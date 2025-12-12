@@ -54,6 +54,7 @@ It does not mandate Fly.io for future systems or higher-scale deployments.
 - Persistent data must be explicitly modeled and justified
 - Configuration should remain minimal and auditable
 - Infrastructure complexity must not exceed application complexity
+- This decision is constrained by ADR-002 (Documentation-First Architecture) and ADR-003 (Explicit Memory Model).
 
 ---
 
