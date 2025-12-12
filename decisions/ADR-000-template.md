@@ -1,4 +1,4 @@
-# ADR-000 — <Decision Title>
+# ADR-000 — <Decision Title> 
 
 ## Status
 Accepted | Proposed | Superseded
