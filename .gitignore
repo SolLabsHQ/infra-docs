@@ -1,0 +1,7 @@
+
+# macOS
+.DS_Store
+
+# Structurizr Lite local cache
+.structurizr/
+**/.structurizr/
