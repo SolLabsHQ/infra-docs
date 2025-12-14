@@ -4,7 +4,7 @@
   "documentation" : { },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-12-14T04:25:07Z",
+  "lastModifiedDate" : "2025-12-14T07:13:27Z",
   "model" : {
     "people" : [ {
       "description" : "A human user interacting with SolMobile on a personal device.",
@@ -192,7 +192,7 @@
   "views" : {
     "configuration" : {
       "branding" : { },
-      "lastSavedView" : "C2",
+      "lastSavedView" : "C1",
       "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
@@ -232,15 +232,15 @@
       "elements" : [ {
         "id" : "1",
         "x" : 199,
-        "y" : 159
+        "y" : 160
       }, {
         "id" : "3",
         "x" : 899,
-        "y" : 209
+        "y" : 210
       }, {
         "id" : "4",
         "x" : 1649,
-        "y" : 209
+        "y" : 210
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "C2",
@@ -254,7 +254,7 @@
       "softwareSystemId" : "2"
     }, {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -262,26 +262,30 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "dimensions" : {
+        "height" : 1920,
+        "width" : 2370
+      },
       "elements" : [ {
         "id" : "2",
-        "x" : 0,
-        "y" : 0
+        "x" : 199,
+        "y" : 633
       }, {
         "id" : "5",
-        "x" : 0,
-        "y" : 0
+        "x" : 949,
+        "y" : 179
       }, {
         "id" : "6",
-        "x" : 0,
-        "y" : 0
+        "x" : 1699,
+        "y" : 179
       }, {
         "id" : "7",
-        "x" : 0,
-        "y" : 0
+        "x" : 1699,
+        "y" : 779
       }, {
         "id" : "8",
-        "x" : 0,
-        "y" : 0
+        "x" : 1699,
+        "y" : 1379
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "C3",
@@ -296,7 +300,11 @@
       }, {
         "id" : "19"
       }, {
-        "id" : "20"
+        "id" : "20",
+        "vertices" : [ {
+          "x" : 1699,
+          "y" : 1229
+        } ]
       } ],
       "softwareSystemId" : "4"
     } ],
