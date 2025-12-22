@@ -5,13 +5,57 @@ workspace "SolLabsHQ" "SolMobile v0 C4 diagrams" {
     model {
         user = person "End User" "A human user interacting with SolMobile on a personal device."
 
-        solMobile = softwareSystem "SolMobile" "Native iOS client for a personal AI operating interface with explicit memory and drift control." {
-            mobileApp = container "iOS App" "Native iOS client for SolMobile" "Swift / SwiftUI"
+        solServer = softwareSystem "SolServer" "Backend policy/runtime: routing, budgets, drift controls, and explicit memory APIs." {
+            memoryDb = container "Memory Store" "Explicit memory persistence" "PostgreSQL"
+            api = container "SolServer API" "Containerized API + policy enforcement layer" "Node.js / HTTPS" {
+                auth = component "AuthN/AuthZ" "Authentication, authorization, and step-up hooks (future)." "Node.js"
+                chatEndpoint = component "Chat Endpoint" "Implements POST /v1/chat; validates Packet/Transmission and budgets." "Node.js"
+                policyEngine = component "Policy Engine" "Applies routing/budgets/drift controls; gates calls and shapes context." "Node.js"
+                retrievalService = component "Retrieval Service" "Selects memory summaries for injection (domain-scoped, capped)." "Node.js"
+                inferenceClient = component "Inference Client" "Calls external LLM provider as stateless inference." "HTTPS"
+                memoryService = component "Memory Service" "Explicit memory save/list APIs." "Node.js"
+                usageService = component "Usage Service" "Token/cost accounting and daily rollups." "Node.js"
+
+                chatEndpoint -> auth "Checks" "in-proc"
+                chatEndpoint -> policyEngine "Evaluates" "in-proc"
+                policyEngine -> retrievalService "Requests retrieval" "in-proc"
+                policyEngine -> inferenceClient "Requests inference" "HTTPS"
+                policyEngine -> usageService "Records usage" "in-proc"
+
+                memoryService -> auth "Checks" "in-proc"
+                memoryService -> solServer.memoryDb "Reads/Writes" "SQL"
+                retrievalService -> solServer.memoryDb "Reads summaries" "SQL"
+                usageService -> solServer.memoryDb "Writes rollups" "SQL"
+            }
         }
 
-        solServer = softwareSystem "SolServer" "Backend policy/runtime: routing, budgets, drift controls, and explicit memory APIs." {
-            api = container "SolServer API" "Containerized API + policy enforcement layer" "Node.js / HTTPS"
-            memoryDb = container "Memory Store" "Explicit memory persistence" "PostgreSQL"
+        solMobile = softwareSystem "SolMobile" "Native iOS client for a personal AI operating interface with explicit memory and drift control." {
+            mobileApp = container "iOS App" "Native iOS client for SolMobile" "Swift / SwiftUI" {
+                uiShell = component "UI Shell" "Tabs, navigation, and top-level routing." "SwiftUI"
+                threadStore = component "Thread Store" "Creates/lists Threads; pinning/TTL metadata; last-active tracking." "Swift"
+                messageStore = component "Message Store" "Stores Messages for a Thread; append/read/query." "Swift"
+                captureProcessor = component "Capture Processor" "Processes Captures (transcribe/extract/fetch) and updates Capture records." "Swift"
+                anchorStore = component "Anchor Store" "Stores Anchors that reference Messages." "Swift"
+                checkpointStore = component "Checkpoint Store" "Stores Checkpoints (capsules) for Threads." "Swift"
+                transmissionStore = component "Transmission Store" "Offline-first Transmission store queue; retry via DeliveryAttempts." "Swift"
+                solServerClient = component "SolServer Client" "HTTP client for SolServer (/v1/chat, /v1/memories, /v1/usage)." "HTTPS/JSON"
+                preferencesStore = component "Preferences Store" "User Preferences (budgets/toggles)." "Swift"
+                environment = component "Environment" "Runtime configuration (endpoints, build flags, diagnostics)." "Swift"
+
+                uiShell -> threadStore "Reads/writes" "in-proc"
+                uiShell -> messageStore "Reads/writes" "in-proc"
+                uiShell -> anchorStore "Reads/writes" "in-proc"
+                uiShell -> checkpointStore "Reads/writes" "in-proc"
+                uiShell -> preferencesStore "Reads/writes" "in-proc"
+                uiShell -> environment "Reads" "in-proc"
+
+                messageStore -> captureProcessor "Processes pending Captures" "in-proc"
+                transmissionStore -> solServerClient "Sends Transmissions" "in-proc"
+
+                solServerClient -> solServer.api.chatEndpoint "Calls /v1/chat" "HTTPS/JSON"
+                solServerClient -> solServer.api.memoryService "Calls /v1/memories" "HTTPS/JSON"
+                solServerClient -> solServer.api.usageService "Calls /v1/usage" "HTTPS/JSON"
+            }
         }
 
         inferenceProvider = softwareSystem "Inference Provider" "External managed LLM service used as a stateless reasoning engine."
@@ -55,6 +99,28 @@ workspace "SolLabsHQ" "SolMobile v0 C4 diagrams" {
             autolayout lr
         }
 
+        component solMobile.mobileApp "C4-SolMobile" {
+            include user
+            include *
+            include solServer.api
+            include solServer.api.auth
+            include solServer.api.chatEndpoint
+            include solServer.api.policyEngine
+            include solServer.api.retrievalService
+            include solServer.api.inferenceClient
+            include solServer.api.memoryService
+            include solServer.api.usageService
+            autolayout lr
+        }
+
+        component solServer.api "C4-SolServerAPI" {
+            include *
+            include solServer.memoryDb
+            include inferenceProvider
+            include observability
+            autolayout lr
+        }
+
         styles {
             element Person {
                 shape Person
@@ -63,6 +129,9 @@ workspace "SolLabsHQ" "SolMobile v0 C4 diagrams" {
                 shape RoundedBox
             }
             element Container {
+                shape RoundedBox
+            }
+            element Component {
                 shape RoundedBox
             }
             element Database {

@@ -4,7 +4,7 @@
   "documentation" : { },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-12-14T07:13:27Z",
+  "lastModifiedDate" : "2025-12-22T23:29:46Z",
   "model" : {
     "people" : [ {
       "description" : "A human user interacting with SolMobile on a personal device.",
@@ -15,15 +15,15 @@
       },
       "relationships" : [ {
         "description" : "Uses",
-        "destinationId" : "2",
-        "id" : "9",
+        "destinationId" : "22",
+        "id" : "59",
         "sourceId" : "1",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Interacts with UI",
-        "destinationId" : "3",
-        "id" : "10",
+        "destinationId" : "23",
+        "id" : "60",
         "sourceId" : "1",
         "tags" : "Relationship",
         "technology" : "iOS Touch Interface"
@@ -32,32 +32,469 @@
     } ],
     "softwareSystems" : [ {
       "containers" : [ {
-        "description" : "Native iOS client for SolMobile",
+        "description" : "Explicit memory persistence",
         "documentation" : { },
         "id" : "3",
+        "name" : "Memory Store",
+        "properties" : {
+          "structurizr.dsl.identifier" : "solServer.memoryDb"
+        },
+        "tags" : "Element,Container",
+        "technology" : "PostgreSQL"
+      }, {
+        "components" : [ {
+          "description" : "Authentication, authorization, and step-up hooks (future).",
+          "documentation" : { },
+          "id" : "5",
+          "name" : "AuthN/AuthZ",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solServer.api.auth"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Node.js"
+        }, {
+          "description" : "Implements POST /v1/chat; validates Packet/Transmission and budgets.",
+          "documentation" : { },
+          "id" : "6",
+          "name" : "Chat Endpoint",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solServer.api.chatEndpoint"
+          },
+          "relationships" : [ {
+            "description" : "Checks",
+            "destinationId" : "5",
+            "id" : "12",
+            "sourceId" : "6",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Evaluates",
+            "destinationId" : "7",
+            "id" : "13",
+            "sourceId" : "6",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Node.js"
+        }, {
+          "description" : "Applies routing/budgets/drift controls; gates calls and shapes context.",
+          "documentation" : { },
+          "id" : "7",
+          "name" : "Policy Engine",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solServer.api.policyEngine"
+          },
+          "relationships" : [ {
+            "description" : "Requests retrieval",
+            "destinationId" : "8",
+            "id" : "14",
+            "sourceId" : "7",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Requests inference",
+            "destinationId" : "9",
+            "id" : "15",
+            "sourceId" : "7",
+            "tags" : "Relationship",
+            "technology" : "HTTPS"
+          }, {
+            "description" : "Records usage",
+            "destinationId" : "11",
+            "id" : "16",
+            "sourceId" : "7",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Node.js"
+        }, {
+          "description" : "Selects memory summaries for injection (domain-scoped, capped).",
+          "documentation" : { },
+          "id" : "8",
+          "name" : "Retrieval Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solServer.api.retrievalService"
+          },
+          "relationships" : [ {
+            "description" : "Reads summaries",
+            "destinationId" : "3",
+            "id" : "20",
+            "sourceId" : "8",
+            "tags" : "Relationship",
+            "technology" : "SQL"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Node.js"
+        }, {
+          "description" : "Calls external LLM provider as stateless inference.",
+          "documentation" : { },
+          "id" : "9",
+          "name" : "Inference Client",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solServer.api.inferenceClient"
+          },
+          "tags" : "Element,Component",
+          "technology" : "HTTPS"
+        }, {
+          "description" : "Explicit memory save/list APIs.",
+          "documentation" : { },
+          "id" : "10",
+          "name" : "Memory Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solServer.api.memoryService"
+          },
+          "relationships" : [ {
+            "description" : "Checks",
+            "destinationId" : "5",
+            "id" : "17",
+            "sourceId" : "10",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Reads/Writes",
+            "destinationId" : "3",
+            "id" : "18",
+            "sourceId" : "10",
+            "tags" : "Relationship",
+            "technology" : "SQL"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Node.js"
+        }, {
+          "description" : "Token/cost accounting and daily rollups.",
+          "documentation" : { },
+          "id" : "11",
+          "name" : "Usage Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solServer.api.usageService"
+          },
+          "relationships" : [ {
+            "description" : "Writes rollups",
+            "destinationId" : "3",
+            "id" : "21",
+            "sourceId" : "11",
+            "tags" : "Relationship",
+            "technology" : "SQL"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Node.js"
+        } ],
+        "description" : "Containerized API + policy enforcement layer",
+        "documentation" : { },
+        "id" : "4",
+        "name" : "SolServer API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "solServer.api"
+        },
+        "relationships" : [ {
+          "description" : "Reads/Writes",
+          "destinationId" : "3",
+          "id" : "19",
+          "linkedRelationshipId" : "18",
+          "sourceId" : "4",
+          "technology" : "SQL"
+        }, {
+          "description" : "Reads/Writes explicit memory",
+          "destinationId" : "3",
+          "id" : "62",
+          "sourceId" : "4",
+          "tags" : "Relationship",
+          "technology" : "SQL"
+        }, {
+          "description" : "Requests inference",
+          "destinationId" : "57",
+          "id" : "63",
+          "sourceId" : "4",
+          "tags" : "Relationship",
+          "technology" : "HTTPS"
+        }, {
+          "description" : "Sends server errors",
+          "destinationId" : "58",
+          "id" : "67",
+          "sourceId" : "4",
+          "tags" : "Relationship",
+          "technology" : "HTTPS"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Node.js / HTTPS"
+      } ],
+      "description" : "Backend policy/runtime: routing, budgets, drift controls, and explicit memory APIs.",
+      "documentation" : { },
+      "id" : "2",
+      "name" : "SolServer",
+      "properties" : {
+        "structurizr.dsl.identifier" : "solServer"
+      },
+      "relationships" : [ {
+        "description" : "Requests inference",
+        "destinationId" : "57",
+        "id" : "64",
+        "linkedRelationshipId" : "63",
+        "sourceId" : "2",
+        "technology" : "HTTPS"
+      }, {
+        "description" : "Sends server errors",
+        "destinationId" : "58",
+        "id" : "68",
+        "linkedRelationshipId" : "67",
+        "sourceId" : "2",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "containers" : [ {
+        "components" : [ {
+          "description" : "Tabs, navigation, and top-level routing.",
+          "documentation" : { },
+          "id" : "24",
+          "name" : "UI Shell",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.uiShell"
+          },
+          "relationships" : [ {
+            "description" : "Reads/writes",
+            "destinationId" : "25",
+            "id" : "34",
+            "sourceId" : "24",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Reads/writes",
+            "destinationId" : "26",
+            "id" : "35",
+            "sourceId" : "24",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Reads/writes",
+            "destinationId" : "28",
+            "id" : "36",
+            "sourceId" : "24",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Reads/writes",
+            "destinationId" : "29",
+            "id" : "37",
+            "sourceId" : "24",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Reads/writes",
+            "destinationId" : "32",
+            "id" : "38",
+            "sourceId" : "24",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
+            "description" : "Reads",
+            "destinationId" : "33",
+            "id" : "39",
+            "sourceId" : "24",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "SwiftUI"
+        }, {
+          "description" : "Creates/lists Threads; pinning/TTL metadata; last-active tracking.",
+          "documentation" : { },
+          "id" : "25",
+          "name" : "Thread Store",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.threadStore"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        }, {
+          "description" : "Stores Messages for a Thread; append/read/query.",
+          "documentation" : { },
+          "id" : "26",
+          "name" : "Message Store",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.messageStore"
+          },
+          "relationships" : [ {
+            "description" : "Processes pending Captures",
+            "destinationId" : "27",
+            "id" : "40",
+            "sourceId" : "26",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        }, {
+          "description" : "Processes Captures (transcribe/extract/fetch) and updates Capture records.",
+          "documentation" : { },
+          "id" : "27",
+          "name" : "Capture Processor",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.captureProcessor"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        }, {
+          "description" : "Stores Anchors that reference Messages.",
+          "documentation" : { },
+          "id" : "28",
+          "name" : "Anchor Store",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.anchorStore"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        }, {
+          "description" : "Stores Checkpoints (capsules) for Threads.",
+          "documentation" : { },
+          "id" : "29",
+          "name" : "Checkpoint Store",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.checkpointStore"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        }, {
+          "description" : "Offline-first Transmission store queue; retry via DeliveryAttempts.",
+          "documentation" : { },
+          "id" : "30",
+          "name" : "Transmission Store",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.transmissionStore"
+          },
+          "relationships" : [ {
+            "description" : "Sends Transmissions",
+            "destinationId" : "31",
+            "id" : "41",
+            "sourceId" : "30",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        }, {
+          "description" : "HTTP client for SolServer (/v1/chat, /v1/memories, /v1/usage).",
+          "documentation" : { },
+          "id" : "31",
+          "name" : "SolServer Client",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.solServerClient"
+          },
+          "relationships" : [ {
+            "description" : "Calls /v1/chat",
+            "destinationId" : "6",
+            "id" : "42",
+            "sourceId" : "31",
+            "tags" : "Relationship",
+            "technology" : "HTTPS/JSON"
+          }, {
+            "description" : "Calls /v1/chat",
+            "destinationId" : "4",
+            "id" : "43",
+            "linkedRelationshipId" : "42",
+            "sourceId" : "31",
+            "technology" : "HTTPS/JSON"
+          }, {
+            "description" : "Calls /v1/chat",
+            "destinationId" : "2",
+            "id" : "44",
+            "linkedRelationshipId" : "42",
+            "sourceId" : "31",
+            "technology" : "HTTPS/JSON"
+          }, {
+            "description" : "Calls /v1/memories",
+            "destinationId" : "10",
+            "id" : "51",
+            "sourceId" : "31",
+            "tags" : "Relationship",
+            "technology" : "HTTPS/JSON"
+          }, {
+            "description" : "Calls /v1/usage",
+            "destinationId" : "11",
+            "id" : "54",
+            "sourceId" : "31",
+            "tags" : "Relationship",
+            "technology" : "HTTPS/JSON"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "HTTPS/JSON"
+        }, {
+          "description" : "User Preferences (budgets/toggles).",
+          "documentation" : { },
+          "id" : "32",
+          "name" : "Preferences Store",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.preferencesStore"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        }, {
+          "description" : "Runtime configuration (endpoints, build flags, diagnostics).",
+          "documentation" : { },
+          "id" : "33",
+          "name" : "Environment",
+          "properties" : {
+            "structurizr.dsl.identifier" : "solMobile.mobileApp.environment"
+          },
+          "tags" : "Element,Component",
+          "technology" : "Swift"
+        } ],
+        "description" : "Native iOS client for SolMobile",
+        "documentation" : { },
+        "id" : "23",
         "name" : "iOS App",
         "properties" : {
           "structurizr.dsl.identifier" : "solMobile.mobileApp"
         },
         "relationships" : [ {
-          "description" : "Calls API",
-          "destinationId" : "5",
-          "id" : "11",
-          "sourceId" : "3",
-          "tags" : "Relationship",
+          "description" : "Calls /v1/chat",
+          "destinationId" : "6",
+          "id" : "45",
+          "linkedRelationshipId" : "42",
+          "sourceId" : "23",
+          "technology" : "HTTPS/JSON"
+        }, {
+          "description" : "Calls /v1/chat",
+          "destinationId" : "4",
+          "id" : "46",
+          "linkedRelationshipId" : "42",
+          "sourceId" : "23",
+          "technology" : "HTTPS/JSON"
+        }, {
+          "description" : "Calls /v1/chat",
+          "destinationId" : "2",
+          "id" : "47",
+          "linkedRelationshipId" : "42",
+          "sourceId" : "23",
+          "technology" : "HTTPS/JSON"
+        }, {
+          "description" : "Calls /v1/memories",
+          "destinationId" : "10",
+          "id" : "52",
+          "linkedRelationshipId" : "51",
+          "sourceId" : "23",
+          "technology" : "HTTPS/JSON"
+        }, {
+          "description" : "Calls /v1/usage",
+          "destinationId" : "11",
+          "id" : "55",
+          "linkedRelationshipId" : "54",
+          "sourceId" : "23",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Calls API",
           "destinationId" : "4",
-          "id" : "12",
-          "linkedRelationshipId" : "11",
-          "sourceId" : "3",
+          "id" : "61",
+          "sourceId" : "23",
+          "tags" : "Relationship",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Sends client errors",
-          "destinationId" : "8",
-          "id" : "18",
-          "sourceId" : "3",
+          "destinationId" : "58",
+          "id" : "65",
+          "sourceId" : "23",
           "tags" : "Relationship",
           "technology" : "HTTPS"
         } ],
@@ -66,105 +503,59 @@
       } ],
       "description" : "Native iOS client for a personal AI operating interface with explicit memory and drift control.",
       "documentation" : { },
-      "id" : "2",
+      "id" : "22",
       "name" : "SolMobile",
       "properties" : {
         "structurizr.dsl.identifier" : "solMobile"
       },
       "relationships" : [ {
-        "description" : "Calls API",
-        "destinationId" : "5",
-        "id" : "13",
-        "linkedRelationshipId" : "11",
-        "sourceId" : "2",
+        "description" : "Calls /v1/chat",
+        "destinationId" : "6",
+        "id" : "48",
+        "linkedRelationshipId" : "42",
+        "sourceId" : "22",
         "technology" : "HTTPS/JSON"
       }, {
-        "description" : "Calls API",
+        "description" : "Calls /v1/chat",
         "destinationId" : "4",
-        "id" : "14",
-        "linkedRelationshipId" : "11",
-        "sourceId" : "2",
+        "id" : "49",
+        "linkedRelationshipId" : "42",
+        "sourceId" : "22",
+        "technology" : "HTTPS/JSON"
+      }, {
+        "description" : "Calls /v1/chat",
+        "destinationId" : "2",
+        "id" : "50",
+        "linkedRelationshipId" : "42",
+        "sourceId" : "22",
+        "technology" : "HTTPS/JSON"
+      }, {
+        "description" : "Calls /v1/memories",
+        "destinationId" : "10",
+        "id" : "53",
+        "linkedRelationshipId" : "51",
+        "sourceId" : "22",
+        "technology" : "HTTPS/JSON"
+      }, {
+        "description" : "Calls /v1/usage",
+        "destinationId" : "11",
+        "id" : "56",
+        "linkedRelationshipId" : "54",
+        "sourceId" : "22",
         "technology" : "HTTPS/JSON"
       }, {
         "description" : "Sends client errors",
-        "destinationId" : "8",
-        "id" : "19",
-        "linkedRelationshipId" : "18",
-        "sourceId" : "2",
-        "technology" : "HTTPS"
-      } ],
-      "tags" : "Element,Software System"
-    }, {
-      "containers" : [ {
-        "description" : "Containerized API + policy enforcement layer",
-        "documentation" : { },
-        "id" : "5",
-        "name" : "SolServer API",
-        "properties" : {
-          "structurizr.dsl.identifier" : "solServer.api"
-        },
-        "relationships" : [ {
-          "description" : "Reads/Writes explicit memory",
-          "destinationId" : "6",
-          "id" : "15",
-          "sourceId" : "5",
-          "tags" : "Relationship",
-          "technology" : "SQL"
-        }, {
-          "description" : "Requests inference",
-          "destinationId" : "7",
-          "id" : "16",
-          "sourceId" : "5",
-          "tags" : "Relationship",
-          "technology" : "HTTPS"
-        }, {
-          "description" : "Sends server errors",
-          "destinationId" : "8",
-          "id" : "20",
-          "sourceId" : "5",
-          "tags" : "Relationship",
-          "technology" : "HTTPS"
-        } ],
-        "tags" : "Element,Container",
-        "technology" : "Node.js / HTTPS"
-      }, {
-        "description" : "Explicit memory persistence",
-        "documentation" : { },
-        "id" : "6",
-        "name" : "Memory Store",
-        "properties" : {
-          "structurizr.dsl.identifier" : "solServer.memoryDb"
-        },
-        "tags" : "Element,Container",
-        "technology" : "PostgreSQL"
-      } ],
-      "description" : "Backend policy/runtime: routing, budgets, drift controls, and explicit memory APIs.",
-      "documentation" : { },
-      "id" : "4",
-      "name" : "SolServer",
-      "properties" : {
-        "structurizr.dsl.identifier" : "solServer"
-      },
-      "relationships" : [ {
-        "description" : "Requests inference",
-        "destinationId" : "7",
-        "id" : "17",
-        "linkedRelationshipId" : "16",
-        "sourceId" : "4",
-        "technology" : "HTTPS"
-      }, {
-        "description" : "Sends server errors",
-        "destinationId" : "8",
-        "id" : "21",
-        "linkedRelationshipId" : "20",
-        "sourceId" : "4",
+        "destinationId" : "58",
+        "id" : "66",
+        "linkedRelationshipId" : "65",
+        "sourceId" : "22",
         "technology" : "HTTPS"
       } ],
       "tags" : "Element,Software System"
     }, {
       "description" : "External managed LLM service used as a stateless reasoning engine.",
       "documentation" : { },
-      "id" : "7",
+      "id" : "57",
       "name" : "Inference Provider",
       "properties" : {
         "structurizr.dsl.identifier" : "inferenceProvider"
@@ -173,7 +564,7 @@
     }, {
       "description" : "Error tracking and optional tracing for client and server.",
       "documentation" : { },
-      "id" : "8",
+      "id" : "58",
       "name" : "Observability",
       "properties" : {
         "structurizr.dsl.identifier" : "observability"
@@ -187,15 +578,201 @@
     "structurizr.inspection.ignore" : "0",
     "structurizr.inspection.error" : "7",
     "structurizr.inspection.warning" : "0",
-    "structurizr.dsl" : "d29ya3NwYWNlICJTb2xMYWJzSFEiICJTb2xNb2JpbGUgdjAgQzQgZGlhZ3JhbXMiIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewogICAgICAgIHVzZXIgPSBwZXJzb24gIkVuZCBVc2VyIiAiQSBodW1hbiB1c2VyIGludGVyYWN0aW5nIHdpdGggU29sTW9iaWxlIG9uIGEgcGVyc29uYWwgZGV2aWNlLiIKCiAgICAgICAgc29sTW9iaWxlID0gc29mdHdhcmVTeXN0ZW0gIlNvbE1vYmlsZSIgIk5hdGl2ZSBpT1MgY2xpZW50IGZvciBhIHBlcnNvbmFsIEFJIG9wZXJhdGluZyBpbnRlcmZhY2Ugd2l0aCBleHBsaWNpdCBtZW1vcnkgYW5kIGRyaWZ0IGNvbnRyb2wuIiB7CiAgICAgICAgICAgIG1vYmlsZUFwcCA9IGNvbnRhaW5lciAiaU9TIEFwcCIgIk5hdGl2ZSBpT1MgY2xpZW50IGZvciBTb2xNb2JpbGUiICJTd2lmdCAvIFN3aWZ0VUkiCiAgICAgICAgfQoKICAgICAgICBzb2xTZXJ2ZXIgPSBzb2Z0d2FyZVN5c3RlbSAiU29sU2VydmVyIiAiQmFja2VuZCBwb2xpY3kvcnVudGltZTogcm91dGluZywgYnVkZ2V0cywgZHJpZnQgY29udHJvbHMsIGFuZCBleHBsaWNpdCBtZW1vcnkgQVBJcy4iIHsKICAgICAgICAgICAgYXBpID0gY29udGFpbmVyICJTb2xTZXJ2ZXIgQVBJIiAiQ29udGFpbmVyaXplZCBBUEkgKyBwb2xpY3kgZW5mb3JjZW1lbnQgbGF5ZXIiICJOb2RlLmpzIC8gSFRUUFMiCiAgICAgICAgICAgIG1lbW9yeURiID0gY29udGFpbmVyICJNZW1vcnkgU3RvcmUiICJFeHBsaWNpdCBtZW1vcnkgcGVyc2lzdGVuY2UiICJQb3N0Z3JlU1FMIgogICAgICAgIH0KCiAgICAgICAgaW5mZXJlbmNlUHJvdmlkZXIgPSBzb2Z0d2FyZVN5c3RlbSAiSW5mZXJlbmNlIFByb3ZpZGVyIiAiRXh0ZXJuYWwgbWFuYWdlZCBMTE0gc2VydmljZSB1c2VkIGFzIGEgc3RhdGVsZXNzIHJlYXNvbmluZyBlbmdpbmUuIgogICAgICAgIG9ic2VydmFiaWxpdHkgPSBzb2Z0d2FyZVN5c3RlbSAiT2JzZXJ2YWJpbGl0eSIgIkVycm9yIHRyYWNraW5nIGFuZCBvcHRpb25hbCB0cmFjaW5nIGZvciBjbGllbnQgYW5kIHNlcnZlci4iCgogICAgICAgIHVzZXIgLT4gc29sTW9iaWxlICJVc2VzIiAiSFRUUFMiCiAgICAgICAgdXNlciAtPiBzb2xNb2JpbGUubW9iaWxlQXBwICJJbnRlcmFjdHMgd2l0aCBVSSIgImlPUyBUb3VjaCBJbnRlcmZhY2UiCgogICAgICAgIHNvbE1vYmlsZS5tb2JpbGVBcHAgLT4gc29sU2VydmVyLmFwaSAiQ2FsbHMgQVBJIiAiSFRUUFMvSlNPTiIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMvV3JpdGVzIGV4cGxpY2l0IG1lbW9yeSIgIlNRTCIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IGluZmVyZW5jZVByb3ZpZGVyICJSZXF1ZXN0cyBpbmZlcmVuY2UiICJIVFRQUyIKICAgICAgICBzb2xNb2JpbGUubW9iaWxlQXBwIC0+IG9ic2VydmFiaWxpdHkgIlNlbmRzIGNsaWVudCBlcnJvcnMiICJIVFRQUyIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IG9ic2VydmFiaWxpdHkgIlNlbmRzIHNlcnZlciBlcnJvcnMiICJIVFRQUyIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBzb2xNb2JpbGUgIkMxIiB7CiAgICAgICAgICAgIGluY2x1ZGUgdXNlcgogICAgICAgICAgICBpbmNsdWRlIHNvbE1vYmlsZQogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlcgogICAgICAgICAgICBpbmNsdWRlIGluZmVyZW5jZVByb3ZpZGVyCiAgICAgICAgICAgIGluY2x1ZGUgb2JzZXJ2YWJpbGl0eQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgc29sTW9iaWxlICJDMiIgewogICAgICAgICAgICBpbmNsdWRlIHVzZXIKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUubW9iaWxlQXBwCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgc29sU2VydmVyICJDMyIgewogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIubWVtb3J5RGIKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUubW9iaWxlQXBwCiAgICAgICAgICAgIGluY2x1ZGUgaW5mZXJlbmNlUHJvdmlkZXIKICAgICAgICAgICAgaW5jbHVkZSBvYnNlcnZhYmlsaXR5CiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgUGVyc29uIHsKICAgICAgICAgICAgICAgIHNoYXBlIFBlcnNvbgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlNvZnR3YXJlIFN5c3RlbSIgewogICAgICAgICAgICAgICAgc2hhcGUgUm91bmRlZEJveAogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgQ29udGFpbmVyIHsKICAgICAgICAgICAgICAgIHNoYXBlIFJvdW5kZWRCb3gKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50IERhdGFiYXNlIHsKICAgICAgICAgICAgICAgIHNoYXBlIEN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICAgICAgcmVsYXRpb25zaGlwICogewogICAgICAgICAgICAgICAgdGhpY2tuZXNzIDQKICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0gCn0="
+    "structurizr.dsl" : "d29ya3NwYWNlICJTb2xMYWJzSFEiICJTb2xNb2JpbGUgdjAgQzQgZGlhZ3JhbXMiIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewogICAgICAgIHVzZXIgPSBwZXJzb24gIkVuZCBVc2VyIiAiQSBodW1hbiB1c2VyIGludGVyYWN0aW5nIHdpdGggU29sTW9iaWxlIG9uIGEgcGVyc29uYWwgZGV2aWNlLiIKCiAgICAgICAgc29sU2VydmVyID0gc29mdHdhcmVTeXN0ZW0gIlNvbFNlcnZlciIgIkJhY2tlbmQgcG9saWN5L3J1bnRpbWU6IHJvdXRpbmcsIGJ1ZGdldHMsIGRyaWZ0IGNvbnRyb2xzLCBhbmQgZXhwbGljaXQgbWVtb3J5IEFQSXMuIiB7CiAgICAgICAgICAgIG1lbW9yeURiID0gY29udGFpbmVyICJNZW1vcnkgU3RvcmUiICJFeHBsaWNpdCBtZW1vcnkgcGVyc2lzdGVuY2UiICJQb3N0Z3JlU1FMIgogICAgICAgICAgICBhcGkgPSBjb250YWluZXIgIlNvbFNlcnZlciBBUEkiICJDb250YWluZXJpemVkIEFQSSArIHBvbGljeSBlbmZvcmNlbWVudCBsYXllciIgIk5vZGUuanMgLyBIVFRQUyIgewogICAgICAgICAgICAgICAgYXV0aCA9IGNvbXBvbmVudCAiQXV0aE4vQXV0aFoiICJBdXRoZW50aWNhdGlvbiwgYXV0aG9yaXphdGlvbiwgYW5kIHN0ZXAtdXAgaG9va3MgKGZ1dHVyZSkuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIGNoYXRFbmRwb2ludCA9IGNvbXBvbmVudCAiQ2hhdCBFbmRwb2ludCIgIkltcGxlbWVudHMgUE9TVCAvdjEvY2hhdDsgdmFsaWRhdGVzIFBhY2tldC9UcmFuc21pc3Npb24gYW5kIGJ1ZGdldHMuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHBvbGljeUVuZ2luZSA9IGNvbXBvbmVudCAiUG9saWN5IEVuZ2luZSIgIkFwcGxpZXMgcm91dGluZy9idWRnZXRzL2RyaWZ0IGNvbnRyb2xzOyBnYXRlcyBjYWxscyBhbmQgc2hhcGVzIGNvbnRleHQuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHJldHJpZXZhbFNlcnZpY2UgPSBjb21wb25lbnQgIlJldHJpZXZhbCBTZXJ2aWNlIiAiU2VsZWN0cyBtZW1vcnkgc3VtbWFyaWVzIGZvciBpbmplY3Rpb24gKGRvbWFpbi1zY29wZWQsIGNhcHBlZCkuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIGluZmVyZW5jZUNsaWVudCA9IGNvbXBvbmVudCAiSW5mZXJlbmNlIENsaWVudCIgIkNhbGxzIGV4dGVybmFsIExMTSBwcm92aWRlciBhcyBzdGF0ZWxlc3MgaW5mZXJlbmNlLiIgIkhUVFBTIgogICAgICAgICAgICAgICAgbWVtb3J5U2VydmljZSA9IGNvbXBvbmVudCAiTWVtb3J5IFNlcnZpY2UiICJFeHBsaWNpdCBtZW1vcnkgc2F2ZS9saXN0IEFQSXMuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHVzYWdlU2VydmljZSA9IGNvbXBvbmVudCAiVXNhZ2UgU2VydmljZSIgIlRva2VuL2Nvc3QgYWNjb3VudGluZyBhbmQgZGFpbHkgcm9sbHVwcy4iICJOb2RlLmpzIgoKICAgICAgICAgICAgICAgIGNoYXRFbmRwb2ludCAtPiBhdXRoICJDaGVja3MiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgY2hhdEVuZHBvaW50IC0+IHBvbGljeUVuZ2luZSAiRXZhbHVhdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHBvbGljeUVuZ2luZSAtPiByZXRyaWV2YWxTZXJ2aWNlICJSZXF1ZXN0cyByZXRyaWV2YWwiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgcG9saWN5RW5naW5lIC0+IGluZmVyZW5jZUNsaWVudCAiUmVxdWVzdHMgaW5mZXJlbmNlIiAiSFRUUFMiCiAgICAgICAgICAgICAgICBwb2xpY3lFbmdpbmUgLT4gdXNhZ2VTZXJ2aWNlICJSZWNvcmRzIHVzYWdlIiAiaW4tcHJvYyIKCiAgICAgICAgICAgICAgICBtZW1vcnlTZXJ2aWNlIC0+IGF1dGggIkNoZWNrcyIgImluLXByb2MiCiAgICAgICAgICAgICAgICBtZW1vcnlTZXJ2aWNlIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMvV3JpdGVzIiAiU1FMIgogICAgICAgICAgICAgICAgcmV0cmlldmFsU2VydmljZSAtPiBzb2xTZXJ2ZXIubWVtb3J5RGIgIlJlYWRzIHN1bW1hcmllcyIgIlNRTCIKICAgICAgICAgICAgICAgIHVzYWdlU2VydmljZSAtPiBzb2xTZXJ2ZXIubWVtb3J5RGIgIldyaXRlcyByb2xsdXBzIiAiU1FMIgogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICBzb2xNb2JpbGUgPSBzb2Z0d2FyZVN5c3RlbSAiU29sTW9iaWxlIiAiTmF0aXZlIGlPUyBjbGllbnQgZm9yIGEgcGVyc29uYWwgQUkgb3BlcmF0aW5nIGludGVyZmFjZSB3aXRoIGV4cGxpY2l0IG1lbW9yeSBhbmQgZHJpZnQgY29udHJvbC4iIHsKICAgICAgICAgICAgbW9iaWxlQXBwID0gY29udGFpbmVyICJpT1MgQXBwIiAiTmF0aXZlIGlPUyBjbGllbnQgZm9yIFNvbE1vYmlsZSIgIlN3aWZ0IC8gU3dpZnRVSSIgewogICAgICAgICAgICAgICAgdWlTaGVsbCA9IGNvbXBvbmVudCAiVUkgU2hlbGwiICJUYWJzLCBuYXZpZ2F0aW9uLCBhbmQgdG9wLWxldmVsIHJvdXRpbmcuIiAiU3dpZnRVSSIKICAgICAgICAgICAgICAgIHRocmVhZFN0b3JlID0gY29tcG9uZW50ICJUaHJlYWQgU3RvcmUiICJDcmVhdGVzL2xpc3RzIFRocmVhZHM7IHBpbm5pbmcvVFRMIG1ldGFkYXRhOyBsYXN0LWFjdGl2ZSB0cmFja2luZy4iICJTd2lmdCIKICAgICAgICAgICAgICAgIG1lc3NhZ2VTdG9yZSA9IGNvbXBvbmVudCAiTWVzc2FnZSBTdG9yZSIgIlN0b3JlcyBNZXNzYWdlcyBmb3IgYSBUaHJlYWQ7IGFwcGVuZC9yZWFkL3F1ZXJ5LiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgY2FwdHVyZVByb2Nlc3NvciA9IGNvbXBvbmVudCAiQ2FwdHVyZSBQcm9jZXNzb3IiICJQcm9jZXNzZXMgQ2FwdHVyZXMgKHRyYW5zY3JpYmUvZXh0cmFjdC9mZXRjaCkgYW5kIHVwZGF0ZXMgQ2FwdHVyZSByZWNvcmRzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgYW5jaG9yU3RvcmUgPSBjb21wb25lbnQgIkFuY2hvciBTdG9yZSIgIlN0b3JlcyBBbmNob3JzIHRoYXQgcmVmZXJlbmNlIE1lc3NhZ2VzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgY2hlY2twb2ludFN0b3JlID0gY29tcG9uZW50ICJDaGVja3BvaW50IFN0b3JlIiAiU3RvcmVzIENoZWNrcG9pbnRzIChjYXBzdWxlcykgZm9yIFRocmVhZHMuIiAiU3dpZnQiCiAgICAgICAgICAgICAgICB0cmFuc21pc3Npb25TdG9yZSA9IGNvbXBvbmVudCAiVHJhbnNtaXNzaW9uIFN0b3JlIiAiT2ZmbGluZS1maXJzdCBUcmFuc21pc3Npb24gc3RvcmUgcXVldWU7IHJldHJ5IHZpYSBEZWxpdmVyeUF0dGVtcHRzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgc29sU2VydmVyQ2xpZW50ID0gY29tcG9uZW50ICJTb2xTZXJ2ZXIgQ2xpZW50IiAiSFRUUCBjbGllbnQgZm9yIFNvbFNlcnZlciAoL3YxL2NoYXQsIC92MS9tZW1vcmllcywgL3YxL3VzYWdlKS4iICJIVFRQUy9KU09OIgogICAgICAgICAgICAgICAgcHJlZmVyZW5jZXNTdG9yZSA9IGNvbXBvbmVudCAiUHJlZmVyZW5jZXMgU3RvcmUiICJVc2VyIFByZWZlcmVuY2VzIChidWRnZXRzL3RvZ2dsZXMpLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgZW52aXJvbm1lbnQgPSBjb21wb25lbnQgIkVudmlyb25tZW50IiAiUnVudGltZSBjb25maWd1cmF0aW9uIChlbmRwb2ludHMsIGJ1aWxkIGZsYWdzLCBkaWFnbm9zdGljcykuIiAiU3dpZnQiCgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiB0aHJlYWRTdG9yZSAiUmVhZHMvd3JpdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHVpU2hlbGwgLT4gbWVzc2FnZVN0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBhbmNob3JTdG9yZSAiUmVhZHMvd3JpdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHVpU2hlbGwgLT4gY2hlY2twb2ludFN0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBwcmVmZXJlbmNlc1N0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBlbnZpcm9ubWVudCAiUmVhZHMiICJpbi1wcm9jIgoKICAgICAgICAgICAgICAgIG1lc3NhZ2VTdG9yZSAtPiBjYXB0dXJlUHJvY2Vzc29yICJQcm9jZXNzZXMgcGVuZGluZyBDYXB0dXJlcyIgImluLXByb2MiCiAgICAgICAgICAgICAgICB0cmFuc21pc3Npb25TdG9yZSAtPiBzb2xTZXJ2ZXJDbGllbnQgIlNlbmRzIFRyYW5zbWlzc2lvbnMiICJpbi1wcm9jIgoKICAgICAgICAgICAgICAgIHNvbFNlcnZlckNsaWVudCAtPiBzb2xTZXJ2ZXIuYXBpLmNoYXRFbmRwb2ludCAiQ2FsbHMgL3YxL2NoYXQiICJIVFRQUy9KU09OIgogICAgICAgICAgICAgICAgc29sU2VydmVyQ2xpZW50IC0+IHNvbFNlcnZlci5hcGkubWVtb3J5U2VydmljZSAiQ2FsbHMgL3YxL21lbW9yaWVzIiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgICAgIHNvbFNlcnZlckNsaWVudCAtPiBzb2xTZXJ2ZXIuYXBpLnVzYWdlU2VydmljZSAiQ2FsbHMgL3YxL3VzYWdlIiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgaW5mZXJlbmNlUHJvdmlkZXIgPSBzb2Z0d2FyZVN5c3RlbSAiSW5mZXJlbmNlIFByb3ZpZGVyIiAiRXh0ZXJuYWwgbWFuYWdlZCBMTE0gc2VydmljZSB1c2VkIGFzIGEgc3RhdGVsZXNzIHJlYXNvbmluZyBlbmdpbmUuIgogICAgICAgIG9ic2VydmFiaWxpdHkgPSBzb2Z0d2FyZVN5c3RlbSAiT2JzZXJ2YWJpbGl0eSIgIkVycm9yIHRyYWNraW5nIGFuZCBvcHRpb25hbCB0cmFjaW5nIGZvciBjbGllbnQgYW5kIHNlcnZlci4iCgogICAgICAgIHVzZXIgLT4gc29sTW9iaWxlICJVc2VzIiAiSFRUUFMiCiAgICAgICAgdXNlciAtPiBzb2xNb2JpbGUubW9iaWxlQXBwICJJbnRlcmFjdHMgd2l0aCBVSSIgImlPUyBUb3VjaCBJbnRlcmZhY2UiCgogICAgICAgIHNvbE1vYmlsZS5tb2JpbGVBcHAgLT4gc29sU2VydmVyLmFwaSAiQ2FsbHMgQVBJIiAiSFRUUFMvSlNPTiIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMvV3JpdGVzIGV4cGxpY2l0IG1lbW9yeSIgIlNRTCIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IGluZmVyZW5jZVByb3ZpZGVyICJSZXF1ZXN0cyBpbmZlcmVuY2UiICJIVFRQUyIKICAgICAgICBzb2xNb2JpbGUubW9iaWxlQXBwIC0+IG9ic2VydmFiaWxpdHkgIlNlbmRzIGNsaWVudCBlcnJvcnMiICJIVFRQUyIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IG9ic2VydmFiaWxpdHkgIlNlbmRzIHNlcnZlciBlcnJvcnMiICJIVFRQUyIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBzb2xNb2JpbGUgIkMxIiB7CiAgICAgICAgICAgIGluY2x1ZGUgdXNlcgogICAgICAgICAgICBpbmNsdWRlIHNvbE1vYmlsZQogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlcgogICAgICAgICAgICBpbmNsdWRlIGluZmVyZW5jZVByb3ZpZGVyCiAgICAgICAgICAgIGluY2x1ZGUgb2JzZXJ2YWJpbGl0eQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgc29sTW9iaWxlICJDMiIgewogICAgICAgICAgICBpbmNsdWRlIHVzZXIKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUubW9iaWxlQXBwCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgc29sU2VydmVyICJDMyIgewogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIubWVtb3J5RGIKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUubW9iaWxlQXBwCiAgICAgICAgICAgIGluY2x1ZGUgaW5mZXJlbmNlUHJvdmlkZXIKICAgICAgICAgICAgaW5jbHVkZSBvYnNlcnZhYmlsaXR5CiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbXBvbmVudCBzb2xNb2JpbGUubW9iaWxlQXBwICJDNC1Tb2xNb2JpbGUiIHsKICAgICAgICAgICAgaW5jbHVkZSB1c2VyCiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLmF1dGgKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLmNoYXRFbmRwb2ludAogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkucG9saWN5RW5naW5lCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS5yZXRyaWV2YWxTZXJ2aWNlCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS5pbmZlcmVuY2VDbGllbnQKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLm1lbW9yeVNlcnZpY2UKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLnVzYWdlU2VydmljZQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb21wb25lbnQgc29sU2VydmVyLmFwaSAiQzQtU29sU2VydmVyQVBJIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5tZW1vcnlEYgogICAgICAgICAgICBpbmNsdWRlIGluZmVyZW5jZVByb3ZpZGVyCiAgICAgICAgICAgIGluY2x1ZGUgb2JzZXJ2YWJpbGl0eQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBzdHlsZXMgewogICAgICAgICAgICBlbGVtZW50IFBlcnNvbiB7CiAgICAgICAgICAgICAgICBzaGFwZSBQZXJzb24KICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIHNoYXBlIFJvdW5kZWRCb3gKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50IENvbnRhaW5lciB7CiAgICAgICAgICAgICAgICBzaGFwZSBSb3VuZGVkQm94CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCBDb21wb25lbnQgewogICAgICAgICAgICAgICAgc2hhcGUgUm91bmRlZEJveAogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgRGF0YWJhc2UgewogICAgICAgICAgICAgICAgc2hhcGUgQ3lsaW5kZXIKICAgICAgICAgICAgfQogICAgICAgICAgICByZWxhdGlvbnNoaXAgKiB7CiAgICAgICAgICAgICAgICB0aGlja25lc3MgNAogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfSAKfQ=="
   },
   "views" : {
+    "componentViews" : [ {
+      "automaticLayout" : {
+        "applied" : true,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "containerId" : "23",
+      "dimensions" : {
+        "height" : 5052,
+        "width" : 2430
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 264,
+        "y" : 4412
+      }, {
+        "id" : "2",
+        "x" : 1739,
+        "y" : 4412
+      }, {
+        "id" : "24",
+        "x" : 239,
+        "y" : 1700
+      }, {
+        "id" : "25",
+        "x" : 989,
+        "y" : 3200
+      }, {
+        "id" : "26",
+        "x" : 989,
+        "y" : 2600
+      }, {
+        "id" : "27",
+        "x" : 1739,
+        "y" : 2600
+      }, {
+        "id" : "28",
+        "x" : 989,
+        "y" : 2000
+      }, {
+        "id" : "29",
+        "x" : 989,
+        "y" : 1400
+      }, {
+        "id" : "30",
+        "x" : 239,
+        "y" : 3800
+      }, {
+        "id" : "31",
+        "x" : 989,
+        "y" : 3800
+      }, {
+        "id" : "32",
+        "x" : 989,
+        "y" : 800
+      }, {
+        "id" : "33",
+        "x" : 989,
+        "y" : 200
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "C4-SolMobile",
+      "name" : "Component View: SolMobile - iOS App",
+      "order" : 4,
+      "relationships" : [ {
+        "id" : "34",
+        "vertices" : [ {
+          "x" : 989,
+          "y" : 3050
+        } ]
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "36"
+      }, {
+        "id" : "37"
+      }, {
+        "id" : "38"
+      }, {
+        "id" : "39",
+        "vertices" : [ {
+          "x" : 989,
+          "y" : 650
+        } ]
+      }, {
+        "id" : "40"
+      }, {
+        "id" : "41"
+      }, {
+        "id" : "44"
+      } ]
+    }, {
+      "automaticLayout" : {
+        "applied" : false,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "containerId" : "4",
+      "elements" : [ {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "22",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "57",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "58",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "C4-SolServerAPI",
+      "name" : "Component View: SolServer - SolServer API",
+      "order" : 5,
+      "relationships" : [ {
+        "id" : "12"
+      }, {
+        "id" : "13"
+      }, {
+        "id" : "14"
+      }, {
+        "id" : "15"
+      }, {
+        "id" : "16"
+      }, {
+        "id" : "17"
+      }, {
+        "id" : "18"
+      }, {
+        "id" : "20"
+      }, {
+        "id" : "21"
+      }, {
+        "id" : "48"
+      }, {
+        "id" : "53"
+      }, {
+        "id" : "56"
+      }, {
+        "id" : "66"
+      } ]
+    } ],
     "configuration" : {
       "branding" : { },
-      "lastSavedView" : "C1",
+      "lastSavedView" : "C4-SolMobile",
       "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
+          "shape" : "RoundedBox",
+          "tag" : "Component"
+        }, {
           "shape" : "RoundedBox",
           "tag" : "Container"
         }, {
@@ -217,7 +794,7 @@
     },
     "containerViews" : [ {
       "automaticLayout" : {
-        "applied" : true,
+        "applied" : false,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -225,36 +802,32 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
-      "dimensions" : {
-        "height" : 849,
-        "width" : 2300
-      },
       "elements" : [ {
         "id" : "1",
-        "x" : 199,
-        "y" : 160
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "3",
-        "x" : 899,
-        "y" : 210
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "4",
-        "x" : 1649,
-        "y" : 210
+        "id" : "23",
+        "x" : 0,
+        "y" : 0
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "C2",
       "name" : "Container View: SolMobile",
       "order" : 2,
       "relationships" : [ {
-        "id" : "10"
+        "id" : "47"
       }, {
-        "id" : "12"
+        "id" : "60"
       } ],
-      "softwareSystemId" : "2"
+      "softwareSystemId" : "22"
     }, {
       "automaticLayout" : {
-        "applied" : true,
+        "applied" : false,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -262,55 +835,49 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
-      "dimensions" : {
-        "height" : 1920,
-        "width" : 2370
-      },
       "elements" : [ {
-        "id" : "2",
-        "x" : 199,
-        "y" : 633
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "5",
-        "x" : 949,
-        "y" : 179
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "6",
-        "x" : 1699,
-        "y" : 179
+        "id" : "22",
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "7",
-        "x" : 1699,
-        "y" : 779
+        "id" : "57",
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "8",
-        "x" : 1699,
-        "y" : 1379
+        "id" : "58",
+        "x" : 0,
+        "y" : 0
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "C3",
       "name" : "Container View: SolServer",
       "order" : 3,
       "relationships" : [ {
-        "id" : "13"
-      }, {
-        "id" : "15"
-      }, {
-        "id" : "16"
-      }, {
         "id" : "19"
       }, {
-        "id" : "20",
-        "vertices" : [ {
-          "x" : 1699,
-          "y" : 1229
-        } ]
+        "id" : "49"
+      }, {
+        "id" : "62"
+      }, {
+        "id" : "63"
+      }, {
+        "id" : "66"
+      }, {
+        "id" : "67"
       } ],
-      "softwareSystemId" : "4"
+      "softwareSystemId" : "2"
     } ],
     "systemContextViews" : [ {
       "automaticLayout" : {
-        "applied" : true,
+        "applied" : false,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -318,47 +885,43 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
-      "dimensions" : {
-        "height" : 1300,
-        "width" : 3050
-      },
       "elements" : [ {
         "id" : "1",
-        "x" : 199,
-        "y" : 414
+        "x" : 0,
+        "y" : 0
       }, {
         "id" : "2",
-        "x" : 899,
-        "y" : 464
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "4",
-        "x" : 1649,
-        "y" : 160
+        "id" : "22",
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "7",
-        "x" : 2399,
-        "y" : 160
+        "id" : "57",
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "8",
-        "x" : 2399,
-        "y" : 760
+        "id" : "58",
+        "x" : 0,
+        "y" : 0
       } ],
       "enterpriseBoundaryVisible" : true,
       "key" : "C1",
       "name" : "System Context View: SolMobile",
       "order" : 1,
       "relationships" : [ {
-        "id" : "14"
+        "id" : "50"
       }, {
-        "id" : "17"
+        "id" : "59"
       }, {
-        "id" : "19"
+        "id" : "64"
       }, {
-        "id" : "21"
+        "id" : "66"
       }, {
-        "id" : "9"
+        "id" : "68"
       } ],
-      "softwareSystemId" : "2"
+      "softwareSystemId" : "22"
     } ]
   }
 }
