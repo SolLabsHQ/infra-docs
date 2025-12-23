@@ -4,7 +4,7 @@
   "documentation" : { },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-12-22T23:29:46Z",
+  "lastModifiedDate" : "2025-12-23T01:17:54Z",
   "model" : {
     "people" : [ {
       "description" : "A human user interacting with SolMobile on a personal device.",
@@ -16,16 +16,23 @@
       "relationships" : [ {
         "description" : "Uses",
         "destinationId" : "22",
-        "id" : "59",
+        "id" : "70",
         "sourceId" : "1",
         "tags" : "Relationship",
         "technology" : "HTTPS"
       }, {
         "description" : "Interacts with UI",
-        "destinationId" : "23",
-        "id" : "60",
+        "destinationId" : "24",
+        "id" : "71",
         "sourceId" : "1",
         "tags" : "Relationship",
+        "technology" : "iOS Touch Interface"
+      }, {
+        "description" : "Interacts with UI",
+        "destinationId" : "23",
+        "id" : "72",
+        "linkedRelationshipId" : "71",
+        "sourceId" : "1",
         "technology" : "iOS Touch Interface"
       } ],
       "tags" : "Element,Person"
@@ -74,6 +81,27 @@
             "sourceId" : "6",
             "tags" : "Relationship",
             "technology" : "in-proc"
+          }, {
+            "description" : "Responds",
+            "destinationId" : "31",
+            "id" : "59",
+            "sourceId" : "6",
+            "tags" : "Relationship",
+            "technology" : "HTTPS/JSON"
+          }, {
+            "description" : "Responds",
+            "destinationId" : "23",
+            "id" : "60",
+            "linkedRelationshipId" : "59",
+            "sourceId" : "6",
+            "technology" : "HTTPS/JSON"
+          }, {
+            "description" : "Responds",
+            "destinationId" : "22",
+            "id" : "61",
+            "linkedRelationshipId" : "59",
+            "sourceId" : "6",
+            "technology" : "HTTPS/JSON"
           } ],
           "tags" : "Element,Component",
           "technology" : "Node.js"
@@ -135,6 +163,14 @@
           "properties" : {
             "structurizr.dsl.identifier" : "solServer.api.inferenceClient"
           },
+          "relationships" : [ {
+            "description" : "Requests inference",
+            "destinationId" : "68",
+            "id" : "77",
+            "sourceId" : "9",
+            "tags" : "Relationship",
+            "technology" : "HTTPS"
+          } ],
           "tags" : "Element,Component",
           "technology" : "HTTPS"
         }, {
@@ -196,23 +232,44 @@
           "sourceId" : "4",
           "technology" : "SQL"
         }, {
+          "description" : "Responds",
+          "destinationId" : "31",
+          "id" : "62",
+          "linkedRelationshipId" : "59",
+          "sourceId" : "4",
+          "technology" : "HTTPS/JSON"
+        }, {
+          "description" : "Responds",
+          "destinationId" : "23",
+          "id" : "63",
+          "linkedRelationshipId" : "59",
+          "sourceId" : "4",
+          "technology" : "HTTPS/JSON"
+        }, {
+          "description" : "Responds",
+          "destinationId" : "22",
+          "id" : "64",
+          "linkedRelationshipId" : "59",
+          "sourceId" : "4",
+          "technology" : "HTTPS/JSON"
+        }, {
           "description" : "Reads/Writes explicit memory",
           "destinationId" : "3",
-          "id" : "62",
+          "id" : "74",
           "sourceId" : "4",
           "tags" : "Relationship",
           "technology" : "SQL"
         }, {
           "description" : "Requests inference",
-          "destinationId" : "57",
-          "id" : "63",
+          "destinationId" : "68",
+          "id" : "75",
           "sourceId" : "4",
           "tags" : "Relationship",
           "technology" : "HTTPS"
         }, {
           "description" : "Sends server errors",
-          "destinationId" : "58",
-          "id" : "67",
+          "destinationId" : "69",
+          "id" : "80",
           "sourceId" : "4",
           "tags" : "Relationship",
           "technology" : "HTTPS"
@@ -228,17 +285,38 @@
         "structurizr.dsl.identifier" : "solServer"
       },
       "relationships" : [ {
+        "description" : "Responds",
+        "destinationId" : "31",
+        "id" : "65",
+        "linkedRelationshipId" : "59",
+        "sourceId" : "2",
+        "technology" : "HTTPS/JSON"
+      }, {
+        "description" : "Responds",
+        "destinationId" : "23",
+        "id" : "66",
+        "linkedRelationshipId" : "59",
+        "sourceId" : "2",
+        "technology" : "HTTPS/JSON"
+      }, {
+        "description" : "Responds",
+        "destinationId" : "22",
+        "id" : "67",
+        "linkedRelationshipId" : "59",
+        "sourceId" : "2",
+        "technology" : "HTTPS/JSON"
+      }, {
         "description" : "Requests inference",
-        "destinationId" : "57",
-        "id" : "64",
-        "linkedRelationshipId" : "63",
+        "destinationId" : "68",
+        "id" : "76",
+        "linkedRelationshipId" : "75",
         "sourceId" : "2",
         "technology" : "HTTPS"
       }, {
         "description" : "Sends server errors",
-        "destinationId" : "58",
-        "id" : "68",
-        "linkedRelationshipId" : "67",
+        "destinationId" : "69",
+        "id" : "81",
+        "linkedRelationshipId" : "80",
         "sourceId" : "2",
         "technology" : "HTTPS"
       } ],
@@ -323,6 +401,13 @@
             "sourceId" : "26",
             "tags" : "Relationship",
             "technology" : "in-proc"
+          }, {
+            "description" : "Enqueue Transmission + Packet",
+            "destinationId" : "30",
+            "id" : "41",
+            "sourceId" : "26",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
           } ],
           "tags" : "Element,Component",
           "technology" : "Swift"
@@ -367,7 +452,7 @@
           "relationships" : [ {
             "description" : "Sends Transmissions",
             "destinationId" : "31",
-            "id" : "41",
+            "id" : "42",
             "sourceId" : "30",
             "tags" : "Relationship",
             "technology" : "in-proc"
@@ -383,37 +468,44 @@
             "structurizr.dsl.identifier" : "solMobile.mobileApp.solServerClient"
           },
           "relationships" : [ {
+            "description" : "Appends assistant Message",
+            "destinationId" : "26",
+            "id" : "43",
+            "sourceId" : "31",
+            "tags" : "Relationship",
+            "technology" : "in-proc"
+          }, {
             "description" : "Calls /v1/chat",
             "destinationId" : "6",
-            "id" : "42",
+            "id" : "44",
             "sourceId" : "31",
             "tags" : "Relationship",
             "technology" : "HTTPS/JSON"
           }, {
             "description" : "Calls /v1/chat",
             "destinationId" : "4",
-            "id" : "43",
-            "linkedRelationshipId" : "42",
+            "id" : "45",
+            "linkedRelationshipId" : "44",
             "sourceId" : "31",
             "technology" : "HTTPS/JSON"
           }, {
             "description" : "Calls /v1/chat",
             "destinationId" : "2",
-            "id" : "44",
-            "linkedRelationshipId" : "42",
+            "id" : "46",
+            "linkedRelationshipId" : "44",
             "sourceId" : "31",
             "technology" : "HTTPS/JSON"
           }, {
             "description" : "Calls /v1/memories",
             "destinationId" : "10",
-            "id" : "51",
+            "id" : "53",
             "sourceId" : "31",
             "tags" : "Relationship",
             "technology" : "HTTPS/JSON"
           }, {
             "description" : "Calls /v1/usage",
             "destinationId" : "11",
-            "id" : "54",
+            "id" : "56",
             "sourceId" : "31",
             "tags" : "Relationship",
             "technology" : "HTTPS/JSON"
@@ -451,49 +543,49 @@
         "relationships" : [ {
           "description" : "Calls /v1/chat",
           "destinationId" : "6",
-          "id" : "45",
-          "linkedRelationshipId" : "42",
+          "id" : "47",
+          "linkedRelationshipId" : "44",
           "sourceId" : "23",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Calls /v1/chat",
           "destinationId" : "4",
-          "id" : "46",
-          "linkedRelationshipId" : "42",
+          "id" : "48",
+          "linkedRelationshipId" : "44",
           "sourceId" : "23",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Calls /v1/chat",
           "destinationId" : "2",
-          "id" : "47",
-          "linkedRelationshipId" : "42",
+          "id" : "49",
+          "linkedRelationshipId" : "44",
           "sourceId" : "23",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Calls /v1/memories",
           "destinationId" : "10",
-          "id" : "52",
-          "linkedRelationshipId" : "51",
+          "id" : "54",
+          "linkedRelationshipId" : "53",
           "sourceId" : "23",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Calls /v1/usage",
           "destinationId" : "11",
-          "id" : "55",
-          "linkedRelationshipId" : "54",
+          "id" : "57",
+          "linkedRelationshipId" : "56",
           "sourceId" : "23",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Calls API",
           "destinationId" : "4",
-          "id" : "61",
+          "id" : "73",
           "sourceId" : "23",
           "tags" : "Relationship",
           "technology" : "HTTPS/JSON"
         }, {
           "description" : "Sends client errors",
-          "destinationId" : "58",
-          "id" : "65",
+          "destinationId" : "69",
+          "id" : "78",
           "sourceId" : "23",
           "tags" : "Relationship",
           "technology" : "HTTPS"
@@ -511,43 +603,43 @@
       "relationships" : [ {
         "description" : "Calls /v1/chat",
         "destinationId" : "6",
-        "id" : "48",
-        "linkedRelationshipId" : "42",
+        "id" : "50",
+        "linkedRelationshipId" : "44",
         "sourceId" : "22",
         "technology" : "HTTPS/JSON"
       }, {
         "description" : "Calls /v1/chat",
         "destinationId" : "4",
-        "id" : "49",
-        "linkedRelationshipId" : "42",
+        "id" : "51",
+        "linkedRelationshipId" : "44",
         "sourceId" : "22",
         "technology" : "HTTPS/JSON"
       }, {
         "description" : "Calls /v1/chat",
         "destinationId" : "2",
-        "id" : "50",
-        "linkedRelationshipId" : "42",
+        "id" : "52",
+        "linkedRelationshipId" : "44",
         "sourceId" : "22",
         "technology" : "HTTPS/JSON"
       }, {
         "description" : "Calls /v1/memories",
         "destinationId" : "10",
-        "id" : "53",
-        "linkedRelationshipId" : "51",
+        "id" : "55",
+        "linkedRelationshipId" : "53",
         "sourceId" : "22",
         "technology" : "HTTPS/JSON"
       }, {
         "description" : "Calls /v1/usage",
         "destinationId" : "11",
-        "id" : "56",
-        "linkedRelationshipId" : "54",
+        "id" : "58",
+        "linkedRelationshipId" : "56",
         "sourceId" : "22",
         "technology" : "HTTPS/JSON"
       }, {
         "description" : "Sends client errors",
-        "destinationId" : "58",
-        "id" : "66",
-        "linkedRelationshipId" : "65",
+        "destinationId" : "69",
+        "id" : "79",
+        "linkedRelationshipId" : "78",
         "sourceId" : "22",
         "technology" : "HTTPS"
       } ],
@@ -555,7 +647,7 @@
     }, {
       "description" : "External managed LLM service used as a stateless reasoning engine.",
       "documentation" : { },
-      "id" : "57",
+      "id" : "68",
       "name" : "Inference Provider",
       "properties" : {
         "structurizr.dsl.identifier" : "inferenceProvider"
@@ -564,7 +656,7 @@
     }, {
       "description" : "Error tracking and optional tracing for client and server.",
       "documentation" : { },
-      "id" : "58",
+      "id" : "69",
       "name" : "Observability",
       "properties" : {
         "structurizr.dsl.identifier" : "observability"
@@ -578,7 +670,7 @@
     "structurizr.inspection.ignore" : "0",
     "structurizr.inspection.error" : "7",
     "structurizr.inspection.warning" : "0",
-    "structurizr.dsl" : "d29ya3NwYWNlICJTb2xMYWJzSFEiICJTb2xNb2JpbGUgdjAgQzQgZGlhZ3JhbXMiIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewogICAgICAgIHVzZXIgPSBwZXJzb24gIkVuZCBVc2VyIiAiQSBodW1hbiB1c2VyIGludGVyYWN0aW5nIHdpdGggU29sTW9iaWxlIG9uIGEgcGVyc29uYWwgZGV2aWNlLiIKCiAgICAgICAgc29sU2VydmVyID0gc29mdHdhcmVTeXN0ZW0gIlNvbFNlcnZlciIgIkJhY2tlbmQgcG9saWN5L3J1bnRpbWU6IHJvdXRpbmcsIGJ1ZGdldHMsIGRyaWZ0IGNvbnRyb2xzLCBhbmQgZXhwbGljaXQgbWVtb3J5IEFQSXMuIiB7CiAgICAgICAgICAgIG1lbW9yeURiID0gY29udGFpbmVyICJNZW1vcnkgU3RvcmUiICJFeHBsaWNpdCBtZW1vcnkgcGVyc2lzdGVuY2UiICJQb3N0Z3JlU1FMIgogICAgICAgICAgICBhcGkgPSBjb250YWluZXIgIlNvbFNlcnZlciBBUEkiICJDb250YWluZXJpemVkIEFQSSArIHBvbGljeSBlbmZvcmNlbWVudCBsYXllciIgIk5vZGUuanMgLyBIVFRQUyIgewogICAgICAgICAgICAgICAgYXV0aCA9IGNvbXBvbmVudCAiQXV0aE4vQXV0aFoiICJBdXRoZW50aWNhdGlvbiwgYXV0aG9yaXphdGlvbiwgYW5kIHN0ZXAtdXAgaG9va3MgKGZ1dHVyZSkuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIGNoYXRFbmRwb2ludCA9IGNvbXBvbmVudCAiQ2hhdCBFbmRwb2ludCIgIkltcGxlbWVudHMgUE9TVCAvdjEvY2hhdDsgdmFsaWRhdGVzIFBhY2tldC9UcmFuc21pc3Npb24gYW5kIGJ1ZGdldHMuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHBvbGljeUVuZ2luZSA9IGNvbXBvbmVudCAiUG9saWN5IEVuZ2luZSIgIkFwcGxpZXMgcm91dGluZy9idWRnZXRzL2RyaWZ0IGNvbnRyb2xzOyBnYXRlcyBjYWxscyBhbmQgc2hhcGVzIGNvbnRleHQuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHJldHJpZXZhbFNlcnZpY2UgPSBjb21wb25lbnQgIlJldHJpZXZhbCBTZXJ2aWNlIiAiU2VsZWN0cyBtZW1vcnkgc3VtbWFyaWVzIGZvciBpbmplY3Rpb24gKGRvbWFpbi1zY29wZWQsIGNhcHBlZCkuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIGluZmVyZW5jZUNsaWVudCA9IGNvbXBvbmVudCAiSW5mZXJlbmNlIENsaWVudCIgIkNhbGxzIGV4dGVybmFsIExMTSBwcm92aWRlciBhcyBzdGF0ZWxlc3MgaW5mZXJlbmNlLiIgIkhUVFBTIgogICAgICAgICAgICAgICAgbWVtb3J5U2VydmljZSA9IGNvbXBvbmVudCAiTWVtb3J5IFNlcnZpY2UiICJFeHBsaWNpdCBtZW1vcnkgc2F2ZS9saXN0IEFQSXMuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHVzYWdlU2VydmljZSA9IGNvbXBvbmVudCAiVXNhZ2UgU2VydmljZSIgIlRva2VuL2Nvc3QgYWNjb3VudGluZyBhbmQgZGFpbHkgcm9sbHVwcy4iICJOb2RlLmpzIgoKICAgICAgICAgICAgICAgIGNoYXRFbmRwb2ludCAtPiBhdXRoICJDaGVja3MiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgY2hhdEVuZHBvaW50IC0+IHBvbGljeUVuZ2luZSAiRXZhbHVhdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHBvbGljeUVuZ2luZSAtPiByZXRyaWV2YWxTZXJ2aWNlICJSZXF1ZXN0cyByZXRyaWV2YWwiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgcG9saWN5RW5naW5lIC0+IGluZmVyZW5jZUNsaWVudCAiUmVxdWVzdHMgaW5mZXJlbmNlIiAiSFRUUFMiCiAgICAgICAgICAgICAgICBwb2xpY3lFbmdpbmUgLT4gdXNhZ2VTZXJ2aWNlICJSZWNvcmRzIHVzYWdlIiAiaW4tcHJvYyIKCiAgICAgICAgICAgICAgICBtZW1vcnlTZXJ2aWNlIC0+IGF1dGggIkNoZWNrcyIgImluLXByb2MiCiAgICAgICAgICAgICAgICBtZW1vcnlTZXJ2aWNlIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMvV3JpdGVzIiAiU1FMIgogICAgICAgICAgICAgICAgcmV0cmlldmFsU2VydmljZSAtPiBzb2xTZXJ2ZXIubWVtb3J5RGIgIlJlYWRzIHN1bW1hcmllcyIgIlNRTCIKICAgICAgICAgICAgICAgIHVzYWdlU2VydmljZSAtPiBzb2xTZXJ2ZXIubWVtb3J5RGIgIldyaXRlcyByb2xsdXBzIiAiU1FMIgogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICBzb2xNb2JpbGUgPSBzb2Z0d2FyZVN5c3RlbSAiU29sTW9iaWxlIiAiTmF0aXZlIGlPUyBjbGllbnQgZm9yIGEgcGVyc29uYWwgQUkgb3BlcmF0aW5nIGludGVyZmFjZSB3aXRoIGV4cGxpY2l0IG1lbW9yeSBhbmQgZHJpZnQgY29udHJvbC4iIHsKICAgICAgICAgICAgbW9iaWxlQXBwID0gY29udGFpbmVyICJpT1MgQXBwIiAiTmF0aXZlIGlPUyBjbGllbnQgZm9yIFNvbE1vYmlsZSIgIlN3aWZ0IC8gU3dpZnRVSSIgewogICAgICAgICAgICAgICAgdWlTaGVsbCA9IGNvbXBvbmVudCAiVUkgU2hlbGwiICJUYWJzLCBuYXZpZ2F0aW9uLCBhbmQgdG9wLWxldmVsIHJvdXRpbmcuIiAiU3dpZnRVSSIKICAgICAgICAgICAgICAgIHRocmVhZFN0b3JlID0gY29tcG9uZW50ICJUaHJlYWQgU3RvcmUiICJDcmVhdGVzL2xpc3RzIFRocmVhZHM7IHBpbm5pbmcvVFRMIG1ldGFkYXRhOyBsYXN0LWFjdGl2ZSB0cmFja2luZy4iICJTd2lmdCIKICAgICAgICAgICAgICAgIG1lc3NhZ2VTdG9yZSA9IGNvbXBvbmVudCAiTWVzc2FnZSBTdG9yZSIgIlN0b3JlcyBNZXNzYWdlcyBmb3IgYSBUaHJlYWQ7IGFwcGVuZC9yZWFkL3F1ZXJ5LiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgY2FwdHVyZVByb2Nlc3NvciA9IGNvbXBvbmVudCAiQ2FwdHVyZSBQcm9jZXNzb3IiICJQcm9jZXNzZXMgQ2FwdHVyZXMgKHRyYW5zY3JpYmUvZXh0cmFjdC9mZXRjaCkgYW5kIHVwZGF0ZXMgQ2FwdHVyZSByZWNvcmRzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgYW5jaG9yU3RvcmUgPSBjb21wb25lbnQgIkFuY2hvciBTdG9yZSIgIlN0b3JlcyBBbmNob3JzIHRoYXQgcmVmZXJlbmNlIE1lc3NhZ2VzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgY2hlY2twb2ludFN0b3JlID0gY29tcG9uZW50ICJDaGVja3BvaW50IFN0b3JlIiAiU3RvcmVzIENoZWNrcG9pbnRzIChjYXBzdWxlcykgZm9yIFRocmVhZHMuIiAiU3dpZnQiCiAgICAgICAgICAgICAgICB0cmFuc21pc3Npb25TdG9yZSA9IGNvbXBvbmVudCAiVHJhbnNtaXNzaW9uIFN0b3JlIiAiT2ZmbGluZS1maXJzdCBUcmFuc21pc3Npb24gc3RvcmUgcXVldWU7IHJldHJ5IHZpYSBEZWxpdmVyeUF0dGVtcHRzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgc29sU2VydmVyQ2xpZW50ID0gY29tcG9uZW50ICJTb2xTZXJ2ZXIgQ2xpZW50IiAiSFRUUCBjbGllbnQgZm9yIFNvbFNlcnZlciAoL3YxL2NoYXQsIC92MS9tZW1vcmllcywgL3YxL3VzYWdlKS4iICJIVFRQUy9KU09OIgogICAgICAgICAgICAgICAgcHJlZmVyZW5jZXNTdG9yZSA9IGNvbXBvbmVudCAiUHJlZmVyZW5jZXMgU3RvcmUiICJVc2VyIFByZWZlcmVuY2VzIChidWRnZXRzL3RvZ2dsZXMpLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgZW52aXJvbm1lbnQgPSBjb21wb25lbnQgIkVudmlyb25tZW50IiAiUnVudGltZSBjb25maWd1cmF0aW9uIChlbmRwb2ludHMsIGJ1aWxkIGZsYWdzLCBkaWFnbm9zdGljcykuIiAiU3dpZnQiCgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiB0aHJlYWRTdG9yZSAiUmVhZHMvd3JpdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHVpU2hlbGwgLT4gbWVzc2FnZVN0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBhbmNob3JTdG9yZSAiUmVhZHMvd3JpdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHVpU2hlbGwgLT4gY2hlY2twb2ludFN0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBwcmVmZXJlbmNlc1N0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBlbnZpcm9ubWVudCAiUmVhZHMiICJpbi1wcm9jIgoKICAgICAgICAgICAgICAgIG1lc3NhZ2VTdG9yZSAtPiBjYXB0dXJlUHJvY2Vzc29yICJQcm9jZXNzZXMgcGVuZGluZyBDYXB0dXJlcyIgImluLXByb2MiCiAgICAgICAgICAgICAgICB0cmFuc21pc3Npb25TdG9yZSAtPiBzb2xTZXJ2ZXJDbGllbnQgIlNlbmRzIFRyYW5zbWlzc2lvbnMiICJpbi1wcm9jIgoKICAgICAgICAgICAgICAgIHNvbFNlcnZlckNsaWVudCAtPiBzb2xTZXJ2ZXIuYXBpLmNoYXRFbmRwb2ludCAiQ2FsbHMgL3YxL2NoYXQiICJIVFRQUy9KU09OIgogICAgICAgICAgICAgICAgc29sU2VydmVyQ2xpZW50IC0+IHNvbFNlcnZlci5hcGkubWVtb3J5U2VydmljZSAiQ2FsbHMgL3YxL21lbW9yaWVzIiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgICAgIHNvbFNlcnZlckNsaWVudCAtPiBzb2xTZXJ2ZXIuYXBpLnVzYWdlU2VydmljZSAiQ2FsbHMgL3YxL3VzYWdlIiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgaW5mZXJlbmNlUHJvdmlkZXIgPSBzb2Z0d2FyZVN5c3RlbSAiSW5mZXJlbmNlIFByb3ZpZGVyIiAiRXh0ZXJuYWwgbWFuYWdlZCBMTE0gc2VydmljZSB1c2VkIGFzIGEgc3RhdGVsZXNzIHJlYXNvbmluZyBlbmdpbmUuIgogICAgICAgIG9ic2VydmFiaWxpdHkgPSBzb2Z0d2FyZVN5c3RlbSAiT2JzZXJ2YWJpbGl0eSIgIkVycm9yIHRyYWNraW5nIGFuZCBvcHRpb25hbCB0cmFjaW5nIGZvciBjbGllbnQgYW5kIHNlcnZlci4iCgogICAgICAgIHVzZXIgLT4gc29sTW9iaWxlICJVc2VzIiAiSFRUUFMiCiAgICAgICAgdXNlciAtPiBzb2xNb2JpbGUubW9iaWxlQXBwICJJbnRlcmFjdHMgd2l0aCBVSSIgImlPUyBUb3VjaCBJbnRlcmZhY2UiCgogICAgICAgIHNvbE1vYmlsZS5tb2JpbGVBcHAgLT4gc29sU2VydmVyLmFwaSAiQ2FsbHMgQVBJIiAiSFRUUFMvSlNPTiIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMvV3JpdGVzIGV4cGxpY2l0IG1lbW9yeSIgIlNRTCIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IGluZmVyZW5jZVByb3ZpZGVyICJSZXF1ZXN0cyBpbmZlcmVuY2UiICJIVFRQUyIKICAgICAgICBzb2xNb2JpbGUubW9iaWxlQXBwIC0+IG9ic2VydmFiaWxpdHkgIlNlbmRzIGNsaWVudCBlcnJvcnMiICJIVFRQUyIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IG9ic2VydmFiaWxpdHkgIlNlbmRzIHNlcnZlciBlcnJvcnMiICJIVFRQUyIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBzb2xNb2JpbGUgIkMxIiB7CiAgICAgICAgICAgIGluY2x1ZGUgdXNlcgogICAgICAgICAgICBpbmNsdWRlIHNvbE1vYmlsZQogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlcgogICAgICAgICAgICBpbmNsdWRlIGluZmVyZW5jZVByb3ZpZGVyCiAgICAgICAgICAgIGluY2x1ZGUgb2JzZXJ2YWJpbGl0eQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgc29sTW9iaWxlICJDMiIgewogICAgICAgICAgICBpbmNsdWRlIHVzZXIKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUubW9iaWxlQXBwCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgc29sU2VydmVyICJDMyIgewogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIubWVtb3J5RGIKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUubW9iaWxlQXBwCiAgICAgICAgICAgIGluY2x1ZGUgaW5mZXJlbmNlUHJvdmlkZXIKICAgICAgICAgICAgaW5jbHVkZSBvYnNlcnZhYmlsaXR5CiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbXBvbmVudCBzb2xNb2JpbGUubW9iaWxlQXBwICJDNC1Tb2xNb2JpbGUiIHsKICAgICAgICAgICAgaW5jbHVkZSB1c2VyCiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLmF1dGgKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLmNoYXRFbmRwb2ludAogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkucG9saWN5RW5naW5lCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS5yZXRyaWV2YWxTZXJ2aWNlCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS5pbmZlcmVuY2VDbGllbnQKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLm1lbW9yeVNlcnZpY2UKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLnVzYWdlU2VydmljZQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb21wb25lbnQgc29sU2VydmVyLmFwaSAiQzQtU29sU2VydmVyQVBJIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5tZW1vcnlEYgogICAgICAgICAgICBpbmNsdWRlIGluZmVyZW5jZVByb3ZpZGVyCiAgICAgICAgICAgIGluY2x1ZGUgb2JzZXJ2YWJpbGl0eQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBzdHlsZXMgewogICAgICAgICAgICBlbGVtZW50IFBlcnNvbiB7CiAgICAgICAgICAgICAgICBzaGFwZSBQZXJzb24KICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIHNoYXBlIFJvdW5kZWRCb3gKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50IENvbnRhaW5lciB7CiAgICAgICAgICAgICAgICBzaGFwZSBSb3VuZGVkQm94CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCBDb21wb25lbnQgewogICAgICAgICAgICAgICAgc2hhcGUgUm91bmRlZEJveAogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgRGF0YWJhc2UgewogICAgICAgICAgICAgICAgc2hhcGUgQ3lsaW5kZXIKICAgICAgICAgICAgfQogICAgICAgICAgICByZWxhdGlvbnNoaXAgKiB7CiAgICAgICAgICAgICAgICB0aGlja25lc3MgNAogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfSAKfQ=="
+    "structurizr.dsl" : "d29ya3NwYWNlICJTb2xMYWJzSFEiICJTb2xNb2JpbGUgdjAgQzQgZGlhZ3JhbXMiIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewogICAgICAgIHVzZXIgPSBwZXJzb24gIkVuZCBVc2VyIiAiQSBodW1hbiB1c2VyIGludGVyYWN0aW5nIHdpdGggU29sTW9iaWxlIG9uIGEgcGVyc29uYWwgZGV2aWNlLiIKCiAgICAgICAgc29sU2VydmVyID0gc29mdHdhcmVTeXN0ZW0gIlNvbFNlcnZlciIgIkJhY2tlbmQgcG9saWN5L3J1bnRpbWU6IHJvdXRpbmcsIGJ1ZGdldHMsIGRyaWZ0IGNvbnRyb2xzLCBhbmQgZXhwbGljaXQgbWVtb3J5IEFQSXMuIiB7CiAgICAgICAgICAgIG1lbW9yeURiID0gY29udGFpbmVyICJNZW1vcnkgU3RvcmUiICJFeHBsaWNpdCBtZW1vcnkgcGVyc2lzdGVuY2UiICJQb3N0Z3JlU1FMIgogICAgICAgICAgICBhcGkgPSBjb250YWluZXIgIlNvbFNlcnZlciBBUEkiICJDb250YWluZXJpemVkIEFQSSArIHBvbGljeSBlbmZvcmNlbWVudCBsYXllciIgIk5vZGUuanMgLyBIVFRQUyIgewogICAgICAgICAgICAgICAgYXV0aCA9IGNvbXBvbmVudCAiQXV0aE4vQXV0aFoiICJBdXRoZW50aWNhdGlvbiwgYXV0aG9yaXphdGlvbiwgYW5kIHN0ZXAtdXAgaG9va3MgKGZ1dHVyZSkuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIGNoYXRFbmRwb2ludCA9IGNvbXBvbmVudCAiQ2hhdCBFbmRwb2ludCIgIkltcGxlbWVudHMgUE9TVCAvdjEvY2hhdDsgdmFsaWRhdGVzIFBhY2tldC9UcmFuc21pc3Npb24gYW5kIGJ1ZGdldHMuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHBvbGljeUVuZ2luZSA9IGNvbXBvbmVudCAiUG9saWN5IEVuZ2luZSIgIkFwcGxpZXMgcm91dGluZy9idWRnZXRzL2RyaWZ0IGNvbnRyb2xzOyBnYXRlcyBjYWxscyBhbmQgc2hhcGVzIGNvbnRleHQuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHJldHJpZXZhbFNlcnZpY2UgPSBjb21wb25lbnQgIlJldHJpZXZhbCBTZXJ2aWNlIiAiU2VsZWN0cyBtZW1vcnkgc3VtbWFyaWVzIGZvciBpbmplY3Rpb24gKGRvbWFpbi1zY29wZWQsIGNhcHBlZCkuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIGluZmVyZW5jZUNsaWVudCA9IGNvbXBvbmVudCAiSW5mZXJlbmNlIENsaWVudCIgIkNhbGxzIGV4dGVybmFsIExMTSBwcm92aWRlciBhcyBzdGF0ZWxlc3MgaW5mZXJlbmNlLiIgIkhUVFBTIgogICAgICAgICAgICAgICAgbWVtb3J5U2VydmljZSA9IGNvbXBvbmVudCAiTWVtb3J5IFNlcnZpY2UiICJFeHBsaWNpdCBtZW1vcnkgc2F2ZS9saXN0IEFQSXMuIiAiTm9kZS5qcyIKICAgICAgICAgICAgICAgIHVzYWdlU2VydmljZSA9IGNvbXBvbmVudCAiVXNhZ2UgU2VydmljZSIgIlRva2VuL2Nvc3QgYWNjb3VudGluZyBhbmQgZGFpbHkgcm9sbHVwcy4iICJOb2RlLmpzIgoKICAgICAgICAgICAgICAgIGNoYXRFbmRwb2ludCAtPiBhdXRoICJDaGVja3MiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgY2hhdEVuZHBvaW50IC0+IHBvbGljeUVuZ2luZSAiRXZhbHVhdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHBvbGljeUVuZ2luZSAtPiByZXRyaWV2YWxTZXJ2aWNlICJSZXF1ZXN0cyByZXRyaWV2YWwiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgcG9saWN5RW5naW5lIC0+IGluZmVyZW5jZUNsaWVudCAiUmVxdWVzdHMgaW5mZXJlbmNlIiAiSFRUUFMiCiAgICAgICAgICAgICAgICBwb2xpY3lFbmdpbmUgLT4gdXNhZ2VTZXJ2aWNlICJSZWNvcmRzIHVzYWdlIiAiaW4tcHJvYyIKCiAgICAgICAgICAgICAgICBtZW1vcnlTZXJ2aWNlIC0+IGF1dGggIkNoZWNrcyIgImluLXByb2MiCiAgICAgICAgICAgICAgICBtZW1vcnlTZXJ2aWNlIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMvV3JpdGVzIiAiU1FMIgogICAgICAgICAgICAgICAgcmV0cmlldmFsU2VydmljZSAtPiBzb2xTZXJ2ZXIubWVtb3J5RGIgIlJlYWRzIHN1bW1hcmllcyIgIlNRTCIKICAgICAgICAgICAgICAgIHVzYWdlU2VydmljZSAtPiBzb2xTZXJ2ZXIubWVtb3J5RGIgIldyaXRlcyByb2xsdXBzIiAiU1FMIgogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICBzb2xNb2JpbGUgPSBzb2Z0d2FyZVN5c3RlbSAiU29sTW9iaWxlIiAiTmF0aXZlIGlPUyBjbGllbnQgZm9yIGEgcGVyc29uYWwgQUkgb3BlcmF0aW5nIGludGVyZmFjZSB3aXRoIGV4cGxpY2l0IG1lbW9yeSBhbmQgZHJpZnQgY29udHJvbC4iIHsKICAgICAgICAgICAgbW9iaWxlQXBwID0gY29udGFpbmVyICJpT1MgQXBwIiAiTmF0aXZlIGlPUyBjbGllbnQgZm9yIFNvbE1vYmlsZSIgIlN3aWZ0IC8gU3dpZnRVSSIgewogICAgICAgICAgICAgICAgdWlTaGVsbCA9IGNvbXBvbmVudCAiVUkgU2hlbGwiICJUYWJzLCBuYXZpZ2F0aW9uLCBhbmQgdG9wLWxldmVsIHJvdXRpbmcuIiAiU3dpZnRVSSIKICAgICAgICAgICAgICAgIHRocmVhZFN0b3JlID0gY29tcG9uZW50ICJUaHJlYWQgU3RvcmUiICJDcmVhdGVzL2xpc3RzIFRocmVhZHM7IHBpbm5pbmcvVFRMIG1ldGFkYXRhOyBsYXN0LWFjdGl2ZSB0cmFja2luZy4iICJTd2lmdCIKICAgICAgICAgICAgICAgIG1lc3NhZ2VTdG9yZSA9IGNvbXBvbmVudCAiTWVzc2FnZSBTdG9yZSIgIlN0b3JlcyBNZXNzYWdlcyBmb3IgYSBUaHJlYWQ7IGFwcGVuZC9yZWFkL3F1ZXJ5LiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgY2FwdHVyZVByb2Nlc3NvciA9IGNvbXBvbmVudCAiQ2FwdHVyZSBQcm9jZXNzb3IiICJQcm9jZXNzZXMgQ2FwdHVyZXMgKHRyYW5zY3JpYmUvZXh0cmFjdC9mZXRjaCkgYW5kIHVwZGF0ZXMgQ2FwdHVyZSByZWNvcmRzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgYW5jaG9yU3RvcmUgPSBjb21wb25lbnQgIkFuY2hvciBTdG9yZSIgIlN0b3JlcyBBbmNob3JzIHRoYXQgcmVmZXJlbmNlIE1lc3NhZ2VzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgY2hlY2twb2ludFN0b3JlID0gY29tcG9uZW50ICJDaGVja3BvaW50IFN0b3JlIiAiU3RvcmVzIENoZWNrcG9pbnRzIChjYXBzdWxlcykgZm9yIFRocmVhZHMuIiAiU3dpZnQiCiAgICAgICAgICAgICAgICB0cmFuc21pc3Npb25TdG9yZSA9IGNvbXBvbmVudCAiVHJhbnNtaXNzaW9uIFN0b3JlIiAiT2ZmbGluZS1maXJzdCBUcmFuc21pc3Npb24gc3RvcmUgcXVldWU7IHJldHJ5IHZpYSBEZWxpdmVyeUF0dGVtcHRzLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgc29sU2VydmVyQ2xpZW50ID0gY29tcG9uZW50ICJTb2xTZXJ2ZXIgQ2xpZW50IiAiSFRUUCBjbGllbnQgZm9yIFNvbFNlcnZlciAoL3YxL2NoYXQsIC92MS9tZW1vcmllcywgL3YxL3VzYWdlKS4iICJIVFRQUy9KU09OIgogICAgICAgICAgICAgICAgcHJlZmVyZW5jZXNTdG9yZSA9IGNvbXBvbmVudCAiUHJlZmVyZW5jZXMgU3RvcmUiICJVc2VyIFByZWZlcmVuY2VzIChidWRnZXRzL3RvZ2dsZXMpLiIgIlN3aWZ0IgogICAgICAgICAgICAgICAgZW52aXJvbm1lbnQgPSBjb21wb25lbnQgIkVudmlyb25tZW50IiAiUnVudGltZSBjb25maWd1cmF0aW9uIChlbmRwb2ludHMsIGJ1aWxkIGZsYWdzLCBkaWFnbm9zdGljcykuIiAiU3dpZnQiCgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiB0aHJlYWRTdG9yZSAiUmVhZHMvd3JpdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHVpU2hlbGwgLT4gbWVzc2FnZVN0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBhbmNob3JTdG9yZSAiUmVhZHMvd3JpdGVzIiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHVpU2hlbGwgLT4gY2hlY2twb2ludFN0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBwcmVmZXJlbmNlc1N0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICAgICAgdWlTaGVsbCAtPiBlbnZpcm9ubWVudCAiUmVhZHMiICJpbi1wcm9jIgoKICAgICAgICAgICAgICAgIG1lc3NhZ2VTdG9yZSAtPiBjYXB0dXJlUHJvY2Vzc29yICJQcm9jZXNzZXMgcGVuZGluZyBDYXB0dXJlcyIgImluLXByb2MiCiAgICAgICAgICAgICAgICBtZXNzYWdlU3RvcmUgLT4gdHJhbnNtaXNzaW9uU3RvcmUgIkVucXVldWUgVHJhbnNtaXNzaW9uICsgUGFja2V0IiAiaW4tcHJvYyIKICAgICAgICAgICAgICAgIHRyYW5zbWlzc2lvblN0b3JlIC0+IHNvbFNlcnZlckNsaWVudCAiU2VuZHMgVHJhbnNtaXNzaW9ucyIgImluLXByb2MiCiAgICAgICAgICAgICAgICBzb2xTZXJ2ZXJDbGllbnQgLT4gbWVzc2FnZVN0b3JlICJBcHBlbmRzIGFzc2lzdGFudCBNZXNzYWdlIiAiaW4tcHJvYyIKCiAgICAgICAgICAgICAgICBzb2xTZXJ2ZXJDbGllbnQgLT4gc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQgIkNhbGxzIC92MS9jaGF0IiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgICAgIHNvbFNlcnZlckNsaWVudCAtPiBzb2xTZXJ2ZXIuYXBpLm1lbW9yeVNlcnZpY2UgIkNhbGxzIC92MS9tZW1vcmllcyIgIkhUVFBTL0pTT04iCiAgICAgICAgICAgICAgICBzb2xTZXJ2ZXJDbGllbnQgLT4gc29sU2VydmVyLmFwaS51c2FnZVNlcnZpY2UgIkNhbGxzIC92MS91c2FnZSIgIkhUVFBTL0pTT04iCiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIHNvbFNlcnZlci5hcGkuY2hhdEVuZHBvaW50IC0+IHNvbE1vYmlsZS5tb2JpbGVBcHAuc29sU2VydmVyQ2xpZW50ICJSZXNwb25kcyIgIkhUVFBTL0pTT04iCgogICAgICAgIGluZmVyZW5jZVByb3ZpZGVyID0gc29mdHdhcmVTeXN0ZW0gIkluZmVyZW5jZSBQcm92aWRlciIgIkV4dGVybmFsIG1hbmFnZWQgTExNIHNlcnZpY2UgdXNlZCBhcyBhIHN0YXRlbGVzcyByZWFzb25pbmcgZW5naW5lLiIKICAgICAgICBvYnNlcnZhYmlsaXR5ID0gc29mdHdhcmVTeXN0ZW0gIk9ic2VydmFiaWxpdHkiICJFcnJvciB0cmFja2luZyBhbmQgb3B0aW9uYWwgdHJhY2luZyBmb3IgY2xpZW50IGFuZCBzZXJ2ZXIuIgoKICAgICAgICB1c2VyIC0+IHNvbE1vYmlsZSAiVXNlcyIgIkhUVFBTIgogICAgICAgIHVzZXIgLT4gc29sTW9iaWxlLm1vYmlsZUFwcC51aVNoZWxsICJJbnRlcmFjdHMgd2l0aCBVSSIgImlPUyBUb3VjaCBJbnRlcmZhY2UiCgogICAgICAgIHNvbE1vYmlsZS5tb2JpbGVBcHAgLT4gc29sU2VydmVyLmFwaSAiQ2FsbHMgQVBJIiAiSFRUUFMvSlNPTiIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMvV3JpdGVzIGV4cGxpY2l0IG1lbW9yeSIgIlNRTCIKICAgICAgICBzb2xTZXJ2ZXIuYXBpIC0+IGluZmVyZW5jZVByb3ZpZGVyICJSZXF1ZXN0cyBpbmZlcmVuY2UiICJIVFRQUyIKICAgICAgICBzb2xTZXJ2ZXIuYXBpLmluZmVyZW5jZUNsaWVudCAtPiBpbmZlcmVuY2VQcm92aWRlciAiUmVxdWVzdHMgaW5mZXJlbmNlIiAiSFRUUFMiCiAgICAgICAgc29sTW9iaWxlLm1vYmlsZUFwcCAtPiBvYnNlcnZhYmlsaXR5ICJTZW5kcyBjbGllbnQgZXJyb3JzIiAiSFRUUFMiCiAgICAgICAgc29sU2VydmVyLmFwaSAtPiBvYnNlcnZhYmlsaXR5ICJTZW5kcyBzZXJ2ZXIgZXJyb3JzIiAiSFRUUFMiCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgc29sTW9iaWxlICJDMSIgewogICAgICAgICAgICBpbmNsdWRlIHVzZXIKICAgICAgICAgICAgaW5jbHVkZSBzb2xNb2JpbGUKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIKICAgICAgICAgICAgaW5jbHVkZSBpbmZlcmVuY2VQcm92aWRlcgogICAgICAgICAgICBpbmNsdWRlIG9ic2VydmFiaWxpdHkKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIHNvbE1vYmlsZSAiQzIiIHsKICAgICAgICAgICAgaW5jbHVkZSB1c2VyCiAgICAgICAgICAgIGluY2x1ZGUgc29sTW9iaWxlLm1vYmlsZUFwcAogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlcgogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIHNvbFNlcnZlciAiQzMiIHsKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLm1lbW9yeURiCiAgICAgICAgICAgIGluY2x1ZGUgc29sTW9iaWxlCiAgICAgICAgICAgIGluY2x1ZGUgc29sTW9iaWxlLm1vYmlsZUFwcAogICAgICAgICAgICBpbmNsdWRlIGluZmVyZW5jZVByb3ZpZGVyCiAgICAgICAgICAgIGluY2x1ZGUgb2JzZXJ2YWJpbGl0eQogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb21wb25lbnQgc29sTW9iaWxlLm1vYmlsZUFwcCAiQzQtU29sTW9iaWxlIiB7CiAgICAgICAgICAgIGluY2x1ZGUgdXNlcgogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS5hdXRoCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIuYXBpLnBvbGljeUVuZ2luZQogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkucmV0cmlldmFsU2VydmljZQogICAgICAgICAgICBpbmNsdWRlIHNvbFNlcnZlci5hcGkuaW5mZXJlbmNlQ2xpZW50CiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS5tZW1vcnlTZXJ2aWNlCiAgICAgICAgICAgIGluY2x1ZGUgc29sU2VydmVyLmFwaS51c2FnZVNlcnZpY2UKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgY29tcG9uZW50IHNvbFNlcnZlci5hcGkgIkM0LVNvbFNlcnZlckFQSSIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgaW5jbHVkZSBzb2xTZXJ2ZXIubWVtb3J5RGIKICAgICAgICAgICAgaW5jbHVkZSBpbmZlcmVuY2VQcm92aWRlcgogICAgICAgICAgICBpbmNsdWRlIG9ic2VydmFiaWxpdHkKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBzb2xNb2JpbGUubW9iaWxlQXBwICJEMS1DaGF0VHVybiIgewogICAgICAgICAgICB0aXRsZSAiQ2hhdCB0dXJuOiBQYWNrZXQg4oaSIE1vZGVEZWNpc2lvbiDihpIgUHJvbXB0IOKGkiBJbmZlcmVuY2UiCiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJDbGllbnQgY3JlYXRlcyBhIE1lc3NhZ2UsIGVucXVldWVzIGEgVHJhbnNtaXNzaW9uK1BhY2tldCwgc2VuZHMgL3YxL2NoYXQsIHNlcnZlciBhcHBsaWVzIGNvbnRyb2wgcGxhbmUgKG1vZGUrZ2F0ZXMpLCBtYXkgcmVhZC93cml0ZSBleHBsaWNpdCBtZW1vcnksIGNhbGxzIGluZmVyZW5jZSwgYW5kIHJldHVybnMgYW4gYXNzaXN0YW50IG1lc3NhZ2UuIgoKICAgICAgICAgICAgdXNlciAtPiBzb2xNb2JpbGUubW9iaWxlQXBwLnVpU2hlbGwgIkludGVyYWN0cyB3aXRoIFVJIiAiaU9TIFRvdWNoIEludGVyZmFjZSIKICAgICAgICAgICAgc29sTW9iaWxlLm1vYmlsZUFwcC51aVNoZWxsIC0+IHNvbE1vYmlsZS5tb2JpbGVBcHAubWVzc2FnZVN0b3JlICJSZWFkcy93cml0ZXMiICJpbi1wcm9jIgogICAgICAgICAgICBzb2xNb2JpbGUubW9iaWxlQXBwLm1lc3NhZ2VTdG9yZSAtPiBzb2xNb2JpbGUubW9iaWxlQXBwLnRyYW5zbWlzc2lvblN0b3JlICJFbnF1ZXVlIFRyYW5zbWlzc2lvbiArIFBhY2tldCIgImluLXByb2MiCiAgICAgICAgICAgIHNvbE1vYmlsZS5tb2JpbGVBcHAudHJhbnNtaXNzaW9uU3RvcmUgLT4gc29sTW9iaWxlLm1vYmlsZUFwcC5zb2xTZXJ2ZXJDbGllbnQgIlNlbmRzIFRyYW5zbWlzc2lvbnMiICJpbi1wcm9jIgogICAgICAgICAgICBzb2xNb2JpbGUubW9iaWxlQXBwLnNvbFNlcnZlckNsaWVudCAtPiBzb2xTZXJ2ZXIuYXBpLmNoYXRFbmRwb2ludCAiQ2FsbHMgL3YxL2NoYXQiICJIVFRQUy9KU09OIgoKICAgICAgICAgICAgc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQgLT4gc29sU2VydmVyLmFwaS5wb2xpY3lFbmdpbmUgIkV2YWx1YXRlcyIgImluLXByb2MiCiAgICAgICAgICAgIHNvbFNlcnZlci5hcGkucG9saWN5RW5naW5lIC0+IHNvbFNlcnZlci5hcGkucmV0cmlldmFsU2VydmljZSAiUmVxdWVzdHMgcmV0cmlldmFsIiAiaW4tcHJvYyIKICAgICAgICAgICAgc29sU2VydmVyLmFwaS5yZXRyaWV2YWxTZXJ2aWNlIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiUmVhZHMgc3VtbWFyaWVzIiAiU1FMIgoKICAgICAgICAgICAgc29sU2VydmVyLmFwaS5wb2xpY3lFbmdpbmUgLT4gc29sU2VydmVyLmFwaS5pbmZlcmVuY2VDbGllbnQgIlJlcXVlc3RzIGluZmVyZW5jZSIgIkhUVFBTIgogICAgICAgICAgICBzb2xTZXJ2ZXIuYXBpLmluZmVyZW5jZUNsaWVudCAtPiBpbmZlcmVuY2VQcm92aWRlciAiUmVxdWVzdHMgaW5mZXJlbmNlIiAiSFRUUFMiCgogICAgICAgICAgICBzb2xTZXJ2ZXIuYXBpLnBvbGljeUVuZ2luZSAtPiBzb2xTZXJ2ZXIuYXBpLnVzYWdlU2VydmljZSAiUmVjb3JkcyB1c2FnZSIgImluLXByb2MiCiAgICAgICAgICAgIHNvbFNlcnZlci5hcGkudXNhZ2VTZXJ2aWNlIC0+IHNvbFNlcnZlci5tZW1vcnlEYiAiV3JpdGVzIHJvbGx1cHMiICJTUUwiCgogICAgICAgICAgICBzb2xTZXJ2ZXIuYXBpLmNoYXRFbmRwb2ludCAtPiBzb2xNb2JpbGUubW9iaWxlQXBwLnNvbFNlcnZlckNsaWVudCAiUmVzcG9uZHMiICJIVFRQUy9KU09OIgoKICAgICAgICAgICAgc29sTW9iaWxlLm1vYmlsZUFwcC5zb2xTZXJ2ZXJDbGllbnQgLT4gc29sTW9iaWxlLm1vYmlsZUFwcC5tZXNzYWdlU3RvcmUgIkFwcGVuZHMgYXNzaXN0YW50IE1lc3NhZ2UiICJpbi1wcm9jIgoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBzb2xNb2JpbGUubW9iaWxlQXBwICJEMi1UcmFuc21pc3Npb25SZXRyeSIgewogICAgICAgICAgICB0aXRsZSAiVHJhbnNtaXNzaW9uIHJldHJ5OiBEZWxpdmVyeUF0dGVtcHRzIgogICAgICAgICAgICBkZXNjcmlwdGlvbiAiVHJhbnNtaXNzaW9uIFN0b3JlIHJldHJpZXMgc2VuZGluZyBhIFRyYW5zbWlzc2lvbjsgZWFjaCBzZW5kIGF0dGVtcHQgaXMgcmVjb3JkZWQgYXMgYSBEZWxpdmVyeUF0dGVtcHQgKG1vZGVsZWQgYXMgaW50ZXJuYWwgc3RhdGUpLiByZXF1ZXN0SWQgcHJvdmlkZXMgaWRlbXBvdGVuY3kgc2VydmVyLXNpZGUuIgoKICAgICAgICAgICAgc29sTW9iaWxlLm1vYmlsZUFwcC50cmFuc21pc3Npb25TdG9yZSAtPiBzb2xNb2JpbGUubW9iaWxlQXBwLnNvbFNlcnZlckNsaWVudCAiU2VuZHMgVHJhbnNtaXNzaW9ucyIgImluLXByb2MiCiAgICAgICAgICAgIHNvbE1vYmlsZS5tb2JpbGVBcHAuc29sU2VydmVyQ2xpZW50IC0+IHNvbFNlcnZlci5hcGkuY2hhdEVuZHBvaW50ICJDYWxscyAvdjEvY2hhdCIgIkhUVFBTL0pTT04iCiAgICAgICAgICAgIHNvbFNlcnZlci5hcGkuY2hhdEVuZHBvaW50IC0+IHNvbE1vYmlsZS5tb2JpbGVBcHAuc29sU2VydmVyQ2xpZW50ICJSZXNwb25kcyIgIkhUVFBTL0pTT04iCgogICAgICAgICAgICBzb2xNb2JpbGUubW9iaWxlQXBwLnRyYW5zbWlzc2lvblN0b3JlIC0+IHNvbE1vYmlsZS5tb2JpbGVBcHAuc29sU2VydmVyQ2xpZW50ICJTZW5kcyBUcmFuc21pc3Npb25zIiAiaW4tcHJvYyIKICAgICAgICAgICAgc29sTW9iaWxlLm1vYmlsZUFwcC5zb2xTZXJ2ZXJDbGllbnQgLT4gc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQgIkNhbGxzIC92MS9jaGF0IiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQgLT4gc29sTW9iaWxlLm1vYmlsZUFwcC5zb2xTZXJ2ZXJDbGllbnQgIlJlc3BvbmRzIiAiSFRUUFMvSlNPTiIKCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGR5bmFtaWMgc29sTW9iaWxlLm1vYmlsZUFwcCAiRDMtU2VsZWN0b3JFc2NhbGF0aW9uIiB7CiAgICAgICAgICAgIHRpdGxlICJTZWxlY3RvciBlc2NhbGF0aW9uOiBhbWJpZ3VvdXMgcm91dGluZyIKICAgICAgICAgICAgZGVzY3JpcHRpb24gIldoZW4gZGV0ZXJtaW5pc3RpYyByb3V0aW5nIGlzIGxvdy1jb25maWRlbmNlLCBTb2xTZXJ2ZXIgcGVyZm9ybXMgYW4gZXh0cmEgaW5mZXJlbmNlIHBhc3MgdG8gc2VsZWN0IE1vZGVEZWNpc2lvbiBiZWZvcmUgZ2VuZXJhdGluZyB0aGUgZmluYWwgYXNzaXN0YW50IHJlc3BvbnNlLiAoVHdvIGluZmVyZW5jZSBjYWxscyBzaG93biBpbiBvcmRlci4pIgoKICAgICAgICAgICAgc29sTW9iaWxlLm1vYmlsZUFwcC5zb2xTZXJ2ZXJDbGllbnQgLT4gc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQgIkNhbGxzIC92MS9jaGF0IiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQgLT4gc29sU2VydmVyLmFwaS5wb2xpY3lFbmdpbmUgIkV2YWx1YXRlcyIgImluLXByb2MiCgogICAgICAgICAgICBzb2xTZXJ2ZXIuYXBpLnBvbGljeUVuZ2luZSAtPiBzb2xTZXJ2ZXIuYXBpLmluZmVyZW5jZUNsaWVudCAiUmVxdWVzdHMgaW5mZXJlbmNlIiAiSFRUUFMiCiAgICAgICAgICAgIHNvbFNlcnZlci5hcGkuaW5mZXJlbmNlQ2xpZW50IC0+IGluZmVyZW5jZVByb3ZpZGVyICJSZXF1ZXN0cyBpbmZlcmVuY2UiICJIVFRQUyIKCiAgICAgICAgICAgIHNvbFNlcnZlci5hcGkucG9saWN5RW5naW5lIC0+IHNvbFNlcnZlci5hcGkuaW5mZXJlbmNlQ2xpZW50ICJSZXF1ZXN0cyBpbmZlcmVuY2UiICJIVFRQUyIKICAgICAgICAgICAgc29sU2VydmVyLmFwaS5pbmZlcmVuY2VDbGllbnQgLT4gaW5mZXJlbmNlUHJvdmlkZXIgIlJlcXVlc3RzIGluZmVyZW5jZSIgIkhUVFBTIgoKICAgICAgICAgICAgc29sU2VydmVyLmFwaS5jaGF0RW5kcG9pbnQgLT4gc29sTW9iaWxlLm1vYmlsZUFwcC5zb2xTZXJ2ZXJDbGllbnQgIlJlc3BvbmRzIiAiSFRUUFMvSlNPTiIKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgc3R5bGVzIHsKICAgICAgICAgICAgZWxlbWVudCBQZXJzb24gewogICAgICAgICAgICAgICAgc2hhcGUgUGVyc29uCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiU29mdHdhcmUgU3lzdGVtIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBSb3VuZGVkQm94CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCBDb250YWluZXIgewogICAgICAgICAgICAgICAgc2hhcGUgUm91bmRlZEJveAogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgQ29tcG9uZW50IHsKICAgICAgICAgICAgICAgIHNoYXBlIFJvdW5kZWRCb3gKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50IERhdGFiYXNlIHsKICAgICAgICAgICAgICAgIHNoYXBlIEN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICAgICAgcmVsYXRpb25zaGlwICogewogICAgICAgICAgICAgICAgdGhpY2tuZXNzIDQKICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0gCn0="
   },
   "views" : {
     "componentViews" : [ {
@@ -593,57 +685,57 @@
       },
       "containerId" : "23",
       "dimensions" : {
-        "height" : 5052,
-        "width" : 2430
+        "height" : 3938,
+        "width" : 4550
       },
       "elements" : [ {
         "id" : "1",
-        "x" : 264,
-        "y" : 4412
+        "x" : 200,
+        "y" : 1649
       }, {
         "id" : "2",
-        "x" : 1739,
-        "y" : 4412
+        "x" : 3900,
+        "y" : 2374
       }, {
         "id" : "24",
-        "x" : 239,
-        "y" : 1700
+        "x" : 900,
+        "y" : 1699
       }, {
         "id" : "25",
-        "x" : 989,
-        "y" : 3200
+        "x" : 1650,
+        "y" : 3199
       }, {
         "id" : "26",
-        "x" : 989,
-        "y" : 2600
+        "x" : 1650,
+        "y" : 2599
       }, {
         "id" : "27",
-        "x" : 1739,
-        "y" : 2600
+        "x" : 2400,
+        "y" : 3199
       }, {
         "id" : "28",
-        "x" : 989,
-        "y" : 2000
+        "x" : 1650,
+        "y" : 1999
       }, {
         "id" : "29",
-        "x" : 989,
-        "y" : 1400
+        "x" : 1650,
+        "y" : 1399
       }, {
         "id" : "30",
-        "x" : 239,
-        "y" : 3800
+        "x" : 2400,
+        "y" : 2599
       }, {
         "id" : "31",
-        "x" : 989,
-        "y" : 3800
+        "x" : 3150,
+        "y" : 2374
       }, {
         "id" : "32",
-        "x" : 989,
-        "y" : 800
+        "x" : 1650,
+        "y" : 799
       }, {
         "id" : "33",
-        "x" : 989,
-        "y" : 200
+        "x" : 1650,
+        "y" : 199
       } ],
       "externalContainerBoundariesVisible" : false,
       "key" : "C4-SolMobile",
@@ -652,8 +744,8 @@
       "relationships" : [ {
         "id" : "34",
         "vertices" : [ {
-          "x" : 989,
-          "y" : 3050
+          "x" : 1650,
+          "y" : 3049
         } ]
       }, {
         "id" : "35"
@@ -666,19 +758,42 @@
       }, {
         "id" : "39",
         "vertices" : [ {
-          "x" : 989,
-          "y" : 650
+          "x" : 1650,
+          "y" : 649
         } ]
       }, {
         "id" : "40"
       }, {
         "id" : "41"
       }, {
-        "id" : "44"
+        "id" : "42"
+      }, {
+        "id" : "43",
+        "vertices" : [ {
+          "x" : 2850,
+          "y" : 2449
+        }, {
+          "x" : 2400,
+          "y" : 2449
+        } ]
+      }, {
+        "id" : "46",
+        "vertices" : [ {
+          "x" : 3750,
+          "y" : 2674
+        } ]
+      }, {
+        "id" : "65",
+        "vertices" : [ {
+          "x" : 3750,
+          "y" : 2374
+        } ]
+      }, {
+        "id" : "71"
       } ]
     }, {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -687,50 +802,54 @@
         "vertices" : false
       },
       "containerId" : "4",
+      "dimensions" : {
+        "height" : 3329,
+        "width" : 3870
+      },
       "elements" : [ {
         "id" : "3",
-        "x" : 0,
-        "y" : 0
+        "x" : 3200,
+        "y" : 977
       }, {
         "id" : "5",
-        "x" : 0,
-        "y" : 0
+        "x" : 1700,
+        "y" : 977
       }, {
         "id" : "6",
-        "x" : 0,
-        "y" : 0
+        "x" : 950,
+        "y" : 1577
       }, {
         "id" : "7",
-        "x" : 0,
-        "y" : 0
+        "x" : 1700,
+        "y" : 1577
       }, {
         "id" : "8",
-        "x" : 0,
-        "y" : 0
+        "x" : 2450,
+        "y" : 977
       }, {
         "id" : "9",
-        "x" : 0,
-        "y" : 0
+        "x" : 2450,
+        "y" : 1577
       }, {
         "id" : "10",
-        "x" : 0,
-        "y" : 0
+        "x" : 950,
+        "y" : 977
       }, {
         "id" : "11",
-        "x" : 0,
-        "y" : 0
+        "x" : 2450,
+        "y" : 2177
       }, {
         "id" : "22",
-        "x" : 0,
-        "y" : 0
+        "x" : 200,
+        "y" : 1277
       }, {
-        "id" : "57",
-        "x" : 0,
-        "y" : 0
+        "id" : "68",
+        "x" : 3200,
+        "y" : 2789
       }, {
-        "id" : "58",
-        "x" : 0,
-        "y" : 0
+        "id" : "69",
+        "x" : 950,
+        "y" : 160
       } ],
       "externalContainerBoundariesVisible" : false,
       "key" : "C4-SolServerAPI",
@@ -749,24 +868,62 @@
       }, {
         "id" : "17"
       }, {
-        "id" : "18"
+        "id" : "18",
+        "vertices" : [ {
+          "x" : 1700,
+          "y" : 827
+        }, {
+          "x" : 3004,
+          "y" : 827
+        } ]
       }, {
         "id" : "20"
       }, {
-        "id" : "21"
+        "id" : "21",
+        "vertices" : [ {
+          "x" : 3004,
+          "y" : 2027
+        } ]
       }, {
-        "id" : "48"
+        "id" : "50",
+        "vertices" : [ {
+          "x" : 744,
+          "y" : 1716
+        } ]
       }, {
-        "id" : "53"
+        "id" : "55"
       }, {
-        "id" : "56"
+        "id" : "58",
+        "vertices" : [ {
+          "x" : 742,
+          "y" : 2027
+        } ]
       }, {
-        "id" : "66"
+        "id" : "61",
+        "vertices" : [ {
+          "x" : 855,
+          "y" : 1437
+        } ]
+      }, {
+        "id" : "77",
+        "vertices" : [ {
+          "x" : 3004,
+          "y" : 2027
+        }, {
+          "x" : 3200,
+          "y" : 2760
+        } ]
+      }, {
+        "id" : "79",
+        "vertices" : [ {
+          "x" : 742,
+          "y" : 798
+        } ]
       } ]
     } ],
     "configuration" : {
       "branding" : { },
-      "lastSavedView" : "C4-SolMobile",
+      "lastSavedView" : "D3-SelectorEscalation",
       "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
@@ -794,7 +951,7 @@
     },
     "containerViews" : [ {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -802,32 +959,46 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "dimensions" : {
+        "height" : 1400,
+        "width" : 1620
+      },
       "elements" : [ {
         "id" : "1",
-        "x" : 0,
-        "y" : 0
+        "x" : 224,
+        "y" : 159
       }, {
         "id" : "2",
-        "x" : 0,
-        "y" : 0
+        "x" : 199,
+        "y" : 859
       }, {
         "id" : "23",
-        "x" : 0,
-        "y" : 0
+        "x" : 949,
+        "y" : 534
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "C2",
       "name" : "Container View: SolMobile",
       "order" : 2,
       "relationships" : [ {
-        "id" : "47"
+        "id" : "49",
+        "vertices" : [ {
+          "x" : 739,
+          "y" : 708
+        } ]
       }, {
-        "id" : "60"
+        "id" : "66",
+        "vertices" : [ {
+          "x" : 858,
+          "y" : 984
+        } ]
+      }, {
+        "id" : "72"
       } ],
       "softwareSystemId" : "22"
     }, {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -835,49 +1006,77 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "dimensions" : {
+        "height" : 1900,
+        "width" : 1640
+      },
       "elements" : [ {
         "id" : "3",
-        "x" : 0,
-        "y" : 0
+        "x" : 969,
+        "y" : 759
       }, {
         "id" : "4",
-        "x" : 0,
-        "y" : 0
+        "x" : 219,
+        "y" : 759
       }, {
         "id" : "22",
-        "x" : 0,
-        "y" : 0
+        "x" : 219,
+        "y" : 159
       }, {
-        "id" : "57",
-        "x" : 0,
-        "y" : 0
+        "id" : "68",
+        "x" : 969,
+        "y" : 1359
       }, {
-        "id" : "58",
-        "x" : 0,
-        "y" : 0
+        "id" : "69",
+        "x" : 969,
+        "y" : 159
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "C3",
       "name" : "Container View: SolServer",
       "order" : 3,
       "relationships" : [ {
-        "id" : "19"
+        "id" : "19",
+        "vertices" : [ {
+          "x" : 819,
+          "y" : 1059
+        } ]
       }, {
-        "id" : "49"
+        "id" : "51",
+        "vertices" : [ {
+          "x" : 444,
+          "y" : 509
+        }, {
+          "x" : 444,
+          "y" : 709
+        } ]
       }, {
-        "id" : "62"
+        "id" : "64",
+        "vertices" : [ {
+          "x" : 444,
+          "y" : 709
+        }, {
+          "x" : 444,
+          "y" : 509
+        } ]
       }, {
-        "id" : "63"
+        "id" : "74",
+        "vertices" : [ {
+          "x" : 819,
+          "y" : 759
+        } ]
       }, {
-        "id" : "66"
+        "id" : "75"
       }, {
-        "id" : "67"
+        "id" : "79"
+      }, {
+        "id" : "80"
       } ],
       "softwareSystemId" : "2"
     } ],
-    "systemContextViews" : [ {
+    "dynamicViews" : [ {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -885,41 +1084,411 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "description" : "Client creates a Message, enqueues a Transmission+Packet, sends /v1/chat, server applies control plane (mode+gates), may read/write explicit memory, calls inference, and returns an assistant message.",
+      "dimensions" : {
+        "height" : 2552,
+        "width" : 6970
+      },
+      "elementId" : "23",
       "elements" : [ {
         "id" : "1",
-        "x" : 0,
-        "y" : 0
+        "x" : 199,
+        "y" : 732
+      }, {
+        "id" : "3",
+        "x" : 6299,
+        "y" : 482
+      }, {
+        "id" : "6",
+        "x" : 4049,
+        "y" : 782
+      }, {
+        "id" : "7",
+        "x" : 4799,
+        "y" : 782
+      }, {
+        "id" : "8",
+        "x" : 5549,
+        "y" : 782
+      }, {
+        "id" : "9",
+        "x" : 5549,
+        "y" : 1382
+      }, {
+        "id" : "11",
+        "x" : 5549,
+        "y" : 182
+      }, {
+        "id" : "24",
+        "x" : 899,
+        "y" : 782
+      }, {
+        "id" : "26",
+        "x" : 1649,
+        "y" : 782
+      }, {
+        "id" : "30",
+        "x" : 2399,
+        "y" : 936
+      }, {
+        "id" : "31",
+        "x" : 3149,
+        "y" : 782
+      }, {
+        "id" : "68",
+        "x" : 6299,
+        "y" : 1994
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "D1-ChatTurn",
+      "name" : "Dynamic View: SolMobile - iOS App",
+      "order" : 6,
+      "relationships" : [ {
+        "description" : "Interacts with UI",
+        "id" : "71",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "Reads/writes",
+        "id" : "35",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "Enqueue Transmission + Packet",
+        "id" : "41",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "Sends Transmissions",
+        "id" : "42",
+        "order" : "4",
+        "response" : false
+      }, {
+        "description" : "Calls /v1/chat",
+        "id" : "44",
+        "order" : "5",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 3824,
+          "y" : 1082
+        } ]
+      }, {
+        "description" : "Evaluates",
+        "id" : "13",
+        "order" : "6",
+        "response" : false
+      }, {
+        "description" : "Requests retrieval",
+        "id" : "14",
+        "order" : "7",
+        "response" : false
+      }, {
+        "description" : "Reads summaries",
+        "id" : "20",
+        "order" : "8",
+        "response" : false
+      }, {
+        "description" : "Requests inference",
+        "id" : "15",
+        "order" : "9",
+        "response" : false
+      }, {
+        "description" : "Requests inference",
+        "id" : "77",
+        "order" : "10",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 6299,
+          "y" : 1965
+        } ]
+      }, {
+        "description" : "Records usage",
+        "id" : "16",
+        "order" : "11",
+        "response" : false
+      }, {
+        "description" : "Writes rollups",
+        "id" : "21",
+        "order" : "12",
+        "response" : false
+      }, {
+        "description" : "Responds",
+        "id" : "59",
+        "order" : "13",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 3824,
+          "y" : 782
+        } ]
+      }, {
+        "description" : "Appends assistant Message",
+        "id" : "43",
+        "order" : "14",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2849,
+          "y" : 786
+        }, {
+          "x" : 2399,
+          "y" : 786
+        } ]
+      } ],
+      "title" : "Chat turn: Packet → ModeDecision → Prompt → Inference"
+    }, {
+      "automaticLayout" : {
+        "applied" : true,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "description" : "Transmission Store retries sending a Transmission; each send attempt is recorded as a DeliveryAttempt (modeled as internal state). requestId provides idempotency server-side.",
+      "dimensions" : {
+        "height" : 1075,
+        "width" : 2580
+      },
+      "elementId" : "23",
+      "elements" : [ {
+        "id" : "6",
+        "x" : 1889,
+        "y" : 320
+      }, {
+        "id" : "30",
+        "x" : 239,
+        "y" : 320
+      }, {
+        "id" : "31",
+        "x" : 989,
+        "y" : 320
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "D2-TransmissionRetry",
+      "name" : "Dynamic View: SolMobile - iOS App",
+      "order" : 7,
+      "relationships" : [ {
+        "description" : "Sends Transmissions",
+        "id" : "42",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 839,
+          "y" : 620
+        } ]
+      }, {
+        "description" : "Calls /v1/chat",
+        "id" : "44",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1664,
+          "y" : 620
+        } ]
+      }, {
+        "description" : "Responds",
+        "id" : "59",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1664,
+          "y" : 320
+        } ]
+      }, {
+        "description" : "Sends Transmissions",
+        "id" : "42",
+        "order" : "4",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 839,
+          "y" : 320
+        } ]
+      }, {
+        "description" : "Calls /v1/chat",
+        "id" : "44",
+        "order" : "5",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1664,
+          "y" : 770
+        } ]
+      }, {
+        "description" : "Responds",
+        "id" : "59",
+        "order" : "6",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1664,
+          "y" : 170
+        } ]
+      } ],
+      "title" : "Transmission retry: DeliveryAttempts"
+    }, {
+      "automaticLayout" : {
+        "applied" : true,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "description" : "When deterministic routing is low-confidence, SolServer performs an extra inference pass to select ModeDecision before generating the final assistant response. (Two inference calls shown in order.)",
+      "dimensions" : {
+        "height" : 940,
+        "width" : 4040
+      },
+      "elementId" : "23",
+      "elements" : [ {
+        "id" : "6",
+        "x" : 1139,
+        "y" : 185
+      }, {
+        "id" : "7",
+        "x" : 1889,
+        "y" : 185
+      }, {
+        "id" : "9",
+        "x" : 2639,
+        "y" : 185
+      }, {
+        "id" : "31",
+        "x" : 239,
+        "y" : 185
+      }, {
+        "id" : "68",
+        "x" : 3389,
+        "y" : 185
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "D3-SelectorEscalation",
+      "name" : "Dynamic View: SolMobile - iOS App",
+      "order" : 8,
+      "relationships" : [ {
+        "description" : "Calls /v1/chat",
+        "id" : "44",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 914,
+          "y" : 485
+        } ]
+      }, {
+        "description" : "Evaluates",
+        "id" : "13",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "Requests inference",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2489,
+          "y" : 485
+        } ]
+      }, {
+        "description" : "Requests inference",
+        "id" : "77",
+        "order" : "4",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 3239,
+          "y" : 485
+        } ]
+      }, {
+        "description" : "Requests inference",
+        "id" : "15",
+        "order" : "5",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2489,
+          "y" : 185
+        } ]
+      }, {
+        "description" : "Requests inference",
+        "id" : "77",
+        "order" : "6",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 3239,
+          "y" : 185
+        } ]
+      }, {
+        "description" : "Responds",
+        "id" : "59",
+        "order" : "7",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 914,
+          "y" : 185
+        } ]
+      } ],
+      "title" : "Selector escalation: ambiguous routing"
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "applied" : true,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "dimensions" : {
+        "height" : 1350,
+        "width" : 3050
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 200,
+        "y" : 160
       }, {
         "id" : "2",
-        "x" : 0,
-        "y" : 0
+        "x" : 1650,
+        "y" : 210
       }, {
         "id" : "22",
-        "x" : 0,
-        "y" : 0
+        "x" : 900,
+        "y" : 210
       }, {
-        "id" : "57",
-        "x" : 0,
-        "y" : 0
+        "id" : "68",
+        "x" : 2400,
+        "y" : 210
       }, {
-        "id" : "58",
-        "x" : 0,
-        "y" : 0
+        "id" : "69",
+        "x" : 2400,
+        "y" : 810
       } ],
       "enterpriseBoundaryVisible" : true,
       "key" : "C1",
       "name" : "System Context View: SolMobile",
       "order" : 1,
       "relationships" : [ {
-        "id" : "50"
+        "id" : "52",
+        "vertices" : [ {
+          "x" : 1500,
+          "y" : 510
+        } ]
       }, {
-        "id" : "59"
+        "id" : "67",
+        "vertices" : [ {
+          "x" : 1500,
+          "y" : 210
+        } ]
       }, {
-        "id" : "64"
+        "id" : "70"
       }, {
-        "id" : "66"
+        "id" : "76"
       }, {
-        "id" : "68"
+        "id" : "79",
+        "vertices" : [ {
+          "x" : 1650,
+          "y" : 660
+        } ]
+      }, {
+        "id" : "81"
       } ],
       "softwareSystemId" : "22"
     } ]

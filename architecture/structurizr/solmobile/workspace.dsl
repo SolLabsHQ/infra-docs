@@ -50,7 +50,9 @@ workspace "SolLabsHQ" "SolMobile v0 C4 diagrams" {
                 uiShell -> environment "Reads" "in-proc"
 
                 messageStore -> captureProcessor "Processes pending Captures" "in-proc"
+                messageStore -> transmissionStore "Enqueue Transmission + Packet" "in-proc"
                 transmissionStore -> solServerClient "Sends Transmissions" "in-proc"
+                solServerClient -> messageStore "Appends assistant Message" "in-proc"
 
                 solServerClient -> solServer.api.chatEndpoint "Calls /v1/chat" "HTTPS/JSON"
                 solServerClient -> solServer.api.memoryService "Calls /v1/memories" "HTTPS/JSON"
@@ -58,15 +60,18 @@ workspace "SolLabsHQ" "SolMobile v0 C4 diagrams" {
             }
         }
 
+        solServer.api.chatEndpoint -> solMobile.mobileApp.solServerClient "Responds" "HTTPS/JSON"
+
         inferenceProvider = softwareSystem "Inference Provider" "External managed LLM service used as a stateless reasoning engine."
         observability = softwareSystem "Observability" "Error tracking and optional tracing for client and server."
 
         user -> solMobile "Uses" "HTTPS"
-        user -> solMobile.mobileApp "Interacts with UI" "iOS Touch Interface"
+        user -> solMobile.mobileApp.uiShell "Interacts with UI" "iOS Touch Interface"
 
         solMobile.mobileApp -> solServer.api "Calls API" "HTTPS/JSON"
         solServer.api -> solServer.memoryDb "Reads/Writes explicit memory" "SQL"
         solServer.api -> inferenceProvider "Requests inference" "HTTPS"
+        solServer.api.inferenceClient -> inferenceProvider "Requests inference" "HTTPS"
         solMobile.mobileApp -> observability "Sends client errors" "HTTPS"
         solServer.api -> observability "Sends server errors" "HTTPS"
     }
@@ -118,6 +123,65 @@ workspace "SolLabsHQ" "SolMobile v0 C4 diagrams" {
             include solServer.memoryDb
             include inferenceProvider
             include observability
+            autolayout lr
+        }
+
+        dynamic solMobile.mobileApp "D1-ChatTurn" {
+            title "Chat turn: Packet → ModeDecision → Prompt → Inference"
+            description "Client creates a Message, enqueues a Transmission+Packet, sends /v1/chat, server applies control plane (mode+gates), may read/write explicit memory, calls inference, and returns an assistant message."
+
+            user -> solMobile.mobileApp.uiShell "Interacts with UI" "iOS Touch Interface"
+            solMobile.mobileApp.uiShell -> solMobile.mobileApp.messageStore "Reads/writes" "in-proc"
+            solMobile.mobileApp.messageStore -> solMobile.mobileApp.transmissionStore "Enqueue Transmission + Packet" "in-proc"
+            solMobile.mobileApp.transmissionStore -> solMobile.mobileApp.solServerClient "Sends Transmissions" "in-proc"
+            solMobile.mobileApp.solServerClient -> solServer.api.chatEndpoint "Calls /v1/chat" "HTTPS/JSON"
+
+            solServer.api.chatEndpoint -> solServer.api.policyEngine "Evaluates" "in-proc"
+            solServer.api.policyEngine -> solServer.api.retrievalService "Requests retrieval" "in-proc"
+            solServer.api.retrievalService -> solServer.memoryDb "Reads summaries" "SQL"
+
+            solServer.api.policyEngine -> solServer.api.inferenceClient "Requests inference" "HTTPS"
+            solServer.api.inferenceClient -> inferenceProvider "Requests inference" "HTTPS"
+
+            solServer.api.policyEngine -> solServer.api.usageService "Records usage" "in-proc"
+            solServer.api.usageService -> solServer.memoryDb "Writes rollups" "SQL"
+
+            solServer.api.chatEndpoint -> solMobile.mobileApp.solServerClient "Responds" "HTTPS/JSON"
+
+            solMobile.mobileApp.solServerClient -> solMobile.mobileApp.messageStore "Appends assistant Message" "in-proc"
+
+            autolayout lr
+        }
+
+        dynamic solMobile.mobileApp "D2-TransmissionRetry" {
+            title "Transmission retry: DeliveryAttempts"
+            description "Transmission Store retries sending a Transmission; each send attempt is recorded as a DeliveryAttempt (modeled as internal state). requestId provides idempotency server-side."
+
+            solMobile.mobileApp.transmissionStore -> solMobile.mobileApp.solServerClient "Sends Transmissions" "in-proc"
+            solMobile.mobileApp.solServerClient -> solServer.api.chatEndpoint "Calls /v1/chat" "HTTPS/JSON"
+            solServer.api.chatEndpoint -> solMobile.mobileApp.solServerClient "Responds" "HTTPS/JSON"
+
+            solMobile.mobileApp.transmissionStore -> solMobile.mobileApp.solServerClient "Sends Transmissions" "in-proc"
+            solMobile.mobileApp.solServerClient -> solServer.api.chatEndpoint "Calls /v1/chat" "HTTPS/JSON"
+            solServer.api.chatEndpoint -> solMobile.mobileApp.solServerClient "Responds" "HTTPS/JSON"
+
+            autolayout lr
+        }
+
+        dynamic solMobile.mobileApp "D3-SelectorEscalation" {
+            title "Selector escalation: ambiguous routing"
+            description "When deterministic routing is low-confidence, SolServer performs an extra inference pass to select ModeDecision before generating the final assistant response. (Two inference calls shown in order.)"
+
+            solMobile.mobileApp.solServerClient -> solServer.api.chatEndpoint "Calls /v1/chat" "HTTPS/JSON"
+            solServer.api.chatEndpoint -> solServer.api.policyEngine "Evaluates" "in-proc"
+
+            solServer.api.policyEngine -> solServer.api.inferenceClient "Requests inference" "HTTPS"
+            solServer.api.inferenceClient -> inferenceProvider "Requests inference" "HTTPS"
+
+            solServer.api.policyEngine -> solServer.api.inferenceClient "Requests inference" "HTTPS"
+            solServer.api.inferenceClient -> inferenceProvider "Requests inference" "HTTPS"
+
+            solServer.api.chatEndpoint -> solMobile.mobileApp.solServerClient "Responds" "HTTPS/JSON"
             autolayout lr
         }
 
