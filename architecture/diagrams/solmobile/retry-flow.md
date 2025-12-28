@@ -58,7 +58,7 @@ flowchart TD
   B --> C[retryFailed]
   C --> D[Clear lastError]
   D --> E[tx.status = queued]
-  E --> F[processOutbox()]
+  E --> F[processOutbox]
 
   F --> G[send or poll]
   G --> H{Result}

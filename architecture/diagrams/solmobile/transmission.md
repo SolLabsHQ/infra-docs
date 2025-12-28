@@ -129,9 +129,9 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-  A[ThreadDetailView.send(text)] --> B[TransmissionActions.enqueueChat]
+  A[ThreadDetailView send text] --> B[TransmissionActions enqueueChat]
   B --> C[Create Packet + Transmission status=queued]
-  C --> D[TransmissionActions.processQueue]
+  C --> D[TransmissionActions processQueue]
   D --> E{fetchNextQueuedSelection?}
   E -- none --> Z[Exit: nothing queued]
   E -- tx --> F[tx.status = sending]
