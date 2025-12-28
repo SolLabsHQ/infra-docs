@@ -132,39 +132,28 @@ flowchart TD
   A[ThreadDetailView send text] --> B[TransmissionActions enqueueChat]
   B --> C[Create Packet + Transmission status=queued]
   C --> D[TransmissionActions processQueue]
-  D --> E fetchNextQueuedSelection?
+
+  D --> E{Fetch next queued?}
   E -- none --> Z[Exit: nothing queued]
-  E -- tx --> F[tx.status = sending]
+  E -- tx --> F[Set tx status=sending]
 
-  F --> G handlePendingPollIfNeeded?
-  last attempt pending + transmissionId
-  G -- yes --> H[transport.poll transmissionId
-  GET /v1/transmissions/id]
-  H --> I pending?
-  I -- yes --> C2[tx.status = queued
-  (wait; retry later)]
-  I -- no --> J[append assistant message
-   tx.status = succeeded]
+  F --> G{Last attempt pending + has transmissionId?}
+  G -- yes --> H[Poll transmissionId<br/>GET /v1/transmissions/id]
+  H --> I{Pending?}
+  I -- yes --> C2[Set tx status=queued<br/>wait then retry]
+  I -- no --> J[Append assistant message<br/>Set tx status=succeeded]
 
-  G -- no --> K terminal conditions?
-  maxAttempts / pending TTL
-  K -- yes --> L[tx.status = failed]
-  K -- no --> M respect backoff?
+  G -- no --> K{Terminal conditions?}
+  K -- yes --> L[Set tx status=failed]
+  K -- no --> M{Respect backoff?}
   M -- yes --> C2
-  M -- no --> N[transport.send(envelope)
-  POST /v1/chat]
+  M -- no --> N[Send envelope<br/>POST /v1/chat]
 
-  N --> O response.pending OR HTTP 202?
-  O -- yes --> P[record attempt=pending
-  store transmissionId
-  apply draft memento
-   tx.status=queued]
-  O -- no --> Q HTTP 200?
-  Q -- yes --> R[record attempt=succeeded
-  append assistant msg
-   tx.status=succeeded]
-  Q -- no --> S[record attempt=failed
-   tx.status=failed]
+  N --> O{Pending or HTTP 202?}
+  O -- yes --> P[Record attempt=pending<br/>Store transmissionId<br/>Apply draft memento<br/>Set tx status=queued]
+  O -- no --> Q{HTTP 200?}
+  Q -- yes --> R[Record attempt=succeeded<br/>Append assistant msg<br/>Set tx status=succeeded]
+  Q -- no --> S[Record attempt=failed<br/>Set tx status=failed]
 ```
 
 ---
