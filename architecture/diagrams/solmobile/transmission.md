@@ -61,11 +61,11 @@ sequenceDiagram
   autonumber
   participant U as User
   participant TDV as ThreadDetailView
-  participant TA as TransmissionActions (@MainActor)
-  participant SD as SwiftData (ModelContext)
-  participant TX as Transmission (@Model)
+  participant TA as TransmissionActions MainActor
+  participant SD as SwiftData / ModelContext
+  participant TX as Transmission @Model
   participant P as Packet
-  participant T as ChatTransport (SolServerClient)
+  participant T as ChatTransport / SolServerClient
   participant SV as SolServer
 
   U->>TDV: Tap Send(text)
@@ -130,19 +130,19 @@ sequenceDiagram
 ```mermaid
 flowchart TD
   A[ThreadDetailView.send(text)] --> B[TransmissionActions.enqueueChat]
-  B --> C[Create Packet + Transmission(status=queued)]
-  C --> D[TransmissionActions.processQueue()]
+  B --> C[Create Packet + Transmission status=queued]
+  C --> D[TransmissionActions.processQueue]
   D --> E{fetchNextQueuedSelection?}
   E -- none --> Z[Exit: nothing queued]
   E -- tx --> F[tx.status = sending]
 
-  F --> G{handlePendingPollIfNeeded?\n(last attempt pending + transmissionId)}
-  G -- yes --> H[transport.poll(transmissionId)\nGET /v1/transmissions/{id}]
+  F --> G{handlePendingPollIfNeeded?\nlast attempt pending + transmissionId}
+  G -- yes --> H[transport.poll transmissionId\nGET /v1/transmissions/{id}]
   H --> I{pending?}
   I -- yes --> C2[tx.status = queued\n(wait; retry later)]
   I -- no --> J[append assistant message\n tx.status = succeeded]
 
-  G -- no --> K{terminal conditions?\n(maxAttempts / pending TTL)}
+  G -- no --> K{terminal conditions?\nmaxAttempts / pending TTL}
   K -- yes --> L[tx.status = failed]
   K -- no --> M{respect backoff?}
   M -- yes --> C2

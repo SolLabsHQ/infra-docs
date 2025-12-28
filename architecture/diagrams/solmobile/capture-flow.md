@@ -9,8 +9,8 @@ sequenceDiagram
   autonumber
   participant U as User
   participant TDV as ThreadDetailView
-  participant SD as SwiftData (ModelContext)
-  participant MSG as Message (@Model)
+  participant SD as SwiftData / ModelContext
+  participant MSG as Message @Model
   participant TA as TransmissionActions
   participant PK as Packet
   participant TX as Transmission
@@ -35,11 +35,11 @@ sequenceDiagram
 ```mermaid
 flowchart TD
   A[User types message] --> B[Tap Send]
-  B --> C[Create Message (SwiftData)]
+  B --> C[Create Message - SwiftData]
   C --> D[Append to Thread]
   D --> E[Save local state]
   E --> F[enqueueChat()]
   F --> G[Create Packet]
-  G --> H[Create Transmission(status=queued)]
+  G --> H[Create Transmission: status=queued]
   H --> I[processOutbox()]
 ```

@@ -55,7 +55,7 @@ sequenceDiagram
 ```mermaid
 flowchart TD
   A[Transmission failed] --> B[User taps Retry]
-  B --> C[retryFailed()]
+  B --> C[retryFailed]
   C --> D[Clear lastError]
   D --> E[tx.status = queued]
   E --> F[processOutbox()]
