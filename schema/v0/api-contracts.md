@@ -11,18 +11,25 @@ All persistence is explicit and user initiated.
 
 ### Budgets
 Each chat request includes explicit budget caps:
-- max input tokens
-- max output tokens
-- retrieval item limits
+- max_input_tokens
+- max_output_tokens
+- max_regenerations
+- max_tool_steps (optional; future)
+- retrieval limits (max_items, per_item_max_summary_tokens)
 
 Budgets are enforced server-side.
 
 ### Context Strategy
 Chat requests provide:
-- pinned context reference (id, version, hash)
-- capsule summary (client-maintained)
-- capped recent history
+- pinned context reference (id, version, hash) — **mounted law** (stable, versioned). Sent as `packet.pinned_context_ref`.
+- capsule summary — **per-thread runtime** summary (client-maintained; human-readable)
+- Conversation Fact Block (CFB Nav) — **local session navigation state** (UI/controller; not sent to SolServer)
+- Conversation Fact Block (CFB Inference) — **thin model payload** (only what reduces drift)
+- capped recent history window (bounded)
 - retrieval configuration
+- optional checkpoint references (v0 optional)
+
+SolServer owns mode selection and rigor gating; the client does not select personas.
 
 ---
 
@@ -32,23 +39,41 @@ Chat requests provide:
 Perform inference for a user message with bounded context and optional retrieval summaries.
 
 ### Request (conceptual)
-- request_id
-- user/device identifiers (v0 minimal)
-- thread_id, message_id
-- mode (sole/sherlock/watson or equivalent)
-- context:
+- request_id (idempotency key)
+- user_id / device_id (v0 minimal)
+- thread_id
+- user_message_id (or message_id)
+- packet:
+  - packet_id
+  - packet_type: "chat"
+  - message_ids[] (bounded)
+  - checkpoint_ids[] (optional)
   - pinned_context_ref { id, version, hash }
-  - domain_scope
+  - retrieval_config { domain_scope, max_items, per_item_max_summary_tokens }
+- context:
   - capsule_summary
+  - cfb_inference (optional):
+    - primary_arc
+    - decisions[]
+    - next[]
+    - scope_guard (optional):
+      - avoid_topics[]
   - history[] (capped)
-  - retrieval_config { max_items, max_summary_tokens }
 - input_text
-- budgets { max_input_tokens, max_output_tokens }
+- budgets { max_input_tokens, max_output_tokens, max_regenerations }
+
+Notes:
+- The client does not select personas/modes. SolServer returns the mode used in `audit` (optional).
+- `request_id` MUST be stable across retries to support idempotency.
+- `packet.pinned_context_ref` is the stable, versioned “mounted law”; `context` holds per-thread runtime deltas (capsule/cfb_inference/history).
+- CFB Nav is a richer local-only object used for UI/session navigation and is intentionally not part of the API surface.
 
 ### Response (conceptual)
 - request_id
-- output_text
-- retrieved_memories_used[]:
+- assistant_message:
+  - message_id
+  - output_text
+- retrieved_memories_used[] (summaries only):
   - memory_id
   - domain
   - title
@@ -57,10 +82,29 @@ Perform inference for a user message with bounded context and optional retrieval
   - input_tokens
   - output_tokens
   - total_tokens
+  - latency_ms
   - estimated_cost (optional)
-- audit:
-  - pinned_context_hash
-  - policy_version (optional)
+- audit (optional; enable for debug/internals):
+  - pinned_context_ref_used { id, version, hash }
+  - policy_version
+  - mode_label_used
+  - rigor_gates_enabled[]
+  - regen_count
+  - linter_flags[] (optional)
+
+---
+
+## Error Model (v0)
+
+All endpoints return a consistent error shape.
+
+### Error Response (conceptual)
+- request_id (if available)
+- error:
+  - code (stable string)
+  - message
+  - retryable (boolean)
+  - details (optional)
 
 ---
 
