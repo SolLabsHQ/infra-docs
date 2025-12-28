@@ -38,8 +38,8 @@ flowchart TD
   B --> C[Create Message - SwiftData]
   C --> D[Append to Thread]
   D --> E[Save local state]
-  E --> F[enqueueChat()]
+  E --> F[enqueueChat]
   F --> G[Create Packet]
   G --> H[Create Transmission: status=queued]
-  H --> I[processOutbox()]
+  H --> I[processOutbox]
 ```
