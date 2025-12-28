@@ -1,3 +1,10 @@
+# Retry Flow (SolMobile) — v0.1
+
+**Purpose:** Document the user-driven retry path for a failed `Transmission` so UI, outbox processing, and server outcomes are captured in a drift-resistant way.
+
+## Mermaid (Sequence) — failed → retry → queued → send → pending/success/failure
+
+```mermaid
 sequenceDiagram
   autonumber
   participant U as User
@@ -41,8 +48,12 @@ sequenceDiagram
   end
 
   TA->>SD: Save
+```
 
-  flowchart TD
+## Mermaid (Flowchart) — status transitions
+
+```mermaid
+flowchart TD
   A[Transmission failed] --> B[User taps Retry]
   B --> C[retryFailed()]
   C --> D[Clear lastError]
@@ -54,3 +65,4 @@ sequenceDiagram
   H -- success --> I[tx.status = succeeded]
   H -- pending --> J[tx.status = queued]
   H -- failure --> K[tx.status = failed]
+```
