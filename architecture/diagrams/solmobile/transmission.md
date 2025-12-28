@@ -132,27 +132,39 @@ flowchart TD
   A[ThreadDetailView send text] --> B[TransmissionActions enqueueChat]
   B --> C[Create Packet + Transmission status=queued]
   C --> D[TransmissionActions processQueue]
-  D --> E{fetchNextQueuedSelection?}
+  D --> E fetchNextQueuedSelection?
   E -- none --> Z[Exit: nothing queued]
   E -- tx --> F[tx.status = sending]
 
-  F --> G{handlePendingPollIfNeeded?\nlast attempt pending + transmissionId}
-  G -- yes --> H[transport.poll transmissionId\nGET /v1/transmissions/{id}]
-  H --> I{pending?}
-  I -- yes --> C2[tx.status = queued\n(wait; retry later)]
-  I -- no --> J[append assistant message\n tx.status = succeeded]
+  F --> G handlePendingPollIfNeeded?
+  last attempt pending + transmissionId
+  G -- yes --> H[transport.poll transmissionId
+  GET /v1/transmissions/id]
+  H --> I pending?
+  I -- yes --> C2[tx.status = queued
+  (wait; retry later)]
+  I -- no --> J[append assistant message
+   tx.status = succeeded]
 
-  G -- no --> K{terminal conditions?\nmaxAttempts / pending TTL}
+  G -- no --> K terminal conditions?
+  maxAttempts / pending TTL
   K -- yes --> L[tx.status = failed]
-  K -- no --> M{respect backoff?}
+  K -- no --> M respect backoff?
   M -- yes --> C2
-  M -- no --> N[transport.send(envelope)\nPOST /v1/chat]
+  M -- no --> N[transport.send(envelope)
+  POST /v1/chat]
 
-  N --> O{response.pending OR HTTP 202?}
-  O -- yes --> P[record attempt=pending\nstore transmissionId\napply draft memento\n tx.status=queued]
-  O -- no --> Q{HTTP 200?}
-  Q -- yes --> R[record attempt=succeeded\nappend assistant msg\n tx.status=succeeded]
-  Q -- no --> S[record attempt=failed\n tx.status=failed]
+  N --> O response.pending OR HTTP 202?
+  O -- yes --> P[record attempt=pending
+  store transmissionId
+  apply draft memento
+   tx.status=queued]
+  O -- no --> Q HTTP 200?
+  Q -- yes --> R[record attempt=succeeded
+  append assistant msg
+   tx.status=succeeded]
+  Q -- no --> S[record attempt=failed
+   tx.status=failed]
 ```
 
 ---
