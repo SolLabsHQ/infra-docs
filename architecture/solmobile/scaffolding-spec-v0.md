@@ -158,15 +158,21 @@ Encapsulated payload for a Transmission (extensible).
 
 ## Relationships (Cardinality)
 - `User 1—1 Preferences`
-- `User 1—* Thread`
-- `Thread 1—* Message`
+- `User 1—0..* Thread`
+- `Thread 1—0..* Message`
 - `Message 0..* Capture`
+- `Message 0..* Anchor`
 - `Anchor 1—1 Message`
 - `Thread 0..* Checkpoint`
 - `Checkpoint 1—1 Thread`
-- `Anchor 0..1 — 1 Checkpoint`
+- `Checkpoint 0..* Anchor`
+- `Anchor 0..1—1 Checkpoint`
 - `Transmission 1—1 Packet`
 - `Transmission 0..* DeliveryAttempt`
+- `DeliveryAttempt 1—1 Transmission`
+
+> Anchors are a projection layer over Messages; Messages are the primary timeline.
+
 
 ---
 
