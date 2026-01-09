@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/journal_offer_event.schema.json",
+  "title": "JournalOfferEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "event_type", "ts", "thread_id", "moment_id", "evidence_span"],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "journal_offer_shown",
+        "journal_offer_accepted",
+        "journal_offer_declined",
+        "journal_offer_muted_or_tuned",
+        "journal_draft_generated",
+        "journal_entry_saved",
+        "journal_entry_edited_before_save"
+      ]
+    },
+
+    "ts": { "type": "string", "format": "date-time" },
+
+    "thread_id": { "type": "string", "minLength": 1 },
+    "moment_id": { "type": "string", "minLength": 1 },
+
+    "evidence_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_message_id", "end_message_id"],
+      "properties": {
+        "start_message_id": { "type": "string", "minLength": 1 },
+        "end_message_id": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "phase_at_offer": {
+      "type": "string",
+      "enum": ["rising", "peak", "downshift", "settled"]
+    },
+
+    "mode_selected": {
+      "type": "string",
+      "enum": ["verbatim", "assist"]
+    },
+
+    "user_action": {
+      "type": "string",
+      "enum": ["save", "edit", "not_now", "disable_or_tune"]
+    },
+
+    "cooldown_active": { "type": "boolean" },
+
+    "latency_ms": { "type": "integer", "minimum": 0 },
+
+    "refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpb_id": { "type": "string", "minLength": 1 },
+        "draft_id": { "type": "string", "minLength": 1 },
+        "entry_id": { "type": "string", "minLength": 1 },
+        "request_id": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "tuning": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "new_cooldown_minutes": { "type": "integer", "minimum": 0, "maximum": 1440 },
+        "avoid_peak_overwhelm": { "type": "boolean" },
+        "offers_enabled": { "type": "boolean" }
+      }
+    }
+  }
+}

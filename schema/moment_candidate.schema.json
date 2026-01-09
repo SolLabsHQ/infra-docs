@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/moment_candidate.schema.json",
+  "title": "MomentCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["moment_id", "thread_id", "moment_type", "phase", "confidence", "evidence_span"],
+  "properties": {
+    "moment_id": { "type": "string", "minLength": 1 },
+    "thread_id": { "type": "string", "minLength": 1 },
+    "moment_type": {
+      "type": "string",
+      "enum": ["fun", "insight", "decision", "overwhelm", "gratitude"]
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["rising", "peak", "downshift", "settled"]
+    },
+    "confidence": { "type": "string", "enum": ["low", "med", "high"] },
+    "evidence_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_message_id", "end_message_id"],
+      "properties": {
+        "start_message_id": { "type": "string", "minLength": 1 },
+        "end_message_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "why": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 100 },
+      "default": []
+    }
+  }
+}

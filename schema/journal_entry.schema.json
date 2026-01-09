@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/journal_entry.schema.json",
+  "title": "JournalEntry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entry_id", "created_ts", "title", "body", "tags", "source_span", "draft_meta"],
+  "properties": {
+    "entry_id": { "type": "string", "minLength": 1 },
+    "created_ts": { "type": "string", "format": "date-time" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "body": { "type": "string", "minLength": 1, "maxLength": 20000 },
+    "tags": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Tag" },
+      "default": []
+    },
+    "source_span": { "$ref": "#/$defs/SourceSpan" },
+    "draft_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["assist", "verbatim"] },
+        "cpb_id": { "type": "string", "minLength": 1 },
+        "draft_id": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "Tag": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\- ]*$"
+    },
+    "SourceSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["thread_id", "start_message_id", "end_message_id"],
+      "properties": {
+        "thread_id": { "type": "string", "minLength": 1 },
+        "start_message_id": { "type": "string", "minLength": 1 },
+        "end_message_id": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
