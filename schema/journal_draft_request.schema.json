@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/journal_draft_request.schema.json",
+  "title": "JournalDraftRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "thread_id", "mode", "evidence_span"],
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1 },
+    "thread_id": { "type": "string", "minLength": 1 },
+    "mode": { "type": "string", "enum": ["verbatim", "assist"] },
+    "evidence_span": { "$ref": "#/$defs/EvidenceSpan" },
+    "cpb_refs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/CpbRef" },
+      "default": []
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_lines": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "include_tags_suggested": { "type": "boolean", "default": true }
+      }
+    }
+  },
+  "$defs": {
+    "EvidenceSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_message_id", "end_message_id"],
+      "properties": {
+        "start_message_id": { "type": "string", "minLength": 1 },
+        "end_message_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "CpbRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpb_id"],
+      "properties": {
+        "cpb_id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "enum": ["journalStyle"] }
+      }
+    }
+  }
+}

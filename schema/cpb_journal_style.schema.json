@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/cpb_journal_style.schema.json",
+  "title": "ConversationPreferenceBlock_journalStyle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cpb_id", "type", "trust_tier", "created_ts", "updated_ts", "settings"],
+  "properties": {
+    "cpb_id": { "type": "string", "minLength": 1 },
+    "type": { "const": "journalStyle" },
+    "trust_tier": { "type": "string", "enum": ["authoritative"] },
+    "created_ts": { "type": "string", "format": "date-time" },
+    "updated_ts": { "type": "string", "format": "date-time" },
+    "source_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "default": []
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_mode", "max_lines_default", "tone_notes", "offer_timing", "offer_frequency"],
+      "properties": {
+        "default_mode": { "type": "string", "enum": ["assist", "verbatim"] },
+        "max_lines_default": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "title_style": { "type": "string", "enum": ["short", "descriptive"], "default": "short" },
+        "tone_notes": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "offer_timing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["avoid_peak_overwhelm"],
+          "properties": {
+            "avoid_peak_overwhelm": { "type": "boolean", "default": true }
+          }
+        },
+        "offer_frequency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cooldown_minutes"],
+          "properties": {
+            "cooldown_minutes": { "type": "integer", "minimum": 0, "maximum": 1440 }
+          }
+        }
+      }
+    }
+  }
+}

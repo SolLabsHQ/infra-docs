@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/journal_draft_envelope.schema.json",
+  "title": "JournalDraftEnvelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "draft_id", "thread_id", "mode", "title", "body", "source_span", "meta"],
+  "properties": {
+    "type": { "const": "JournalDraftEnvelope" },
+    "draft_id": { "type": "string", "minLength": 1 },
+    "thread_id": { "type": "string", "minLength": 1 },
+    "mode": { "type": "string", "enum": ["verbatim", "assist"] },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "body": { "type": "string", "minLength": 1, "maxLength": 20000 },
+    "tags_suggested": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Tag" },
+      "default": []
+    },
+    "source_span": { "$ref": "#/$defs/SourceSpan" },
+    "meta": { "$ref": "#/$defs/DraftMeta" }
+  },
+  "$defs": {
+    "Tag": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\- ]*$"
+    },
+    "SourceSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["thread_id", "start_message_id", "end_message_id"],
+      "properties": {
+        "thread_id": { "type": "string", "minLength": 1 },
+        "start_message_id": { "type": "string", "minLength": 1 },
+        "end_message_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "DraftMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["used_cpb_ids", "assumptions", "unknowns", "evidence_binding"],
+      "properties": {
+        "used_cpb_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "default": []
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Note" },
+          "default": []
+        },
+        "unknowns": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Note" },
+          "default": []
+        },
+        "evidence_binding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_span", "non_invention"],
+          "properties": {
+            "source_span": { "$ref": "#/$defs/SourceSpan" },
+            "non_invention": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "Note": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      }
+    }
+  }
+}
