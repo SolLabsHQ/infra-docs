@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/trace_event.schema.json",
+  "title": "TraceEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trace_event_id",
+    "trace_run_id",
+    "ts",
+    "actor",
+    "phase",
+    "status"
+  ],
+  "properties": {
+    "trace_event_id": { "type": "string", "minLength": 1 },
+    "trace_run_id": { "type": "string", "minLength": 1 },
+
+    "thread_id": { "type": "string" },
+    "request_id": { "type": "string" },
+    "message_id": { "type": "string" },
+
+    "ts": { "type": "string", "format": "date-time" },
+
+    "actor": {
+      "type": "string",
+      "enum": ["solmobile", "solserver", "model", "renderer", "user"]
+    },
+
+    "phase": {
+      "type": "string",
+      "enum": [
+        "normalize",
+        "modality_gate",
+        "intent_gate",
+        "risk_gate",
+        "enrichment_lattice",
+        "policy_engine",
+        "compose_request",
+        "model_call",
+        "output_gates",
+        "render",
+        "breakpoint",
+        "export",
+        "error"
+      ]
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["started", "completed", "paused", "blocked", "failed"]
+    },
+
+    "summary": { "type": "string" },
+
+    "gate_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "signals": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evidence_pack_id": { "type": "string" },
+        "used_cfb_ids": { "type": "array", "items": { "type": "string" } },
+        "used_evidence_span_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "driver_blocks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "driver_block_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "version": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "driver_block_inline_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "breakpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "breakpoint_id": { "type": "string" },
+        "proposed_action": { "type": "string" },
+        "reversible_note": { "type": "string" },
+        "user_decision": {
+          "type": "string",
+          "enum": ["approve", "edit", "deny", "none"]
+        }
+      }
+    },
+
+    "model_usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "input_tokens": { "type": "integer", "minimum": 0 },
+        "output_tokens": { "type": "integer", "minimum": 0 },
+        "latency_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/output_envelope.schema.json",
+  "title": "OutputEnvelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["assistant_text", "meta"],
+  "properties": {
+    "assistant_text": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode_label", "used_cfb_ids", "claim_map"],
+      "properties": {
+        "mode_label": { "type": "string" },
+
+        "evidence_pack_id": { "type": "string" },
+        "used_cfb_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "used_evidence_span_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+
+        "claim_map": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "https://sollabshq.com/schemas/claim_map_entry.schema.json" }
+        }
+      }
+    }
+  }
+}
