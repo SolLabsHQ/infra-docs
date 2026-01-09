@@ -84,6 +84,8 @@ Attachment-ish unit owned by a Message.
 - `data?` (derived payload text): transcript, extracted pdf text, OCR results, fetched URL content snippet, etc.
 - `error?`
 
+> Note: These capture types exist in v0 for data-model completeness and UI capture. Downstream processing (upload/transcode/analysis) may be deferred depending on v0 scope.
+
 **Interpretation guidance**
 - `dataDescription` = what the UI shows (“voice note”, “receipt.pdf”, “example.com — Title”)
 - `data` = what downstream processing uses (transcript/extracted text)
@@ -142,7 +144,7 @@ Encapsulated payload for a Transmission (extensible).
 - `threadId`
 - `messageIds[]`
 - `checkpointIds[]?`
-- `factBlockIds[]?`
+- `factBlockRefs[]?`
 - `budgets?`
 - `contextRefs?` (pinned context ref/version/hash, etc.)
 - `driverBlockRefs[]?` (system/default blocks by `{id, version}`)
@@ -150,6 +152,7 @@ Encapsulated payload for a Transmission (extensible).
 - `payload` (opaque JSON/text blob if needed)
 
 > This keeps Transmission stable while Packet evolves.
+> `factBlockRefs` are references (id/version/hash) to server-side Fact Blocks; `inline` Fact Blocks are not supported in v0.
 
 ---
 
@@ -159,6 +162,7 @@ Encapsulated payload for a Transmission (extensible).
 - `Thread 1—* Message`
 - `Message 0..* Capture`
 - `Anchor 1—1 Message`
+- `Thread 0..* Checkpoint`
 - `Checkpoint 1—1 Thread`
 - `Anchor 0..1 — 1 Checkpoint`
 - `Transmission 1—1 Packet`
