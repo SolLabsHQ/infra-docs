@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sollabshq.com/schemas/v0/claim_support.schema.json",
+  "$id": "https://sollabshq.com/schema/v0/claim_support.schema.json",
   "title": "ClaimSupport",
   "type": "object",
   "additionalProperties": false,
