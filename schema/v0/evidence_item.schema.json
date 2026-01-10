@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/evidence_item.schema.json",
+  "title": "EvidenceItem",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_item_id",
+    "evidence_span_id",
+    "doc_id",
+    "source_domain",
+    "source_url",
+    "trust_tier",
+    "policy_compliant",
+    "excerpt"
+  ],
+  "properties": {
+    "evidence_item_id": { "type": "string", "minLength": 1 },
+
+    "doc_id": { "type": "string", "minLength": 1 },
+    "evidence_span_id": { "type": "string", "minLength": 1 },
+
+    "source_url": { "type": "string", "minLength": 1 },
+    "source_domain": { "type": "string", "minLength": 1 },
+
+    "trust_tier": {
+      "type": "string",
+      "enum": ["official", "reputable", "long_tail", "social", "unknown"]
+    },
+
+    "policy_compliant": { "type": "boolean" },
+
+    "retrieved_at": { "type": "string", "format": "date-time" },
+
+    "title": { "type": "string" },
+
+    "excerpt": { "type": "string", "minLength": 1 },
+
+    "score": { "type": "number" },
+
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

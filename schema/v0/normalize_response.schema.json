@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/normalize_response.schema.json",
+  "title": "NormalizeResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "status"],
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1 },
+
+    "status": {
+      "type": "string",
+      "enum": ["ok", "fetch_error", "normalize_error"]
+    },
+
+    "doc": { "$ref": "https://sollabshq.com/schemas/normalized_document.schema.json" },
+
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "ssrf_blocked",
+            "policy_violation",
+            "timeout",
+            "too_large",
+            "http_error",
+            "unsupported_content_type",
+            "parse_failed"
+          ]
+        },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

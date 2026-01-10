@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sollabshq.com/schemas/cpb_journal_style.schema.json",
+  "$id": "https://sollabshq.com/schema/v0/cpb_journal_style.schema.json",
   "title": "ConversationPreferenceBlock_journalStyle",
   "type": "object",
   "additionalProperties": false,

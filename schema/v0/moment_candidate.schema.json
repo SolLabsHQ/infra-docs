@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sollabshq.com/schemas/moment_candidate.schema.json",
+  "$id": "https://sollabshq.com/schemas/v0/moment_candidate.schema.json",
   "title": "MomentCandidate",
   "type": "object",
   "additionalProperties": false,

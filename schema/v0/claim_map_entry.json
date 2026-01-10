@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schema/v0/claim_map_entry.schema.json",
+  "title": "ClaimMapEntry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["claim_id", "claim_text", "support"],
+  "properties": {
+    "claim_id": { "type": "string", "minLength": 1 },
+
+    "claim_text": { "type": "string", "minLength": 1 },
+
+    "claim_kind": {
+      "type": "string",
+      "enum": ["fact", "inference", "recommendation"]
+    },
+
+    "support": {
+      "type": "array",
+      "description": "List of evidence support records for this claim (may be empty when stance is insufficient).",
+      "items": { "$ref": "https://sollabshq.com/schema/v0/claim_support.schema.json" },
+      "default": []
+    },
+
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    }
+  }
+}

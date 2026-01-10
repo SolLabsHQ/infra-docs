@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sollabshq.com/schemas/journal_draft_envelope.schema.json",
+  "$id": "https://sollabshq.com/schemas/v0/journal_draft_envelope.schema.json",
   "title": "JournalDraftEnvelope",
   "type": "object",
   "additionalProperties": false,

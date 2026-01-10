@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schema/v0/claim_support.schema.json",
+  "title": "ClaimSupport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "support_id",
+    "claim_id",
+    "stance",
+    "evidence_item_ids",
+    "evidence_span_ids",
+    "created_at"
+  ],
+  "properties": {
+    "support_id": {
+      "type": "string",
+      "description": "Unique id for this support record (UUID recommended)."
+    },
+    "claim_id": {
+      "type": "string",
+      "description": "The claim being evaluated."
+    },
+    "stance": {
+      "type": "string",
+      "enum": ["supports", "contradicts", "mixed", "insufficient"],
+      "description": "How the evidence relates to the claim."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Confidence in the stance."
+    },
+    "evidence_item_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "EvidenceItem ids used."
+    },
+    "evidence_span_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "EvidenceSpan ids (specific excerpts/locations) used."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Short rationale summary for UI display."
+    },
+    "policy_flags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional flags (e.g. 'needs_citation', 'sensitive', 'requires_breakpoint')."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

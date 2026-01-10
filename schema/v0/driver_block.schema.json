@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schema/v0/driver_block.schema.json",
+  "title": "DriverBlock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "title", "scope", "definition", "approved_at", "source"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Client-generated identifier for the Driver Block (UUID recommended)."
+    },
+    "version": {
+      "type": "string",
+      "description": "Client-managed version label (e.g. '1', '1.0', '2026-01-10')."
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human-readable label."
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["global", "thread"],
+      "description": "Whether this block is applied globally or only within a thread."
+    },
+    "definition": {
+      "type": "string",
+      "description": "Opaque policy text. v0: treated as a bounded input to policy + request composition."
+    },
+    "source": {
+      "type": "string",
+      "enum": ["user_created", "assistant_proposed", "system_shipped"],
+      "description": "Origin classification. Durable blocks are always user-approved."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the user approved this Driver Block."
+    },
+    "thread_id": {
+      "type": "string",
+      "description": "If scope=thread, the associated thread_id."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional user notes or rationale."
+    }
+  }
+}
