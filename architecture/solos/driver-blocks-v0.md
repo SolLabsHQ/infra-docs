@@ -30,9 +30,9 @@ Driver Blocks are policy inputs for SolServer’s Policy Engine. SolMobile’s j
 
 ### D8 — Packet carries Driver Block inputs
 - For each remote chat request, SolMobile includes:
-  - `driverBlockRefs[]` for system defaults (id + version)
-  - `driverBlockInline[]?` for user blocks not resolvable by server in v0
-  - `driverBlockMode?` for audit clarity (`default | custom`)
+  - `driver_block_refs[]` for system defaults (id + version)
+  - `driver_block_inline[]?` for user-approved blocks that must be carried inline in v0 (no server registry)
+  - `driver_block_mode?` for audit clarity (`default | custom`)
 
 ### D9 — Driver Blocks do not require a new UI surface in v0
 - v0 defaults to “system baseline blocks” with zero user configuration required.
@@ -50,7 +50,7 @@ User-owned policy artifact stored locally.
 - `scope`: `system | user`
 - `enabledByDefault` (bool)
 - `createdAt`, `updatedAt`
-- `definition` (opaque text/json blob; schema not enforced in v0)
+- `definition` (opaque text blob; schema not enforced in v0)
 - `tags[]?` (optional: decision, offload, rigor, tone, etc.)
 
 > v0 treats `definition` as opaque. SolServer interprets compiled behavior; SolMobile just stores/selects/transmits.
@@ -66,9 +66,9 @@ User-owned policy artifact stored locally.
   - `inlineBlocks[]?` (custom blocks to include for this thread)
 
 ### Packet (chat additions)
-- `driverBlockMode?`
-- `driverBlockRefs[]?`
-- `driverBlockInline[]?`
+- `driver_block_mode?`
+- `driver_block_refs[]?`
+- `driver_block_inline[]?`
 
 ---
 
@@ -81,14 +81,14 @@ User-owned policy artifact stored locally.
    - messageIds[]
    - budgets?
    - pinnedContextRef?
-   - **driverBlockRefs[]** from Preferences + Thread overrides
-   - **driverBlockInline[]?** if thread uses local-only blocks
+   - **driver_block_refs[]** from Preferences + Thread overrides
+   - **driver_block_inline[]?** if thread uses local-only blocks
 4. SolServer applies Driver Blocks in Policy Engine and returns assistant message (+ optional action hints)
 5. SolMobile appends `Message(assistant)` locally
 
 ### Flow D — Remote chat request (SolServer) (updated)
 1. create `Transmission(chat)` with `Packet` describing thread + message ids + checkpoint/facts refs (if any)
-2. include `driverBlockRefs[]` and optional `driverBlockInline[]`
+2. include `driver_block_refs[]` and optional `driver_block_inline[]`
 3. attempts recorded in `DeliveryAttempt[]`
 4. on success → append `Message(assistant)` with usage metadata
 5. optional: interpret action hints (Anchor/Checkpoint suggestions) as UI prompts (v0.1)
@@ -107,9 +107,18 @@ User-owned policy artifact stored locally.
 - Defer schema formalization; treat Driver Block definitions as opaque blobs until v0 usage proves what needs structure.
 Keep the interaction model simple: “defaults work; customization is optional.”
 
+## Wire format vs local model
+- **Wire format** fields in the Packet use **snake_case** (e.g., `driver_block_refs`) to match the API contract.
+- SolMobile may use camelCase for local Swift types, but must map to the wire keys when constructing the Packet.
+
+## v0 Bounds
+- Max active **user** Driver Blocks per request: **3** (`driver_block_inline` items).
+- Max size per inline block (recommended): **4 KB** of UTF-8 text.
+- Application order: **system defaults** → **user saved (offline)** → **runtime proposed + approved**.
+
 ## Baseline System Driver Blocks (v0)
 
-These are **system-default** Driver Blocks shipped as the baseline behavior. They require **no UI configuration** in v0; SolMobile simply includes their `{id, version}` refs by default in the chat Packet.
+These are **system-default** Driver Blocks shipped as the baseline behavior. They require **no UI configuration** in v0; SolMobile simply includes their `{id, version}` refs by default in the chat Packet as `driver_block_refs[]`.
 
 ### DB-001 — NoAuthorityDrift (v0)
 **Intent:** Prevent capability/authority laundering and maintain trust boundaries.  
