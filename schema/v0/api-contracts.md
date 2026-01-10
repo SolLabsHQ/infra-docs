@@ -38,6 +38,7 @@ Trace is **always on** for `/v1/chat`.
 - Trace retention is client-local until thread TTL cleanup (v0).
 
 > Note: “trace events” are an event stream; the canonical schema lives in `schema/v0/trace_event.schema.json`.
+> Note: Inline Driver Blocks use `schema/v0/driver_block.schema.json` (v0 minimal; definition text is treated as opaque policy input).
 
 ---
 
@@ -57,7 +58,9 @@ Perform inference for a user message with bounded context and optional retrieval
   - message_ids[] (bounded)
   - checkpoint_ids[] (optional)
   - pinned_context_ref { id, version, hash }
-  - driver_block_refs[] (optional; user-approved refs `{id, version}`)
+  - driver_block_mode (optional): default | custom
+  - driver_block_refs[] (optional; refs `{id, version}` for shipped system defaults)
+  - driver_block_inline[] (optional; user-approved blocks carried inline in v0; no server registry)
   - trace_config (optional):
     - level: info | debug
   - retrieval_config { domain_scope, max_items, per_item_max_summary_tokens }
@@ -78,7 +81,8 @@ Notes:
 - `request_id` MUST be stable across retries to support idempotency.
 - `packet.pinned_context_ref` is the stable, versioned “mounted law”; `context` holds per-thread runtime deltas (capsule/cfb_inference/history).
 - CFB Nav is a richer local-only object used for UI/session navigation and is intentionally not part of the API surface.
-- Driver Blocks are selected/approved by the user (client), carried as refs in `packet.driver_block_refs`, and resolved server-side into inline policy inputs during request composition.
+- Driver Blocks are always **user-owned**: the assistant may propose a block, but the user must explicitly approve before it becomes durable.
+- In v0, shipped system defaults may be referenced via `packet.driver_block_refs`, while user-approved blocks are carried inline via `packet.driver_block_inline` so SolServer can apply them without a server-side registry.
 
 ### Response (conceptual)
 - request_id
