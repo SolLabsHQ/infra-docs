@@ -32,16 +32,8 @@ Driver Blocks are policy inputs for SolServer’s Policy Engine. SolMobile’s j
 - For each remote chat request, SolMobile includes:
   - `driver_block_refs[]` for system defaults (id + version)
   - `driver_block_inline[]?` for user-approved blocks that must be carried inline in v0 (no server registry)
-  - `driver_block_mode?` for audit clarity (`default | custom`)
 
-#### driver_block_mode semantics (v0)
-
-`driver_block_mode` exists for **audit clarity** and **deterministic enforcement** at the SolServer boundary.
-
-- `driver_block_mode: "default"` means **baseline-only** behavior: SolServer applies the **system default Driver Blocks** (the shipped baseline) and **ignores** any custom `driver_block_refs[]` or `driver_block_inline[]` that may be present (treating them as a client mismatch or untrusted input). SolServer should emit a trace event when custom blocks are present while mode is `default` (e.g., `driver_blocks_mismatch=true`), and may optionally include counts of dropped refs/inline for debugging.
-- `driver_block_mode: "custom"` means **baseline + custom** behavior: SolServer applies the system default blocks first, then applies any provided `driver_block_refs[]` and `driver_block_inline[]` subject to strict ordering and bounds enforcement (system-first, user-inline last, drop/trim with trace events on violation).
-
-If `driver_block_mode` is omitted, v0 treats it as `"default"` for safety and trace consistency.
+**Driver Blocks are always additive.** Baseline system Driver Blocks apply server-side; packet refs/inline only add.
 
 ### D9 — Driver Blocks do not require a new UI surface in v00
 - v0 defaults to “system baseline blocks” with zero user configuration required.
@@ -75,7 +67,6 @@ User-owned policy artifact stored locally.
   - `inlineBlocks[]?` (custom blocks to include for this thread)
 
 ### Packet (chat additions)
-- `driver_block_mode?`
 - `driver_block_refs[]?`
 - `driver_block_inline[]?`
 
