@@ -48,7 +48,7 @@
 
     "status": {
       "type": "string",
-      "enum": ["started", "completed", "paused", "blocked", "failed"]
+      "enum": ["started", "completed", "paused", "blocked", "failed", "warning"]
     },
 
     "summary": { "type": "string" },
