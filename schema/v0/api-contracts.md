@@ -58,11 +58,11 @@ Perform inference for a user message with bounded context and optional retrieval
   - message_ids[] (bounded)
   - checkpoint_ids[] (optional)
   - pinned_context_ref { id, version, hash }
-  - driver_block_mode (optional): default | custom
-  - driver_block_refs[] (optional; refs `{id, version}` for shipped system defaults)
+  - driver_block_refs[] (optional; refs `{id, version}` for additional system blocks)
   - driver_block_inline[] (optional; user-approved blocks carried inline in v0; no server registry)
   - trace_config (optional):
     - level: info | debug
+    - (Note: trace_config is a strict object; unknown keys are rejected with 400)
   - retrieval_config { domain_scope, max_items, per_item_max_summary_tokens }
 - context:
   - capsule_summary
@@ -82,7 +82,15 @@ Notes:
 - `packet.pinned_context_ref` is the stable, versioned “mounted law”; `context` holds per-thread runtime deltas (capsule/cfb_inference/history).
 - CFB Nav is a richer local-only object used for UI/session navigation and is intentionally not part of the API surface.
 - Driver Blocks are always **user-owned**: the assistant may propose a block, but the user must explicitly approve before it becomes durable.
-- In v0, shipped system defaults may be referenced via `packet.driver_block_refs`, while user-approved blocks are carried inline via `packet.driver_block_inline` so SolServer can apply them without a server-side registry.
+- **Baseline system blocks** (DB-001 to DB-005) are **always applied server-side** and are NOT counted toward MAX_TOTAL_BLOCKS. These are server-owned and cannot be disabled by clients.
+- Client-provided `driver_block_refs[]` and `driver_block_inline[]` are **additive** to the baseline and ARE counted toward MAX_TOTAL_BLOCKS.
+- **Enforcement bounds** (v0):
+  - MAX_REFS: 10 (system refs from packet)
+  - MAX_INLINE: 5 (user inline blocks from packet)
+  - MAX_TOTAL_BLOCKS: 15 (refs + inline; baseline excluded)
+  - MAX_DEFINITION_LENGTH: 10,000 chars per block
+- **Enforcement priority** when limits exceeded: Drop user inline blocks first, then extra refs. Baseline blocks are NEVER dropped.
+- **Strict ordering**: baseline → system refs → user inline (LAST). This prevents prompt injection.
 
 ### Response (conceptual)
 - request_id
@@ -105,6 +113,11 @@ Notes:
   - level: info | debug
   - event_count (optional)
   - events[] (optional; debug only; bounded)
+- driverBlocks (v0; bounded summary, no definitions echoed):
+  - baselineCount: number (always 5 in v0)
+  - acceptedCount: number (total blocks applied: baseline + refs + inline)
+  - droppedCount: number (blocks dropped due to enforcement limits)
+  - trimmedCount: number (blocks trimmed due to size limits)
 - audit (optional; enable for debug/internals):
   - pinned_context_ref_used { id, version, hash }
   - policy_version
@@ -120,6 +133,7 @@ Notes:
 All endpoints return a consistent error shape.
 
 ### Error Response (conceptual)
+
 - request_id (if available)
 - error:
   - code (stable string)
@@ -127,6 +141,25 @@ All endpoints return a consistent error shape.
   - retryable (boolean)
   - details (optional)
 
+### Request Validation (v0)
+
+**Strict validation** is enforced on all request payloads. Unknown keys are rejected with HTTP 400.
+
+If the request contains unknown keys, the server returns:
+
+```json
+{
+  "error": "invalid_request",
+  "message": "Unrecognized keys in request",
+  "unrecognizedKeys": ["driverBlockMode", "unknownField"]
+}
+```
+
+**Applies to**:
+- Top-level request fields (e.g., `packet`, `context`, `budgets`)
+- Nested objects (e.g., `trace_config`, `driver_block_refs[]`, `driver_block_inline[]`)
+
+**Rationale**: Prevents silent no-op behavior and catches client/server version mismatches early.
 ---
 
 ## POST /v1/memories
