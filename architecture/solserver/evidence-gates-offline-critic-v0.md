@@ -206,8 +206,12 @@ Every gate function returns a GateResult record:
 
 **G7 — semantic_critic_sync (expensive; rare)**
 - Called only when policy says so (see §9)
-- Asks a critic model: “Given EvidencePack + claim_map, identify uncited or contradicted claims.”
+- Asks a critic model: "Given EvidencePack + claim_map, identify uncited or contradicted claims."
 - Outputs structured `CriticFinding` JSON
+
+### 5.4 Trace sequencing contract (metadata.seq)
+
+The gates pipeline emits gate-phase trace events in a deterministic, stable order per trace run. Each gate trace event includes `metadata.seq`, a monotonic integer assigned by the pipeline, starting at 0 and increasing by 1 for each emitted gate event in that run. The ordering of gate phases is a v0 behavior contract (tests rely on it): `evidence_intake` → `gate_normalize_modality` → `gate_intent_risk` → `gate_lattice`. Any new gate phases must append after the existing sequence (no reordering). Refactors must preserve this sequencing and `seq` semantics to avoid drift and to keep trace consumers able to reconstruct the pipeline flow.
 
 ---
 
