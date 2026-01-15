@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/output_envelope.v0_min.schema.json",
+  "title": "OutputEnvelopeV0Min",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["assistant_text"],
+  "properties": {
+    "assistant_text": { "type": "string" },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "used_context_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "meta": {
+      "type": "object"
+    }
+  }
+}
