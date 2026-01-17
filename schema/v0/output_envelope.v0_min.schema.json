@@ -20,7 +20,41 @@
       "items": { "type": "string" }
     },
     "meta": {
-      "type": "object"
+      "type": "object",
+      "required": ["meta_version"],
+      "properties": {
+        "meta_version": { "const": "v1" },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "claim_text", "evidence_refs"],
+            "properties": {
+              "claim_id": { "type": "string" },
+              "claim_text": { "type": "string" },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["evidence_id"],
+                  "properties": {
+                    "evidence_id": { "type": "string" },
+                    "span_id": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "used_evidence_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "evidence_pack_id": { "type": "string" }
+      },
+      "additionalProperties": true
     }
   }
 }
