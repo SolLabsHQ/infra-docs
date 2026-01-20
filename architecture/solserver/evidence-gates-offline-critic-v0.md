@@ -215,12 +215,13 @@ The gates pipeline has a deterministic, stable order. This order is a public v0 
 
 1. `evidence_intake`
 2. `gate_normalize_modality`
-3. `gate_intent_risk`
-4. `gate_lattice`
+3. `gate_intent`
+4. `gate_sentinel`
+5. `gate_lattice`
 
 Each gate trace event must include `metadata.seq` from the global monotonic sequence for the request. The sequence is not gate-local; it is shared across all trace events in the run.
 
-**Implementation note (v0):** Gate modules already exist in SolServer (`src/gates/normalize_modality.ts`, `intent_risk.ts`, `lattice.ts`). Implementation work should focus on wiring confirmation, observability, and tests rather than re-creating gate files.
+**Implementation note (v0):** Gate modules already exist in SolServer (`src/gates/normalize_modality.ts`, `intent_risk.ts` for intent+sentinel, `lattice.ts`). Implementation work should focus on wiring confirmation, observability, and tests rather than re-creating gate files.
 
 ---
 
