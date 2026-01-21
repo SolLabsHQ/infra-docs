@@ -1,4 +1,4 @@
-ADR-0XY: Ghost Deck Delivery + Physics (v0) – Muted Transmissions, Routing, Motion, Haptics
+ADR-023: Ghost Deck Delivery + Physics (v0) – Muted Transmissions, Routing, Motion, Haptics
 Status: Proposed (ready to implement)
 Date: 2026-01-21
 Owner: Ida (Architecture)

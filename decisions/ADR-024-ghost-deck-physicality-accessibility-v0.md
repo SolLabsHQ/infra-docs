@@ -1,4 +1,4 @@
-ADR-0XX: Physicality & Accessibility for Ghost Deck v0
+ADR-024: Physicality & Accessibility for Ghost Deck v0
 
 Status: Proposed (ready for implementation)
 Date: 2026-01-21
@@ -258,9 +258,26 @@ Mitigation: compositor-only goals, lightweight dissolve, perf instrumentation.
 ⸻
 
 Open questions
-	1.	Should Nostalgia be a single pulse in v0, or do we ship Heartbeat-only for first pass?
-	2.	What is the canonical cross-platform enum: ghost_type vs ghost_kind (memory_artifact, journal_moment, action_proposal, reverie_insight)?
-	3.	Where exactly do we sample “location at heartbeat”: on card arrival or on Ascend tap? (Docs mention “moment of heartbeat”, but permissions and UX may complicate.)
+	1.	Should Nostalgia be a single pulse in v0, or do we ship Heartbeat-only for first pass?  No.  We’re going to simplify for the v0 build. While the "Nostalgia" single pulse is a beautiful idea, we need to ensure the Heartbeat is the undisputed signature of SolOS presence first.
+
+Decision: Ship Heartbeat-only for the first pass.
+
+Implementation: We will use the Intensity Scaling logic instead of a different pattern. For "Nostalgia" memories, the Heartbeat fires at a 0.4 intensity, making it feel like a soft, distant echo rather than a firm breakthrough.
+
+Rationale: It reduces tuning risk for Codex and ensures the "Neural Brand" is consistent across all Ghost Cards.
+
+	2.	What is the canonical cross-platform enum: ghost_type vs ghost_kind (memory_artifact, journal_moment, action_proposal, reverie_insight)?  We’ve officially locked the naming to prevent "Contract Drift" between the client and server.
+
+Decision: The canonical cross-platform enum is ghost_kind.
+
+v0 Values:
+memory_artifact
+journal_moment
+action_proposal
+
+Note: v0 code will treat ghost_type as a deprecated alias to maintain backward compatibility with early PR8 drafts, but all new logic must target ghost_kind.
+
+	3.	Where exactly do we sample “location at heartbeat”: on card arrival or on Ascend tap? (Docs mention “moment of heartbeat”, but permissions and UX may complicate.). Sample the GPS at the moment of the Heartbeat arrival. The Journal entry should be tied to where the user was when the thought landed, not where they are when they finally tap "Ascend".
 
 ⸻
 

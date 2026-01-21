@@ -1,4 +1,4 @@
-ADR-0XX: Memory API Contract (v0) – Distill, Persist, CRUD, Consent
+ADR-022: Memory API Contract (v0) – Distill, Persist, CRUD, Consent
 Status: Proposed (ready to implement)
 Date: 2026-01-21
 Owner: Ida (Architecture)
@@ -302,4 +302,3 @@ Consequences
 If you want, I can also produce PR-ready redlines for:
 PR 8-Svr (route normalization + schema additions + error model)
 PR 8-Mob (meta routing + packetType branch + physicality compliance)
-

@@ -165,16 +165,19 @@ If the request contains unknown keys, the server returns:
 ## POST /v1/memories
 
 ### Purpose
-Persist a user-explicit memory object.
+Persist a user-explicit memory object (manual create flow).
 
 ### Request (conceptual)
+- request_id (idempotency key; MUST be stable across retries)
 - memory:
   - domain
   - title (optional)
   - tags[] (optional)
   - importance (optional)
   - content (text)
-- source:
+  - mood_anchor (optional)
+  - rigor_level (optional; normal | high)
+- source (optional):
   - thread_id
   - message_id
   - created_at
@@ -182,11 +185,58 @@ Persist a user-explicit memory object.
   - explicit_user_consent: true
 
 ### Response (conceptual)
-- memory_id
-- created_at
-- domain
-- title
-- summary (server-generated optional)
+- request_id
+- memory:
+  - memory_id
+  - created_at
+  - updated_at (optional)
+  - domain
+  - title
+  - summary (server-generated optional)
+  - tags[]
+  - rigor_level
+
+---
+
+## POST /v1/memories/distill
+
+### Purpose
+Extract a candidate memory artifact from a bounded context window (Gate 04) when a user explicitly requests “Save to Memory”.
+
+This endpoint is async and returns quickly with a transmission_id; the resulting artifact is delivered as a muted Ghost Card.
+
+### Request (conceptual)
+- request_id (idempotency key; MUST be stable across retries)
+- thread_id
+- trigger_message_id
+- context_window[] (capped; chronological order is preferred)
+  - message_id
+  - role: user | assistant | system
+  - content
+  - created_at
+- reaffirm_count (optional; default 0)
+- consent:
+  - explicit_user_consent: true
+
+### Validation + caps (v0)
+- Strict validation is enforced (unknown keys rejected with 400).
+- MAX_CONTEXT_WINDOW_MESSAGES: 15
+- MAX_DISTILLED_FACT_CHARS: 150
+- If no supported fact is found, the server MUST return `fact: null` (client renders a fallback prompt Ghost Card).
+- The server MUST NOT hallucinate facts; only facts supported by the provided messages are allowed.
+
+### Idempotency + reaffirm semantics
+- request_id is the idempotency key. Retries MUST reuse the same request_id.
+- reaffirm_count is advisory and may be used to prioritize/collapse repeated user intent within a short window.
+
+### Response (conceptual)
+- request_id
+- transmission_id
+- status: pending
+
+### Data minimization (required)
+- context_window is ephemeral input only and MUST NOT be persisted or logged verbatim.
+- Permitted logs: request_id, transmission_id, counts/sizes, hashes.
 
 ---
 
@@ -202,14 +252,112 @@ List explicit memories for review and retrieval.
 - limit (optional)
 
 ### Response (conceptual)
+- request_id
 - items[]:
   - memory_id
+  - type: memory | journal | action
+  - snippet (or summary)
   - domain
   - title
-  - summary
-  - created_at
   - tags[]
+  - mood_anchor (optional)
+  - rigor_level: normal | high
+  - fidelity: direct | hazy (optional)
+  - transition_to_hazy_at (optional)
+  - created_at
+  - updated_at (optional)
 - next_cursor (optional)
+
+---
+
+## PATCH /v1/memories/{memory_id}
+
+### Purpose
+Edit a memory artifact (user-initiated).
+
+### Request (conceptual)
+- request_id (idempotency key)
+- patch:
+  - snippet (optional)
+  - tags[] (optional)
+  - mood_anchor (optional)
+- consent:
+  - explicit_user_consent: true
+
+### Response (conceptual)
+- request_id
+- memory:
+  - memory_id
+  - updated_at
+
+---
+
+## DELETE /v1/memories/{memory_id}
+
+### Purpose
+Forget a memory artifact.
+
+### Query
+- confirm=true (required when rigor_level=high)
+
+### Response
+- 204 No Content (idempotent)
+
+Notes:
+- If rigor_level=high and confirm is missing, return a stable error code (e.g., confirm_required).
+
+---
+
+## POST /v1/memories/batch_delete
+
+### Purpose
+Delete multiple memories matching a filter (high-friction action).
+
+### Request (conceptual)
+- request_id
+- filter:
+  - thread_id (optional)
+  - domain (optional)
+  - tags_any (optional)
+  - created_before (optional)
+- confirm: true
+
+### Response (conceptual)
+- request_id
+- deleted_count
+
+---
+
+## POST /v1/memories/clear_all
+
+### Purpose
+Delete all memories (highest-friction action).
+
+### Request (conceptual)
+- request_id
+- confirm: true
+- confirm_phrase: "DELETE ALL"
+
+### Response (conceptual)
+- request_id
+- deleted_count
+
+---
+
+### Memory Error Codes (v0)
+- invalid_request (400): strict validation failure; returns unrecognizedKeys[]
+- confirm_required (409): missing confirm=true for high-rigor delete
+- not_found (404)
+- rate_limited (429)
+- unauthorized (401) / forbidden (403)
+- server_error (500)
+
+---
+
+Constraints / gotchas (do not drift)
+	•	Do not rename request_id to idempotency_key. v0 contract already uses request_id as the idempotency primitive for /v1/chat. Keep it consistent everywhere.
+	•	Do not duplicate the global ## Error Model (v0) section inside the Memory section. Only keep the “Memory Error Codes” list.
+	•	Ensure ## GET /v1/usage/daily remains exactly once and still follows the memory block.
 
 ---
 
