@@ -28,7 +28,7 @@ Note: this ADR intentionally replaces mixed /v1/memory/* routes in PR8 drafts wi
 2) Request/Response schemas
 2.1 
 POST /v1/memories/distill
-Purpose: send an ephemeral context window for Gate 04 distillation, returning quickly with a tracking handle.
+Purpose: send an ephemeral context window for Synaptic Gate (Gate 04) distillation, returning quickly with a tracking handle.
 Request
 {
   "thread_id": "string",
@@ -41,7 +41,7 @@ Request
       "created_at": "string"
     }
   ],
-  "idempotency_key": "string",
+  "request_id": "string",
   "reaffirm_count": 0
 }
 Response (async ack)
@@ -50,7 +50,7 @@ Response (async ack)
   "transmission_id": "string",
   "status": "pending"
 }
-Completion delivery: the distilled result is returned as a Muted Transmission Ghost Card (see ADR-0XY).
+Note: the async ack never includes the distilled fact/snippet; delivery is via a Muted Transmission Ghost Card (see ADR-023).
 
 2.2 
 GET /v1/memories
@@ -135,20 +135,20 @@ Response
   "deleted_count": 0
 }
 
-3) Strict validation rules and caps (Gate 04)
+3) Strict validation rules and caps (Synaptic Gate)
 Strict key validation
 Unknown keys → 400 invalid_request with unknown_keys[].
 Caps
 context_window length: ≤ 15 messages
 Distilled fact/snippet: ≤ 150 characters
-Null-fact fallback: if no high-signal fact is found, output must be fact: null and the client renders the fallback prompt Ghost Card (“I didn’t catch a specific fact…”).
+Null-fact fallback: if no high-signal fact is found, output must be fact: null and the client renders the fallback prompt Ghost Card (“I didn’t catch a specific fact. Is there something you want me to remember?”).
 No hallucinated facts
 Distillation must not invent facts. If unsupported by the referenced messages, discard.
 
 4) Idempotency and reaffirm semantics
 Idempotency
-idempotency_key is required for POST /v1/memories/distill.
-Server dedupes requests by (user_id, idempotency_key) for a bounded window.
+request_id is required for POST /v1/memories/distill and must be stable across retries.
+Server dedupes requests by (user_id, request_id) for a bounded window.
 Retries with identical payload return the same {transmission_id, status}.
 Reaffirm
 reaffirm_count is advisory and used to:
@@ -198,7 +198,7 @@ Consequences
 ✅ Keeps privacy posture tight: ephemeral context, persisted summary only.
 ⚠️ Requires PR8-Svr draft routes to be updated (intentional).
 
-ADR-0XY: Ghost Deck Delivery + Physics (v0) – Muted Transmissions, Routing, Motion, Haptics
+ADR-023: Ghost Deck Delivery + Physics (v0) – Muted Transmissions, Routing, Motion, Haptics
 Status: Proposed (ready to implement)
 Date: 2026-01-21
 Owner: Ida (Architecture)
@@ -221,7 +221,7 @@ Every Ghost Card OutputEnvelope MUST include:
 {
   "meta": {
     "display_hint": "ghost_card",
-    "ghost_kind": "memory_artifact|journal_moment|action_proposal|reverie_insight"
+    "ghost_kind": "memory_artifact|journal_moment|action_proposal"
   },
   "notification_policy": "muted"
 }

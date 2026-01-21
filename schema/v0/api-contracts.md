@@ -201,7 +201,7 @@ Persist a user-explicit memory object (manual create flow).
 ## POST /v1/memories/distill
 
 ### Purpose
-Extract a candidate memory artifact from a bounded context window (Gate 04) when a user explicitly requests “Save to Memory”.
+Extract a candidate memory artifact from a bounded context window (Synaptic Gate / Gate 04) when a user explicitly requests “Save to Memory”.
 
 This endpoint is async and returns quickly with a transmission_id; the resulting artifact is delivered as a muted Ghost Card.
 
