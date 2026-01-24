@@ -40,6 +40,8 @@ SolServer must not expose APIs that:
 - Idempotent where possible
 - Versioned from first release
 
+See Addendum (PR10) for minimal surface expansion.
+
 ---
 
 ## Contract
@@ -165,6 +167,9 @@ Common codes:
 - Auth mechanism is out of scope for this ADR, but endpoints assume authenticated access in production.
 - No raw prompt/output persistence is required for the contract.
 - Any additional logging/storage for drift/debugging must follow ADR-009 (data minimization) and related governance.  
+
+## Addendum (PR10)
+- Minimal surface expansion: journal drafts/entries and trace ingestion.
 
 ## Consequences
 - Smaller, maintainable server surface area.

@@ -58,3 +58,10 @@ sequenceDiagram
 
   M->>M: Log trace + telemetry
 ```
+
+## PR10 delta
+### Synaptic: JournalOfferClassifier v0 (deterministic)
+- Inputs: Sentinel mood label + intensity, Sentinel risk signal, ThreadMemento affect rollup phase.
+- Output: optional `meta.journalOffer` attached to OutputEnvelope.
+- No extra model call for offer detection; model call only for drafting after consent.
+- Suppress offers when risk is elevated or overwhelm is rising/peak/downshift.

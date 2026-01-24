@@ -28,7 +28,9 @@
           "type": "array",
           "minItems": 1,
           "items": { "$ref": "https://sollabshq.com/schemas/claim_map_entry.schema.json" }
-        }
+        },
+
+        "journalOffer": { "$ref": "journal_offer.schema.json" }
       }
     }
   }

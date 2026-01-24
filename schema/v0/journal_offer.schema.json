@@ -1,0 +1,30 @@
+{
+  "$id": "journal_offer.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["momentId", "momentType", "phase", "confidence", "evidenceSpan", "offerEligible"],
+  "properties": {
+    "momentId": { "type": "string" },
+    "momentType": {
+      "type": "string",
+      "enum": ["overwhelm", "vent", "insight", "gratitude", "decision", "fun"]
+    },
+    "phase": { "type": "string", "enum": ["rising", "peak", "downshift", "settled"] },
+    "confidence": { "type": "string", "enum": ["low", "med", "high"] },
+    "evidenceSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["startMessageId", "endMessageId"],
+      "properties": {
+        "startMessageId": { "type": "string" },
+        "endMessageId": { "type": "string" }
+      }
+    },
+    "why": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 6
+    },
+    "offerEligible": { "type": "boolean" }
+  }
+}

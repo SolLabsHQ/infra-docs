@@ -34,6 +34,12 @@ This spec defines how SolSvr obtains external sources, normalizes them, assigns 
 
 ---
 
+## PR10 delta
+- Journal drafts are grounded via evidence spans and must set `meta.evidence_binding.non_invention` in the draft envelope (see `schema/v0/journal_draft_request.schema.json` and `schema/v0/journal_draft_envelope.schema.json`).
+- Journaling remains explicit and consented; see `decisions/ADR-025-consented-journaling-v0-muse-offer-memento-affect-device-muse-trace.md`.
+
+---
+
 ## 2) Goals and Non-goals
 
 ### Goals

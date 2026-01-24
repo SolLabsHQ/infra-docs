@@ -1,5 +1,5 @@
 # SolM Trace UI Spec v0 — Idea Lot Draft
-> Purpose: capture Manus-grade operator tracing as a **SolM-native** capability: user-legible transparency + governance-as-actions + OS-first portability + prompting telemetry.
+> Purpose: capture Manus-grade operator tracing as a **SolM-native** capability: user-legible transparency + governance-as-actions + OS-first portability + prompting trace signals.
 
 ---
 
@@ -28,7 +28,7 @@ SolM should steal the **trace exposure** while keeping our core difference:
 3. **OS-first portability**  
    Outputs must be easy to copy/export into Notes/Markdown (and later PDF), with citations.
 
-4. **Trace as UI AND telemetry**  
+4. **Trace as UI AND trace data**  
    Even if mostly hidden, the trace must exist as structured events for prompt iteration, audit, and debugging.
 
 5. **Privacy-by-default**  
@@ -82,7 +82,7 @@ SolM Trace uses 4B as the operator contract surfaced to the user.
 - **User trust:** “Show me what you’re doing without making me read logs.”
 - **Write safety:** “Before you change anything in my life (events/reminders/messages), ask me.”
 - **Builder debugging:** “Show me where the prompt or tool shape drifted.”
-- **Prompt iteration:** “Give me telemetry I can tune against.”
+- **Prompt iteration:** “Give me trace signals I can tune against.”
 
 ---
 
@@ -205,6 +205,17 @@ Trace must exist as structured events even if UI is minimized.
 - Governance: `{ consequence_weight, confidence_level, required_breakpoint }`
 - Outcome: `success | partial | fail` + `error_code`
 
+## PR10 delta
+### Client Trace Ingestion
+- New endpoint: `POST /v1/trace/events`.
+- Accepted event types: JournalOfferEvent and DeviceMuseObservation.
+- JournalOfferEvent enum: `journal_offer_shown`, `journal_offer_accepted`, `journal_offer_declined`, `journal_offer_muted_or_tuned`, `journal_draft_generated`, `journal_entry_saved`, `journal_entry_edited_before_save`.
+- DeviceMuseObservation is mechanism-only; forbid raw message content, context windows, evidence spans, or entities.
+- Trace inspects the mechanism, not the thought.
+
+### Debug surfaces
+- Internal-only trace viewer can filter by `local_user_uuid`, `thread_id`, `message_id`.
+
 ### Privacy defaults
 - Do **not** store raw page text by default.
 - Do **not** store secrets or credentials ever.
@@ -242,7 +253,7 @@ Governance is enforced by behavior:
 This yields:
 - Manus-level visibility (trust)
 - SolM-level safety (Breakpoints)
-- Real telemetry for prompting (iteration)
+- Real trace data for prompting (iteration)
 
 ---
 
@@ -261,13 +272,13 @@ Buttons: **Approve** | **Edit** | **Deny**
 - Should Trace be pinned per thread or per run?
 - How do we represent async runs (server continues, client shows status)?
 - How do we compress long timelines for human readability?
-- What’s the default retention window for trace telemetry?
+- What’s the default retention window for trace data?
 
 ---
 
 ## Arc | Active | Parked | Decisions | Next
-**Arc:** Bring operator trace visibility into SolM as UI + telemetry.
-**Active:** Trace Drawer, Run Timeline, Evidence Panel, Breakpoint modal, Export, telemetry schema.
+**Arc:** Bring operator trace visibility into SolM as UI + trace data.
+**Active:** Trace Drawer, Run Timeline, Evidence Panel, Breakpoint modal, Export, trace schema.
 **Parked:** SolServer dashboard view; async orchestration UX; long-run compression; retention policy.
 **Decisions:** Governance must be visible as Breakpoints; OS-first export is a primary feature; privacy defaults favor summaries/citations.
 **Next:** Draft the Markdown export template + Notes layout, then mock one example run end-to-end.

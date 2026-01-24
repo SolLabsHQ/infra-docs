@@ -158,7 +158,8 @@ Functional behavior
 	•	Show a minimal receipt (toast): “Moment donated to iOS Journal.”
 
 Availability gate
-	•	Ascend button only if server indicates the memory is high-fidelity / direct (not hazy). (Exact fidelity flag naming is server-contract dependent.)
+	•	Ascend button only when server labels ghost_kind == journal_moment.
+	•	Client is label-only and must not compute fidelity/directness locally.
 
 ⸻
 

@@ -4,20 +4,20 @@
   "title": "JournalDraftEnvelope",
   "type": "object",
   "additionalProperties": false,
-  "required": ["type", "draft_id", "thread_id", "mode", "title", "body", "source_span", "meta"],
+  "required": ["type", "draftId", "threadId", "mode", "title", "body", "sourceSpan", "meta"],
   "properties": {
     "type": { "const": "JournalDraftEnvelope" },
-    "draft_id": { "type": "string", "minLength": 1 },
-    "thread_id": { "type": "string", "minLength": 1 },
+    "draftId": { "type": "string", "minLength": 1 },
+    "threadId": { "type": "string", "minLength": 1 },
     "mode": { "type": "string", "enum": ["verbatim", "assist"] },
     "title": { "type": "string", "minLength": 1, "maxLength": 200 },
     "body": { "type": "string", "minLength": 1, "maxLength": 20000 },
-    "tags_suggested": {
+    "tagsSuggested": {
       "type": "array",
       "items": { "$ref": "#/$defs/Tag" },
       "default": []
     },
-    "source_span": { "$ref": "#/$defs/SourceSpan" },
+    "sourceSpan": { "$ref": "#/$defs/SourceSpan" },
     "meta": { "$ref": "#/$defs/DraftMeta" }
   },
   "$defs": {
@@ -30,19 +30,19 @@
     "SourceSpan": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["thread_id", "start_message_id", "end_message_id"],
+      "required": ["threadId", "startMessageId", "endMessageId"],
       "properties": {
-        "thread_id": { "type": "string", "minLength": 1 },
-        "start_message_id": { "type": "string", "minLength": 1 },
-        "end_message_id": { "type": "string", "minLength": 1 }
+        "threadId": { "type": "string", "minLength": 1 },
+        "startMessageId": { "type": "string", "minLength": 1 },
+        "endMessageId": { "type": "string", "minLength": 1 }
       }
     },
     "DraftMeta": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["used_cpb_ids", "assumptions", "unknowns", "evidence_binding"],
+      "required": ["usedCpbIds", "assumptions", "unknowns", "evidenceBinding"],
       "properties": {
-        "used_cpb_ids": {
+        "usedCpbIds": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },
           "default": []
@@ -57,13 +57,13 @@
           "items": { "$ref": "#/$defs/Note" },
           "default": []
         },
-        "evidence_binding": {
+        "evidenceBinding": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["source_span", "non_invention"],
+          "required": ["sourceSpan", "nonInvention"],
           "properties": {
-            "source_span": { "$ref": "#/$defs/SourceSpan" },
-            "non_invention": { "type": "boolean" }
+            "sourceSpan": { "$ref": "#/$defs/SourceSpan" },
+            "nonInvention": { "type": "boolean" }
           }
         }
       }

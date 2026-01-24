@@ -192,6 +192,10 @@ not persisted in primary storage
 not logged verbatim
 permitted logs: counts, sizes, hashes, and the request_id/transmission_id
 
+Addendum: Journal vs Memory (PR10)
+- Journal drafts and entries use separate endpoints and explicit user consent; they are not part of the memory CRUD surface.
+- JournalDraftEnvelope carries evidence binding and must remain grounded (see meta.evidence_binding.non_invention in the draft envelope schema).
+
 Consequences
 ✅ Eliminates route drift by standardizing under /v1/memories.
 ✅ Makes strict validation survivable via explicit schemas and unknown key reporting.

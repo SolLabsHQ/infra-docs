@@ -27,3 +27,7 @@ The solmobile domain governs the native iOS client and its local-first interacti
 - Retrieval is requested by the client only as part of a chat request.
 - The client does not independently retrieve or inject memory.
 - The client displays which retrieved items were used (summaries only).
+
+## PR10 delta
+- Label-only fidelity gate: Ascend is shown only when `ghost_kind == journal_moment` (see `decisions/ADR-024-ghost-deck-physicality-accessibility-v0.md` and `decisions/ADR-025-consented-journaling-v0-muse-offer-memento-affect-device-muse-trace.md`).
+- Trace ingestion: SolMobile emits JournalOfferEvent and DeviceMuseObservation to `POST /v1/trace/events` (see `architecture/solmobile/trace-ui-v0.md` and `schema/v0/trace_events_request.schema.json`).

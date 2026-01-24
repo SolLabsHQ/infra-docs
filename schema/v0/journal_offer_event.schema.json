@@ -4,11 +4,11 @@
   "title": "JournalOfferEvent",
   "type": "object",
   "additionalProperties": false,
-  "required": ["event_id", "event_type", "ts", "thread_id", "moment_id", "evidence_span"],
+  "required": ["eventId", "eventType", "ts", "threadId", "momentId", "evidenceSpan"],
   "properties": {
-    "event_id": { "type": "string", "minLength": 1 },
+    "eventId": { "type": "string", "minLength": 1 },
 
-    "event_type": {
+    "eventType": {
       "type": "string",
       "enum": [
         "journal_offer_shown",
@@ -23,46 +23,46 @@
 
     "ts": { "type": "string", "format": "date-time" },
 
-    "thread_id": { "type": "string", "minLength": 1 },
-    "moment_id": { "type": "string", "minLength": 1 },
+    "threadId": { "type": "string", "minLength": 1 },
+    "momentId": { "type": "string", "minLength": 1 },
 
-    "evidence_span": {
+    "evidenceSpan": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["start_message_id", "end_message_id"],
+      "required": ["startMessageId", "endMessageId"],
       "properties": {
-        "start_message_id": { "type": "string", "minLength": 1 },
-        "end_message_id": { "type": "string", "minLength": 1 }
+        "startMessageId": { "type": "string", "minLength": 1 },
+        "endMessageId": { "type": "string", "minLength": 1 }
       }
     },
 
-    "phase_at_offer": {
+    "phaseAtOffer": {
       "type": "string",
       "enum": ["rising", "peak", "downshift", "settled"]
     },
 
-    "mode_selected": {
+    "modeSelected": {
       "type": "string",
       "enum": ["verbatim", "assist"]
     },
 
-    "user_action": {
+    "userAction": {
       "type": "string",
       "enum": ["save", "edit", "not_now", "disable_or_tune"]
     },
 
-    "cooldown_active": { "type": "boolean" },
+    "cooldownActive": { "type": "boolean" },
 
-    "latency_ms": { "type": "integer", "minimum": 0 },
+    "latencyMs": { "type": "integer", "minimum": 0 },
 
     "refs": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "cpb_id": { "type": "string", "minLength": 1 },
-        "draft_id": { "type": "string", "minLength": 1 },
-        "entry_id": { "type": "string", "minLength": 1 },
-        "request_id": { "type": "string", "minLength": 1 }
+        "cpbId": { "type": "string", "minLength": 1 },
+        "draftId": { "type": "string", "minLength": 1 },
+        "entryId": { "type": "string", "minLength": 1 },
+        "requestId": { "type": "string", "minLength": 1 }
       }
     },
 
@@ -70,9 +70,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "new_cooldown_minutes": { "type": "integer", "minimum": 0, "maximum": 1440 },
-        "avoid_peak_overwhelm": { "type": "boolean" },
-        "offers_enabled": { "type": "boolean" }
+        "newCooldownMinutes": { "type": "integer", "minimum": 0, "maximum": 1440 },
+        "avoidPeakOverwhelm": { "type": "boolean" },
+        "offersEnabled": { "type": "boolean" }
       }
     }
   }

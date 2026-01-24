@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/v0/thread_memento.schema.json",
+  "title": "ThreadMemento",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "mementoId",
+    "threadId",
+    "createdTs",
+    "version",
+    "arc",
+    "active",
+    "parked",
+    "decisions",
+    "next",
+    "affect"
+  ],
+  "properties": {
+    "mementoId": { "type": "string", "minLength": 1 },
+    "threadId": { "type": "string", "minLength": 1 },
+    "createdTs": { "type": "string", "format": "date-time" },
+    "version": { "const": "memento-v0.1" },
+    "arc": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "active": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+      "default": []
+    },
+    "parked": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+      "default": []
+    },
+    "decisions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+      "default": []
+    },
+    "next": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 200 },
+      "default": []
+    },
+    "affect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["points", "rollup"],
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["endMessageId", "label", "intensity", "confidence", "source"],
+            "properties": {
+              "endMessageId": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1, "maxLength": 64 },
+              "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+              "confidence": { "type": "string", "enum": ["low", "med", "high"] },
+              "source": { "type": "string", "enum": ["server", "device_hint"] }
+            }
+          },
+          "maxItems": 5
+        },
+        "rollup": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["phase", "intensityBucket", "updatedAt"],
+          "properties": {
+            "phase": {
+              "type": "string",
+              "enum": ["rising", "peak", "downshift", "settled"]
+            },
+            "intensityBucket": { "type": "string", "enum": ["low", "med", "high"] },
+            "updatedAt": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  }
+}
