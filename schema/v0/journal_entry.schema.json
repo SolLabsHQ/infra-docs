@@ -4,10 +4,10 @@
   "title": "JournalEntry",
   "type": "object",
   "additionalProperties": false,
-  "required": ["entry_id", "created_ts", "title", "body", "tags", "source_span", "draft_meta"],
+  "required": ["entryId", "createdTs", "title", "body", "tags", "sourceSpan", "draftMeta"],
   "properties": {
-    "entry_id": { "type": "string", "minLength": 1 },
-    "created_ts": { "type": "string", "format": "date-time" },
+    "entryId": { "type": "string", "minLength": 1 },
+    "createdTs": { "type": "string", "format": "date-time" },
     "title": { "type": "string", "minLength": 1, "maxLength": 200 },
     "body": { "type": "string", "minLength": 1, "maxLength": 20000 },
     "tags": {
@@ -15,15 +15,15 @@
       "items": { "$ref": "#/$defs/Tag" },
       "default": []
     },
-    "source_span": { "$ref": "#/$defs/SourceSpan" },
-    "draft_meta": {
+    "sourceSpan": { "$ref": "#/$defs/SourceSpan" },
+    "draftMeta": {
       "type": "object",
       "additionalProperties": false,
       "required": ["mode"],
       "properties": {
         "mode": { "type": "string", "enum": ["assist", "verbatim"] },
-        "cpb_id": { "type": "string", "minLength": 1 },
-        "draft_id": { "type": "string", "minLength": 1 }
+        "cpbId": { "type": "string", "minLength": 1 },
+        "draftId": { "type": "string", "minLength": 1 }
       }
     }
   },
@@ -37,11 +37,11 @@
     "SourceSpan": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["thread_id", "start_message_id", "end_message_id"],
+      "required": ["threadId", "startMessageId", "endMessageId"],
       "properties": {
-        "thread_id": { "type": "string", "minLength": 1 },
-        "start_message_id": { "type": "string", "minLength": 1 },
-        "end_message_id": { "type": "string", "minLength": 1 }
+        "threadId": { "type": "string", "minLength": 1 },
+        "startMessageId": { "type": "string", "minLength": 1 },
+        "endMessageId": { "type": "string", "minLength": 1 }
       }
     }
   }

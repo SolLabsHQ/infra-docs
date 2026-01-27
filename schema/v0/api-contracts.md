@@ -37,7 +37,8 @@ Trace is **always on** for `/v1/chat`.
 - The server returns a `trace_run_id` so SolMobile can correlate UI trace cards, local logs, and server-side audit.
 - Trace retention is client-local until thread TTL cleanup (v0).
 
-> Note: “trace events” are an event stream; the canonical schema lives in `schema/v0/trace_event.schema.json`.
+> Note: Server trace events (run-level) use `schema/v0/trace_event.schema.json`.
+> Note: Client-ingested trace events use `schema/v0/trace_events_request.schema.json` via `POST /v1/trace/events`.
 > Note: Inline Driver Blocks use `schema/v0/driver_block.schema.json` (v0 minimal; definition text is treated as opaque policy input).
 
 ---
@@ -97,6 +98,8 @@ Notes:
 - assistant_message:
   - message_id
   - output_text
+- output_envelope (v0_min; canonical for `/v1/chat`):
+  - schema: `schema/v0/output_envelope.v0_min.schema.json`
 - retrieved_memories_used[] (summaries only):
   - memory_id
   - domain
@@ -125,6 +128,9 @@ Notes:
   - rigor_gates_enabled[]
   - regen_count
   - linter_flags[] (optional)
+
+Notes:
+- `schema/v0/output_envelope.schema.json` is legacy/experimental and not used for v0 `/v1/chat` responses.
 
 ---
 
@@ -201,7 +207,7 @@ Persist a user-explicit memory object (manual create flow).
 ## POST /v1/memories/distill
 
 ### Purpose
-Extract a candidate memory artifact from a bounded context window (Gate 04) when a user explicitly requests “Save to Memory”.
+Extract a candidate memory artifact from a bounded context window (Synaptic Gate / Gate 04) when a user explicitly requests “Save to Memory”.
 
 This endpoint is async and returns quickly with a transmission_id; the resulting artifact is delivered as a muted Ghost Card.
 
@@ -383,3 +389,167 @@ Power the in-app cost meter.
   - total_tokens
   - latency_ms
   - estimated_cost
+
+---
+
+## ThreadMemento (v0.1)
+
+ThreadMemento is a lightweight thread navigation snapshot (not durable knowledge).
+Canonical schema: `schema/v0/thread_memento.schema.json` (version: `memento-v0.1`).
+API payloads use camelCase field names; schema fields are snake_case and mapped 1:1 by the server.
+
+### POST /v1/memento
+
+Purpose
+Create or replace the latest draft ThreadMemento for a thread.
+
+### Request (conceptual)
+- threadId
+- arc
+- active[]
+- parked[]
+- decisions[]
+- next[]
+- affect:
+  - points[] (max 5): { endMessageId, label, intensity, confidence, source }
+  - rollup: { phase, intensityBucket, updatedAt }
+
+### Response (conceptual)
+- ok: true
+- memento: ThreadMemento (schema v0.1)
+
+---
+
+### GET /v1/memento
+
+Purpose
+Read the latest ThreadMemento for a thread.
+
+### Query
+- threadId (required)
+- includeDraft (optional; default false)
+
+### Response (conceptual)
+- ok: true
+- memento: ThreadMemento | null
+
+---
+
+### POST /v1/memento/decision
+
+Purpose
+Accept, decline, or revoke a ThreadMemento draft.
+
+### Request (conceptual)
+- threadId
+- mementoId
+- decision: accept | decline | revoke
+
+### Response (conceptual)
+- ok: true
+- decision
+- applied: boolean
+- reason: applied | already_accepted | already_accepted_not_declined | already_revoked | not_found
+- memento: ThreadMemento | null
+
+---
+
+## POST /v1/journal/drafts
+
+### Purpose
+Generate a JournalDraftEnvelope from a JournalDraftRequest (consent required).
+
+### Request (conceptual)
+- JournalDraftRequest (schema: `schema/v0/journal_draft_request.schema.json`)
+
+### Response (conceptual)
+- 200 OK
+- JournalDraftEnvelope (schema: `schema/v0/journal_draft_envelope.schema.json`)
+
+---
+
+## Journal Entries (explicit persistence)
+
+Canonical schema: `schema/v0/journal_entry.schema.json`.
+
+### POST /v1/journal/entries
+
+Purpose
+Create a JournalEntry (explicit user action).
+
+### Request (conceptual)
+- requestId
+- entry: JournalEntry
+- consent:
+  - explicitUserConsent: true
+
+### Response (conceptual)
+- requestId
+- entry: JournalEntry
+
+---
+
+### GET /v1/journal/entries
+
+Purpose
+List JournalEntry items.
+
+### Query
+- threadId (optional)
+- cursor (optional)
+- limit (optional)
+
+### Response (conceptual)
+- requestId
+- items[]: JournalEntry
+- nextCursor (optional)
+
+---
+
+### PATCH /v1/journal/entries/{entry_id}
+
+Purpose
+Edit a JournalEntry (user-initiated).
+
+### Request (conceptual)
+- requestId
+- patch:
+  - title (optional)
+  - body (optional)
+  - tags[] (optional)
+- consent:
+  - explicitUserConsent: true
+
+### Response (conceptual)
+- requestId
+- entryId
+- updatedAt
+
+---
+
+### DELETE /v1/journal/entries/{entry_id}
+
+Purpose
+Delete a JournalEntry (explicit user action).
+
+### Response
+- 204 No Content (idempotent)
+
+---
+
+## POST /v1/trace/events
+
+### Purpose
+Ingest client trace events for journaling and device hints.
+
+### Request (conceptual)
+- TraceEventsRequest (schema: `schema/v0/trace_events_request.schema.json`)
+
+### Data minimization (required)
+- Mechanism-only events: no raw user text, no context windows, no evidence spans, no PII.
+- DeviceMuseObservation rejects any content fields by schema.
+
+### Response (conceptual)
+- requestId
+- acceptedCount
+- rejectedCount

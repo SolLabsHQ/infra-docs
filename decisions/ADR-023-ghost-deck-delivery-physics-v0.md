@@ -21,7 +21,7 @@ Every Ghost Card OutputEnvelope MUST include:
 {
   "meta": {
     "display_hint": "ghost_card",
-    "ghost_kind": "memory_artifact|journal_moment|action_proposal|reverie_insight"
+    "ghost_kind": "memory_artifact|journal_moment|action_proposal"
   },
   "notification_policy": "muted"
 }

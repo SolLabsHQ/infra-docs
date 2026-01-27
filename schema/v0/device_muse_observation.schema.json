@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sollabshq.com/schemas/v0/device_muse_observation.schema.json",
+  "title": "DeviceMuseObservation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observationId",
+    "ts",
+    "localUserUuid",
+    "threadId",
+    "messageId",
+    "version",
+    "source",
+    "detectedType",
+    "intensity",
+    "confidence"
+  ],
+  "properties": {
+    "observationId": { "type": "string", "minLength": 1 },
+    "ts": { "type": "string", "format": "date-time" },
+    "localUserUuid": { "type": "string", "minLength": 1 },
+    "threadId": { "type": "string", "minLength": 1 },
+    "messageId": { "type": "string", "minLength": 1 },
+    "version": { "const": "device-muse-observation-v0.1" },
+    "source": { "type": "string", "enum": ["apple_intelligence"] },
+    "detectedType": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "phaseHint": {
+      "type": "string",
+      "enum": ["rising", "peak", "downshift", "settled"]
+    }
+  },
+  "allOf": [
+    {
+      "not": {
+        "anyOf": [
+          { "required": ["text"] },
+          { "required": ["content"] },
+          { "required": ["rawText"] },
+          { "required": ["raw_text"] },
+          { "required": ["messageText"] },
+          { "required": ["message_text"] },
+          { "required": ["inputText"] },
+          { "required": ["input_text"] },
+          { "required": ["outputText"] },
+          { "required": ["output_text"] },
+          { "required": ["context"] },
+          { "required": ["contextWindow"] },
+          { "required": ["context_window"] },
+          { "required": ["evidenceSpan"] },
+          { "required": ["evidence_span"] },
+          { "required": ["evidenceSpans"] },
+          { "required": ["evidence_spans"] },
+          { "required": ["summary"] },
+          { "required": ["title"] },
+          { "required": ["body"] }
+        ]
+      }
+    }
+  ]
+}

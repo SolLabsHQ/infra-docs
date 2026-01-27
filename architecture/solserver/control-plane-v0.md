@@ -153,6 +153,16 @@ Compile outputs:
 
 ---
 
+## PR10 delta
+- ThreadMemento v0.1 includes affect rollup (points + phase rollup) and is injected as retrieval context.
+- Muse Offer: Synaptic computes `meta.journal_offer` (inspiration only) and returns it in the chat response.
+- Journaling endpoints:
+  - `POST /v1/journal/drafts` (sync 200) accepts JournalDraftRequest and returns JournalDraftEnvelope with evidence binding and non-invention.
+  - JournalEntry CRUD is explicit-only (draft_meta.mode required; draft_id optional).
+- Trace ingestion: clients send JournalOfferEvent and DeviceMuseObservation to `POST /v1/trace/events` (mechanism-only, no content).
+
+---
+
 ## Checkpoint / Heartbeat Policy
 
 ### Trigger set
@@ -214,6 +224,13 @@ Same as S1, except:
    - return best compliant partial + surface “missing required facts/input” only when needed
 
 > Goal: reduce user-visible “try again” loops while keeping deterministic-first behavior.
+
+### S6 — Journal offer + drafting (PR10 delta)
+1) Synaptic computes JournalOfferClassifier v0 using Sentinel signals + ThreadMemento affect rollup.
+2) If eligible, attach `meta.journalOffer` to OutputEnvelope (inspiration only).
+3) SolMobile renders offer and captures consent (verbatim or assist).
+4) On consent, client calls `POST /v1/journal/drafts` and renders the returned draft.
+5) Explicit save calls JournalEntry endpoints; trace events are sent to `POST /v1/trace/events`.
 
 ---
 

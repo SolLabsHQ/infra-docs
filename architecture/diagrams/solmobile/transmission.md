@@ -38,6 +38,13 @@ These four files are the authoritative inputs for this doc:
 
 ---
 
+## PR10 delta
+- ThreadMemento bumped to memento-v0.1 and includes affect rollup (points + phase rollup), even if UI only surfaces summary.
+- Thread affect is updated each response; accepted memento can be auto-accepted via an internal switch (no per-memento prompts) in v0 internal builds.
+- `applyDraftMemento` should accept v0.1 structures when present.
+
+---
+
 ## Pending delivery (202) + polling semantics (as implemented)
 
 ### Send endpoint

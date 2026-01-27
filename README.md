@@ -43,3 +43,28 @@ It does **not** contain:
 ---
 
 ## Structure
+
+- architecture/ — system architecture and flow specs (v0)
+- decisions/ — ADRs (architecture decisions)
+- schema/ — versioned JSON schemas and api contracts
+- domains/ — domain boundaries and rules
+- timeline/ — milestones and history
+- pr/ — PR execution artifacts and reviews
+- codex/ — working inputs, reviews, and checklists
+- solmobile/ / solserver/ / ios/ — platform-specific reference notes
+
+---
+
+## PR-010 (Consented Journaling v0)
+
+Key docs:
+- `schema/v0/api-contracts.md` — endpoints for journal drafts/entries and trace events
+- `decisions/ADR-024-ghost-deck-physicality-accessibility-v0.md` — label-only Ascend gating
+- `decisions/ADR-025-consented-journaling-v0-muse-offer-memento-affect-device-muse-trace.md`
+- `architecture/solserver/control-plane-v0.md` — journal offer and draft flow
+- `architecture/solserver/message-processing-gates-v0.md` — deterministic JournalOfferClassifier
+- `architecture/solserver/output-envelope-v0-min.md` — meta.journal_offer
+- `architecture/solmobile/trace-ui-v0.md` — trace ingestion and privacy
+- `architecture/diagrams/solmobile/transmission.md` — ThreadMemento v0.1 notes
+- `architecture/solmobile/solm-apple-intelligence-integration.md` — DeviceMuse trace-only
+- `pr/PR-010/` — source artifacts (review, fixlog, checklist, input)
