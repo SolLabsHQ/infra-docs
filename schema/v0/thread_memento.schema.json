@@ -58,7 +58,7 @@
               "label": { "type": "string", "minLength": 1, "maxLength": 64 },
               "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
               "confidence": { "type": "string", "enum": ["low", "med", "high"] },
-              "source": { "type": "string", "enum": ["server", "device_hint"] }
+              "source": { "type": "string", "enum": ["server", "device_hint", "model"] }
             }
           },
           "maxItems": 5
