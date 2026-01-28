@@ -19,6 +19,20 @@
 
 ## Entries
 
+### 2026-01-28 21:15
+- **Area:** SolServer
+- **Issue:** Staging SSE events beyond `tx_accepted` were missing due to worker-only emission.
+- **Impact:** Merge gate blocked (no `run_started` / `assistant_final_ready` / `assistant_failed` in staging SSE).
+- **Root cause:** Worker runs in a separate process; in-memory SSE hub has no connected clients.
+- **Fix:** Enabled inline processing in staging via `SOL_INLINE_PROCESSING=1` so provider + gates run in API process with SSE connections.
+- **Verification:**
+  - Set secret + deploy: `flyctl secrets set SOL_INLINE_PROCESSING=1 -a solserver-staging`; `flyctl deploy -c fly.toml -a solserver-staging`.
+  - Ping cadence verified (`/tmp/sse-liveness-inline-1769634426.log`).
+  - Happy path SSE order observed: `tx_accepted → run_started → assistant_final_ready` (`/tmp/sse-happy-inline-1769634506.log`).
+  - Failure path observed: `tx_accepted → assistant_failed` (`/tmp/sse-fail-inline-1769634597.log`).
+  - Polling fallback confirmed: `pending=false` (`/tmp/transmission-poll-inline-dde1a88d-54ab-4111-b001-f4b49eb874a6.json`).
+- **Notes:** Cross-process fanout deferred to v0.1 (Redis hub). Failure simulate path may skip `run_started` if it short-circuits before provider call.
+
 ### 2026-01-28 20:05
 - **Area:** SolServer
 - **Issue:** Staging SSE only emitted `tx_accepted` (missing `run_started` / `assistant_final_ready` / `assistant_failed`).

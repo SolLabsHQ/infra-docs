@@ -106,17 +106,25 @@
 - [ ] No cases where the UI shows assistant text that failed gates
 
 ## Release checks
-- [ ] Deployed to staging
+- [x] Deployed to staging
+  - `flyctl secrets set SOL_INLINE_PROCESSING=1 -a solserver-staging`
+  - `flyctl deploy -c fly.toml -a solserver-staging`
 - [x] Verify ping every ~30s
-  - `curl -sS -N -m 70 -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/events"`
-- [ ] Verify chat status events in staging logs (only `tx_accepted` observed; `run_started`/`assistant_final_ready` missing)
+  - `curl -sS -N -m 70 -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/events"` (`/tmp/sse-liveness-inline-1769634426.log`)
+- [x] Verify chat status events in staging logs
   - `curl -sS -N -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/events"`
-  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE staging check","clientRequestId":"sse-check-006"}'`
-- [ ] Verify Responses API migration works in staging (200/202 semantics unchanged)
-- [ ] Verify memory usage stable under repeated connect/disconnect
+  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE staging check (inline)","clientRequestId":"sse-check-inline-001"}'`
+  - Order observed: `tx_accepted → run_started → assistant_final_ready` (`/tmp/sse-happy-inline-1769634506.log`)
+- [x] Verify Responses API migration works in staging (200/202 semantics unchanged)
+  - `curl -sS -D /tmp/chat-status-inline-1769634692.hdr -o /tmp/chat-status-inline-1769634692.json -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE responses API staging check","clientRequestId":"sse-resp-inline-001"}'` (HTTP 200)
+- [x] Verify failure flow emits `assistant_failed`
+  - `curl -sS -N -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/events"`
+  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -H "x-sol-simulate-status: 500" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE staging failure check (inline)","clientRequestId":"sse-fail-inline-001"}'`
+  - Observed: `tx_accepted → assistant_failed` (`/tmp/sse-fail-inline-1769634597.log`)
 - [x] Polling fallback works with SSE disabled/unreachable
-  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE polling fallback check","clientRequestId":"sse-poll-001"}'`
-  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/transmissions/<transmission_id>"`
+  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE polling fallback check (inline)","clientRequestId":"sse-poll-inline-001"}'`
+  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/transmissions/<transmission_id>"` (`/tmp/transmission-poll-inline-dde1a88d-54ab-4111-b001-f4b49eb874a6.json`)
+- [ ] Verify memory usage stable under repeated connect/disconnect
 
 ## SSE v0 + Responses API migration (PR #39) — CHECKLIST
 

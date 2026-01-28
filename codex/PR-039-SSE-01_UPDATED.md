@@ -191,3 +191,15 @@ Rules:
 - Transmission `9dff78ab-9608-4a00-82f7-10f4811e04ae` reached `pending=false`.
 
 **Likely root cause:** worker process emits SSE via in-memory hub without connected clients. Needs inline processing in staging or shared pub/sub (v0.1).
+
+## 12. Staging gate passed with inline processing (2026-01-28)
+
+**Change:** Set `SOL_INLINE_PROCESSING=1` on staging so the API process runs provider + gates inline and can emit SSE to active connections.
+
+**Evidence:**
+- Ping cadence OK (`/tmp/sse-liveness-inline-1769634426.log`).
+- Happy path SSE order observed: `tx_accepted → run_started → assistant_final_ready` (`/tmp/sse-happy-inline-1769634506.log`).
+- Failure path SSE observed: `tx_accepted → assistant_failed` (`/tmp/sse-fail-inline-1769634597.log`).
+- Polling fallback confirmed: `pending=false` (`/tmp/transmission-poll-inline-dde1a88d-54ab-4111-b001-f4b49eb874a6.json`).
+
+**Note:** Cross-process fanout remains deferred to v0.1 (Redis hub). Inline processing is staging-only to unblock merge gate.
