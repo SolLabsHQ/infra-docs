@@ -33,6 +33,15 @@
   - Polling fallback confirmed: `pending=false` (`/tmp/transmission-poll-inline-dde1a88d-54ab-4111-b001-f4b49eb874a6.json`).
 - **Notes:** Cross-process fanout deferred to v0.1 (Redis hub). Failure simulate path may skip `run_started` if it short-circuits before provider call.
 
+### 2026-01-28 21:25
+- **Area:** Docs
+- **Issue:** Need explicit follow-ups + staging revert plan for inline processing.
+- **Impact:** Risk of forgetting to revert staging or track fanout + soak work.
+- **Root cause:** Staging gate required inline processing; cross-process fanout deferred.
+- **Fix:** Added follow-up issues + documented revert commands in PR docs/PR bodies.
+- **Verification:** Issues created and linked; revert snippet documented.
+- **Notes:** Follow-ups: https://github.com/SolLabsHQ/solserver/issues/40 and https://github.com/SolLabsHQ/solserver/issues/41. Revert staging after merge: `flyctl secrets unset SOL_INLINE_PROCESSING -a solserver-staging` (or set to 0).
+
 ### 2026-01-28 20:05
 - **Area:** SolServer
 - **Issue:** Staging SSE only emitted `tx_accepted` (missing `run_started` / `assistant_final_ready` / `assistant_failed`).

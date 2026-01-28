@@ -203,3 +203,17 @@ Rules:
 - Polling fallback confirmed: `pending=false` (`/tmp/transmission-poll-inline-dde1a88d-54ab-4111-b001-f4b49eb874a6.json`).
 
 **Note:** Cross-process fanout remains deferred to v0.1 (Redis hub). Inline processing is staging-only to unblock merge gate.
+
+## 13. Follow-ups + staging revert plan
+
+**Follow-up issues (v0.1 / hardening):**
+- SSE fanout: https://github.com/SolLabsHQ/solserver/issues/40
+- SSE soak + memory profile: https://github.com/SolLabsHQ/solserver/issues/41
+
+**Staging revert (post-merge):**
+Inline processing was enabled only to satisfy the staging merge gate. After merge, revert staging to normal async worker processing:
+
+```
+flyctl secrets unset SOL_INLINE_PROCESSING -a solserver-staging
+# (or) flyctl secrets set SOL_INLINE_PROCESSING=0 -a solserver-staging
+```
