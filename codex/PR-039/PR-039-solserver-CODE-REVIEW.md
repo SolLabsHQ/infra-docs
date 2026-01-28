@@ -24,7 +24,7 @@
   - Cache-Control: no-cache
   - X-Accel-Buffering: no
   - flushHeaders called (or equivalent)
-- [ ] Ping cadence ~30s and timer is cleaned up on disconnect.
+- [x] Ping cadence ~30s and timer is cleaned up on disconnect. (Idle timer cleared in `solserver/src/sse/sse_hub.ts`)
 - [x] Connection registry is `user_id -> Set<conn>` not single conn.
 - [x] Cleanup on close removes conn from registry (no unbounded growth).
 
@@ -58,6 +58,6 @@
 - [ ] Confirm no secrets/keys appear in logs or SSE payloads.
 
 ### Notes
-- Ping timer does not currently stop when the last connection closes; consider clearing the interval when registry is empty.
+- Ping timer now stops when the last connection closes (commit `1cf2672`).
 - Inline processing was required to pass staging SSE order checks; cross-process fanout ticketed (issue #40).
 - Failure simulate short-circuits before provider; absence of run_started in that flow is expected.
