@@ -19,6 +19,19 @@
 
 ## Entries
 
+### 2026-01-28 20:05
+- **Area:** SolServer
+- **Issue:** Staging SSE only emitted `tx_accepted` (missing `run_started` / `assistant_final_ready` / `assistant_failed`).
+- **Impact:** Merge gate blocked; SolMobile would stall at Sent/Queued in staging when worker completes.
+- **Root cause:** Likely worker runs in a separate process with an in-memory SSE hub; worker-emitted events have no connected clients.
+- **Fix:** Pending decision (options: inline processing in staging, or shared pub/sub for worker → SSE hub).
+- **Verification:** 
+  - Ping cadence OK: 19:57:04Z, 19:57:30Z, 19:58:00Z via `/v1/events` (`/tmp/sse-liveness-1769630224.log`).
+  - Happy path SSE saw `tx_accepted` only for transmission `dda04aad-75d8-49ee-90ec-728391246790` (`/tmp/sse-happy-1769630364.log`).
+  - Failure simulation (`x-sol-simulate-status: 500`) also only `tx_accepted` for transmission `5ff0cd57-6e56-4d51-98e5-317572b211c4` (`/tmp/sse-fail-1769630458.log`).
+  - Polling fallback confirmed: transmission `9dff78ab-9608-4a00-82f7-10f4811e04ae` became `pending=false` after polling (`/tmp/transmission-poll-9dff78ab-9608-4a00-82f7-10f4811e04ae.json`).
+- **Notes:** Host used: `https://solserver-staging.fly.dev`. Staging merge gate remains incomplete until SSE worker events are delivered.
+
 ### 2026-01-28 19:45
 - **Area:** SolMobile
 - **Issue:** Needed to confirm consistent user id header for SSE + REST.

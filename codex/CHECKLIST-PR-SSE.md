@@ -107,10 +107,16 @@
 
 ## Release checks
 - [ ] Deployed to staging
-- [ ] Verify ping every ~30s
-- [ ] Verify chat status events in staging logs
+- [x] Verify ping every ~30s
+  - `curl -sS -N -m 70 -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/events"`
+- [ ] Verify chat status events in staging logs (only `tx_accepted` observed; `run_started`/`assistant_final_ready` missing)
+  - `curl -sS -N -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/events"`
+  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE staging check","clientRequestId":"sse-check-006"}'`
 - [ ] Verify Responses API migration works in staging (200/202 semantics unchanged)
 - [ ] Verify memory usage stable under repeated connect/disconnect
+- [x] Polling fallback works with SSE disabled/unreachable
+  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE polling fallback check","clientRequestId":"sse-poll-001"}'`
+  - `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/transmissions/<transmission_id>"`
 
 ## SSE v0 + Responses API migration (PR #39) — CHECKLIST
 

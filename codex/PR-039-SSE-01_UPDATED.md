@@ -168,3 +168,26 @@ Rules:
 
 ## 10. Follow-ups
 - None pending for lockfile; `pnpm install` was run under Node 24 via nvm/corepack.
+
+## 11. Staging verification status (2026-01-28)
+
+**Host:** `https://solserver-staging.fly.dev`
+
+**Liveness (pass):**
+- `curl -sS -N -m 70 -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/events"`
+- Pings observed at ~30s cadence (19:57:04Z, 19:57:30Z, 19:58:00Z).
+
+**Chat lifecycle SSE (blocked):**
+- Only `tx_accepted` observed for happy path (`sse-check-006`, transmission `dda04aad-75d8-49ee-90ec-728391246790`).
+- `run_started` / `assistant_final_ready` not observed in staging logs.
+
+**Failure SSE (blocked):**
+- Simulated failure (`x-sol-simulate-status: 500`) emitted only `tx_accepted` (`sse-fail-002`, transmission `5ff0cd57-6e56-4d51-98e5-317572b211c4`).
+- `assistant_failed` not observed.
+
+**Polling fallback (pass):**
+- `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "Content-Type: application/json" -H "x-sol-user-id: $SOL_TEST_USER_ID" -X POST "$SOLSERVER_STAGING_HOST/v1/chat" -d '{"threadId":"TEST","message":"SSE polling fallback check","clientRequestId":"sse-poll-001"}'`
+- `curl -sS -H "Authorization: Bearer $SOLSERVER_STAGING_TOKEN" -H "x-sol-user-id: $SOL_TEST_USER_ID" "$SOLSERVER_STAGING_HOST/v1/transmissions/<transmission_id>"`
+- Transmission `9dff78ab-9608-4a00-82f7-10f4811e04ae` reached `pending=false`.
+
+**Likely root cause:** worker process emits SSE via in-memory hub without connected clients. Needs inline processing in staging or shared pub/sub (v0.1).
