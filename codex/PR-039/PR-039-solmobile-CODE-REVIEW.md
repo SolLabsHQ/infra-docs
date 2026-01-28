@@ -34,7 +34,6 @@
   - Thinking → Final on assistant_final_ready + fetch
   - Any → Failed on assistant_failed (shows code/detail appropriately)
 - [x] State is keyed by transmission_id to avoid misrouting.
-- [x] Send-line pulse is driven by SSE working state with a 60s timeout fallback.
 
 ### Header injection checks
 - [x] `x-sol-user-id` is consistent across:
