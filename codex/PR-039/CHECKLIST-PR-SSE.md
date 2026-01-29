@@ -94,6 +94,7 @@
   - `assistant_final_ready` -> trigger fetch `GET /v1/transmissions/:id` and render final OutputEnvelope
   - `assistant_failed` -> surface user-facing status with code + detail, and determine next action (retry vs wait)
 - [x] If SSE is unavailable: fall back to existing polling watchers
+- [x] Guard `Message.thread` inserts; skip insert + log if thread is unavailable (prevents CoreData 1570 orphans)
 
 ### Tests
 - [ ] Unit test: envelope decoding

@@ -36,6 +36,7 @@ SSE allows SolServer to push **immediate state transitions** to SolMobile, impro
 - SSE client wrapper using LaunchDarkly **`swift-eventsource`**
 - Reconnect behavior with backoff + jitter (bounded; shows degraded state when needed)
 - Dispatcher to decode events and route them to UI + watchers
+- Guard `Message.thread` inserts; skip insert + log if thread is unavailable (prevents CoreData 1570 orphans)
 
 ### Out of scope (explicit punts)
 - Token-by-token assistant text streaming
