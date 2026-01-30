@@ -48,6 +48,8 @@ sqlite-vec
 - [x] LATTICE_OFFLINE badge (dev/staging gated by LATTICE_DEV_BADGE + status=fail) — ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift; ios/SolMobile/SolMobile/Info-Debug.plist; ios/SolMobile/SolMobile/Info-Release.plist
 - [x] UI test stubs for ghost accept + memory detail/undo — ios/SolMobile/SolMobile/Services/UITestNetworkStub.swift
 - [x] UI smoke tests for ghost accept + local memory vault/citations — ios/SolMobile/SolMobileUITests/SolMobileUITests.swift
+- [x] SSE reconnect on base URL change (prevents /v1/events stale localhost) — ios/SolMobile/SolMobile/Views/SettingsView.swift
+- [x] Starlight pending covers queued/sending transmissions — ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift
 
 ## Tests run
 - solserver: `pnpm vitest run test/memory_routes.test.ts`
