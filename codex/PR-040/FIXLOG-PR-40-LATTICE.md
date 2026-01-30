@@ -1,7 +1,7 @@
 # PR 40 Fixlog: Lattice v0 + v0.1 + vector flagged
 
 ## Summary
-- Implemented SolServer memory span save + list/detail endpoints, lattice retrieval with caps + policy trigger rules, meta.lattice always-on, sqlite-vec packaging + CI smoke test, and env flag docs. Added SolMobile memory cache/vault + citations, ghost card accept + auto-accept settings, and lattice meta ingestion. Ran targeted SolServer tests and SolMobile UI smoke on iPhone 17 Pro (local server).
+- Implemented SolServer memory span save + list/detail endpoints, lattice retrieval with caps + policy trigger rules, meta.lattice always-on, sqlite-vec packaging + CI smoke test, and env flag docs. Added SolMobile memory cache/vault + citations, ghost card accept + auto-accept settings, and lattice meta ingestion. Fixed distill typing for tsc build and reran local + staging lattice smoke (score telemetry verified).
 
 ## infra-docs changes
 - [x] ADR-030 updated (decisions/ADR-030-lattice-gate-v0.1-retrieval-policy-capsules-storage.md):
@@ -19,6 +19,7 @@ Memory API
 - [x] GET /v1/memories/:id detail (includes archived + evidence ids) — solserver/src/routes/memories.ts
 - [x] memory lifecycle_state + memory_kind + supersedes_memory_id + evidence_message_ids_json columns and filters — solserver/src/store/sqlite_control_plane_store.ts; solserver/src/store/control_plane_store.ts
 - [x] adaptive span selection + LLM distill with fallback + distill_model/distill_attempts stored — solserver/src/routes/memories.ts; solserver/src/memory/memory_distiller.ts; solserver/src/store/sqlite_control_plane_store.ts
+- [x] distill output typing narrowed for build (DistillCheck union) — solserver/src/memory/memory_distiller.ts
 
 Lattice gate
 - [x] hybrid trigger rules (memory always, policy on risk/intent/keywords) — solserver/src/control-plane/orchestrator.ts
@@ -61,23 +62,24 @@ sqlite-vec
 - solserver: `bash -lc 'source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && pnpm vitest run test/lattice_retrieval.test.ts'`
 - solserver: `pnpm vitest run test/output_envelope.test.ts`
 - solserver: `pnpm vitest run test/gates.pipeline.test.ts`
+- solserver: `pnpm run build`
 - solmobile UI: `xcodebuild test -project ios/SolMobile/SolMobile.xcodeproj -scheme SolMobile -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.2' -only-testing SolMobileUITests/testGhostCardAcceptShowsReceipt -only-testing SolMobileUITests/testMemoryVaultAndCitationsLocal`
 
 ## Smoke runbook
 - Local (solserver/scripts/smoke_lattice_local.sh):
-  - BASE_URL=http://127.0.0.1:3333
-  - Flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=0, LATTICE_VEC_QUERY_ENABLED=0, LLM_PROVIDER=fake, SOL_INLINE_PROCESSING=1, CONTROL_PLANE_DB_PATH=./data/control_plane_smoke.db
+  - BASE_URL=http://localhost:3333
+  - Flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=0, LATTICE_VEC_QUERY_ENABLED=0, SOL_INLINE_PROCESSING=1, CONTROL_PLANE_DB_PATH=./data/control_plane_smoke_<ts>.db
   - POST /v1/chat returned transmission ids (anchors); POST /v1/memories succeeded with evidence_message_ids length > 1.
   - GET /v1/memories/:id and GET /v1/memories returned the created memory.
-  - Chat retrieval: meta.lattice status=hit; scores methods fts5_bm25; bytes_total=492; counts.memories=2
+  - Chat retrieval (outputEnvelope.meta.lattice): status=hit; scores methods fts5_bm25; bytes_total=905; counts.memories=6; counts.mementos=1
 - Staging deploy: `pnpm deploy:staging` succeeded (solserver-staging)
 - Staging smoke (solserver/scripts/smoke_lattice_staging.sh + chat retrieval):
   - Case A flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=0, LATTICE_VEC_QUERY_ENABLED=0
-    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=738; counts.memories=3
+    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=395; counts.memories=1
   - Case B flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=1, LATTICE_VEC_QUERY_ENABLED=0
-    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=984; counts.memories=4
+    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=1972; counts.memories=6
   - Case C flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=1, LATTICE_VEC_QUERY_ENABLED=1
-    - meta.lattice: status=hit; scores methods vec_distance; bytes_total=738; counts.memories=3
+    - meta.lattice: status=hit; scores methods vec_distance; bytes_total=1724; counts.memories=5
 - Staging flags reset to Case B (default): LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=1, LATTICE_VEC_QUERY_ENABLED=0
 
 ## Known issues / deferred
