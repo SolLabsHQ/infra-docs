@@ -33,6 +33,11 @@ Memory API
 - [x] Add GET /v1/memories/:id detail — receipts: solserver/src/routes/memories.ts:694-721
   - [x] Returns evidence_message_ids, lifecycle_state, timestamps — receipts: solserver/src/routes/memories.ts:704-721
 
+Memory span + distill quality (PR-40 UX follow-on)
+- [x] Span selection uses adaptive caps (max_messages=30, max_chars=12k, prefer_before=10, prefer_after=4) — receipts: solserver/src/routes/memories.ts:158-279
+- [x] Explicit memory save distills via LLM (gpt-5-mini, fallback gpt-5.2) with quality gates — receipts: solserver/src/memory/memory_distiller.ts:1-214; solserver/src/routes/memories.ts:621-664
+- [x] Store distill_model + distill_attempts in memory artifacts — receipts: solserver/src/store/sqlite_control_plane_store.ts:340-506,1556-1635; solserver/src/routes/memories.ts:621-664
+
 Memory lifecycle
 - [x] Add lifecycle_state column to memory artifacts with default pinned — receipts: solserver/src/store/sqlite_control_plane_store.ts:340-365,492-509
 - [x] Default retrieval filters pinned only — receipts: solserver/src/control-plane/orchestrator.ts:1932-1937; solserver/src/routes/memories.ts:630-635
@@ -61,6 +66,7 @@ Lattice gate and retrieval
   - [x] max_adr_snips 4 — receipts: solserver/src/control-plane/orchestrator.ts:1916-1919,2036-2037
   - [x] max_policy_capsules 4 — receipts: solserver/src/control-plane/orchestrator.ts:1916-1919,2037-2038
   - [x] max_total_bytes 8KB — receipts: solserver/src/control-plane/orchestrator.ts:1916-1919,2062-2071
+- [x] Pack memory before policy/ADR under byte cap — receipts: solserver/src/control-plane/orchestrator.ts:2058-2077
 
 meta.lattice always present
 - [x] Add OutputEnvelope.meta.lattice:
@@ -132,6 +138,10 @@ Ghost cards accept UX
   - [x] safe_only uses memory_kind/is_safe_for_auto_accept — receipts: solmobile/ios/SolMobile/SolMobile/Views/Chat/GhostCardComponent.swift:autoAcceptIfNeeded; solmobile/ios/SolMobile/SolMobile/Models/MemoryArtifact.swift:isSafeForAutoAccept
   - [x] If auto-accept includes driver_block offers, still emit the receipt notification with View + Undo — receipts: solmobile/ios/SolMobile/SolMobile/Views/Chat/GhostCardComponent.swift:autoAcceptIfNeeded; solmobile/ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift:presentMemoryReceipt
 
+Outbox + receipt UX (PR-40 UX follow-on)
+- [x] Outbox failures distinguish chat_send vs memory_save; retry per kind — receipts: solmobile/ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift:664-781; solmobile/ios/SolMobile/SolMobile/Services/OutboxService.swift:123-136; solmobile/ios/SolMobile/SolMobile/Actions/TransmissionAction.swift:1718-1753
+- [x] Memory receipt adds dismiss (X), swipe-to-dismiss, auto-dismiss window — receipts: solmobile/ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift:1121-1163
+
 ## 4) tests
 SolServer
 - [x] Unit: span resolution includes both roles and evidence_message_ids length > 1 — receipts: solserver/test/memory_routes.test.ts:it("saves a memory span and includes evidence_message_ids")
@@ -141,6 +151,7 @@ SolServer
 - [x] Unit: governance retrieval triggered only under rules — receipts: solserver/test/lattice_retrieval.test.ts:it("retrieves policy capsules only when triggered")
 - [x] Unit: vec load fail-open does not break chat — receipts: solserver/test/lattice_retrieval.test.ts:it("fails open when vec extension cannot load")
 - [x] Integration: POST save then next chat retrieves injected memory — receipts: solserver/test/lattice_retrieval.test.ts:it("retrieves memories saved via the API on the next chat turn")
+- [x] Integration: saved name memory used on next turn — receipts: solserver/test/lattice_retrieval.test.ts:it("uses a saved name memory on the next turn")
 - [x] Integration test: edit memory creates new record; old record is archived but still GET-able by ID — receipts: solserver/test/memory_routes.test.ts:it("patch creates new memory id and archives old record")
 
 SolMobile

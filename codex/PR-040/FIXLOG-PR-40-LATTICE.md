@@ -18,11 +18,13 @@ Memory API
 - [x] GET /v1/memories list (lifecycle_state default pinned, thread scope, cursor) — solserver/src/routes/memories.ts
 - [x] GET /v1/memories/:id detail (includes archived + evidence ids) — solserver/src/routes/memories.ts
 - [x] memory lifecycle_state + memory_kind + supersedes_memory_id + evidence_message_ids_json columns and filters — solserver/src/store/sqlite_control_plane_store.ts; solserver/src/store/control_plane_store.ts
+- [x] adaptive span selection + LLM distill with fallback + distill_model/distill_attempts stored — solserver/src/routes/memories.ts; solserver/src/memory/memory_distiller.ts; solserver/src/store/sqlite_control_plane_store.ts
 
 Lattice gate
 - [x] hybrid trigger rules (memory always, policy on risk/intent/keywords) — solserver/src/control-plane/orchestrator.ts
 - [x] caps enforcement (memories 6, ADR 4, policy 4, 8KB total) — solserver/src/control-plane/orchestrator.ts
 - [x] injection into PromptPack retrieval section only with Governance subsection — solserver/src/control-plane/prompt_pack.ts
+- [x] retrieval packing prioritizes memory before policy/ADR under byte cap — solserver/src/control-plane/orchestrator.ts
 
 meta.lattice + trace
 - [x] meta.lattice always present (IDs + counts + timings + warnings) — solserver/src/control-plane/orchestrator.ts; solserver/src/contracts/output_envelope.ts
@@ -36,6 +38,7 @@ sqlite-vec
 - [x] CI smoke test added — solserver/.github/workflows/ci-solserver.yml
 - [x] fail-open behavior handled in code/tests — solserver/src/control-plane/orchestrator.ts; solserver/test/lattice_retrieval.test.ts
 - [x] Integration test: POST /v1/memories then next chat retrieves memory — solserver/test/lattice_retrieval.test.ts
+- [x] Integration test: saved name memory used next turn — solserver/test/lattice_retrieval.test.ts
 - [x] meta.lattice.scores telemetry (fts5_bm25 + vec_distance keyed by retrieval IDs) — solserver/src/control-plane/orchestrator.ts; solserver/src/contracts/output_envelope.ts
 - [x] Smoke scripts capture transmission id from header/body — solserver/scripts/smoke_lattice_local.sh; solserver/scripts/smoke_lattice_staging.sh
 
@@ -50,10 +53,12 @@ sqlite-vec
 - [x] UI smoke tests for ghost accept + local memory vault/citations — ios/SolMobile/SolMobileUITests/SolMobileUITests.swift
 - [x] SSE reconnect on base URL change (prevents /v1/events stale localhost) — ios/SolMobile/SolMobile/Views/SettingsView.swift
 - [x] Starlight pending covers queued/sending transmissions — ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift
+- [x] Outbox failure banners differentiate chat vs memory + retry per kind — ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift; ios/SolMobile/SolMobile/Services/OutboxService.swift; ios/SolMobile/SolMobile/Actions/TransmissionAction.swift
+- [x] Memory receipt dismiss (X), swipe-to-dismiss, auto-dismiss window — ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift
 
 ## Tests run
-- solserver: `pnpm vitest run test/memory_routes.test.ts`
-- solserver: `pnpm vitest run test/lattice_retrieval.test.ts`
+- solserver: `bash -lc 'source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && pnpm vitest run test/memory_routes.test.ts'`
+- solserver: `bash -lc 'source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && pnpm vitest run test/lattice_retrieval.test.ts'`
 - solserver: `pnpm vitest run test/output_envelope.test.ts`
 - solserver: `pnpm vitest run test/gates.pipeline.test.ts`
 - solmobile UI: `xcodebuild test -project ios/SolMobile/SolMobile.xcodeproj -scheme SolMobile -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.2' -only-testing SolMobileUITests/testGhostCardAcceptShowsReceipt -only-testing SolMobileUITests/testMemoryVaultAndCitationsLocal`
