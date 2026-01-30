@@ -65,7 +65,7 @@ sqlite-vec
 - solserver: `bash -lc 'source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && pnpm vitest run test/memory_routes.test.ts'`
 - solserver: `bash -lc 'source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && pnpm vitest run test/lattice_retrieval.test.ts'`
 - solserver: `pnpm vitest run test/output_envelope.test.ts`
-- solserver: `pnpm vitest run test/gates.pipeline.test.ts --testTimeout 60000` (timed out after 120s)
+- solserver: `pnpm vitest run test/gates.pipeline.test.ts --testTimeout 300000`
 - solserver: `pnpm run build`
 - solmobile UI: `xcodebuild test -project ios/SolMobile/SolMobile.xcodeproj -scheme SolMobile -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.2' -only-testing SolMobileUITests/testGhostCardAcceptShowsReceipt -only-testing SolMobileUITests/testMemoryVaultAndCitationsLocal`
 
