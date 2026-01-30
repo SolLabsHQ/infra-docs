@@ -67,6 +67,7 @@ Lattice gate and retrieval
   - [x] max_policy_capsules 4 — receipts: solserver/src/control-plane/orchestrator.ts:1916-1919,2037-2038
   - [x] max_total_bytes 8KB — receipts: solserver/src/control-plane/orchestrator.ts:1916-1919,2062-2071
 - [x] Pack memory before policy/ADR under byte cap — receipts: solserver/src/control-plane/orchestrator.ts:2058-2077
+- [x] Stop retrieval packing after first byte-cap hit (preserve ordering) — receipts: solserver/src/control-plane/orchestrator.ts:2065-2077
 
 meta.lattice always present
 - [x] Add OutputEnvelope.meta.lattice:
@@ -83,7 +84,7 @@ Trace and latency logging
   - [x] lattice_total_ms — receipts: solserver/src/control-plane/orchestrator.ts:2081-2082,3782-3784
   - [x] model_total_ms — receipts: solserver/src/control-plane/orchestrator.ts:3782-3786
   - [x] request_total_ms — receipts: solserver/src/control-plane/orchestrator.ts:3782-3787
-- [x] Add trace event phase gate_lattice with counts and bytes and safe query terms only — receipts: solserver/src/control-plane/orchestrator.ts:2114-2127
+- [x] Add trace event phase gate_lattice with counts and bytes and query_terms_count only — receipts: solserver/src/control-plane/orchestrator.ts:2114-2140
 
 sqlite-vec packaging + vector query lane (Option 2)
 - [x] Docker build: include vec0.so in /app/extensions — receipts: solserver/Dockerfile:19-41
@@ -150,6 +151,7 @@ SolServer
 - [x] Unit: caps enforced (8KB total) — receipts: solserver/test/lattice_retrieval.test.ts:it("always includes meta.lattice and respects byte caps")
 - [x] Unit: governance retrieval triggered only under rules — receipts: solserver/test/lattice_retrieval.test.ts:it("retrieves policy capsules only when triggered")
 - [x] Unit: vec load fail-open does not break chat — receipts: solserver/test/lattice_retrieval.test.ts:it("fails open when vec extension cannot load")
+- [x] Unit: lattice hit when mementos present — receipts: solserver/test/lattice_retrieval.test.ts:it("marks lattice hit when mementos are present")
 - [x] Integration: POST save then next chat retrieves injected memory — receipts: solserver/test/lattice_retrieval.test.ts:it("retrieves memories saved via the API on the next chat turn")
 - [x] Integration: saved name memory used on next turn — receipts: solserver/test/lattice_retrieval.test.ts:it("uses a saved name memory on the next turn")
 - [x] Integration test: edit memory creates new record; old record is archived but still GET-able by ID — receipts: solserver/test/memory_routes.test.ts:it("patch creates new memory id and archives old record")
@@ -164,3 +166,4 @@ SolMobile
 - [x] Document env flags in README or config doc — receipts: solserver/docs/dev.md:33-49
 - [x] Confirm Fly /data volume usage for SQLite paths — receipts: solserver/docs/dev.md:23-31
 - [x] Confirm busy_timeout is bounded (no hidden latency) — receipts: solserver/src/store/sqlite_control_plane_store.ts:139-146; solserver/docs/dev.md:33-45
+- [x] Ship policy bundle + set LATTICE_POLICY_BUNDLE_PATH in Fly configs + CI smoke check — receipts: solserver/policy/policy_capsules.json; solserver/Dockerfile:36-41; solserver/fly.toml:7-13; solserver/fly.prod.toml:7-13; solserver/.github/workflows/ci-solserver.yml:94-103

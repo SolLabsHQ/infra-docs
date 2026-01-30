@@ -1,7 +1,7 @@
 # PR 40 Fixlog: Lattice v0 + v0.1 + vector flagged
 
 ## Summary
-- Implemented SolServer memory span save + list/detail endpoints, lattice retrieval with caps + policy trigger rules, meta.lattice always-on, sqlite-vec packaging + CI smoke test, and env flag docs. Added SolMobile memory cache/vault + citations, ghost card accept + auto-accept settings, and lattice meta ingestion. Fixed distill typing for tsc build and reran local + staging lattice smoke (score telemetry verified).
+- Implemented SolServer memory span save + list/detail endpoints, lattice retrieval with caps + policy trigger rules, meta.lattice always-on, sqlite-vec packaging + CI smoke test, and env flag docs. Added SolMobile memory cache/vault + citations, ghost card accept + auto-accept settings, and lattice meta ingestion. Removed user-derived query terms from trace, shipped policy bundle into image + Fly env, enforced memento-aware lattice status, and reran local + staging lattice smoke (score telemetry verified).
 
 ## infra-docs changes
 - [x] ADR-030 updated (decisions/ADR-030-lattice-gate-v0.1-retrieval-policy-capsules-storage.md):
@@ -24,12 +24,14 @@ Memory API
 Lattice gate
 - [x] hybrid trigger rules (memory always, policy on risk/intent/keywords) — solserver/src/control-plane/orchestrator.ts
 - [x] caps enforcement (memories 6, ADR 4, policy 4, 8KB total) — solserver/src/control-plane/orchestrator.ts
+- [x] strict byte-cap ordering (stop on first cap hit) — solserver/src/control-plane/orchestrator.ts
 - [x] injection into PromptPack retrieval section only with Governance subsection — solserver/src/control-plane/prompt_pack.ts
 - [x] retrieval packing prioritizes memory before policy/ADR under byte cap — solserver/src/control-plane/orchestrator.ts
 
 meta.lattice + trace
 - [x] meta.lattice always present (IDs + counts + timings + warnings) — solserver/src/control-plane/orchestrator.ts; solserver/src/contracts/output_envelope.ts
 - [x] gate_lattice trace event emitted — solserver/src/control-plane/orchestrator.ts
+- [x] query terms removed from trace; emit count only — solserver/src/control-plane/orchestrator.ts
 - [x] explicit timings added (db, lattice total, model total, request total) — solserver/src/control-plane/orchestrator.ts
 
 sqlite-vec
@@ -42,6 +44,8 @@ sqlite-vec
 - [x] Integration test: saved name memory used next turn — solserver/test/lattice_retrieval.test.ts
 - [x] meta.lattice.scores telemetry (fts5_bm25 + vec_distance keyed by retrieval IDs) — solserver/src/control-plane/orchestrator.ts; solserver/src/contracts/output_envelope.ts
 - [x] Smoke scripts capture transmission id from header/body — solserver/scripts/smoke_lattice_local.sh; solserver/scripts/smoke_lattice_staging.sh
+- [x] policy capsule bundle shipped in image + Fly env set — solserver/policy/policy_capsules.json; solserver/Dockerfile; solserver/fly.toml; solserver/fly.prod.toml
+- [x] Docker smoke checks bundle presence + non-empty capsules — solserver/.github/workflows/ci-solserver.yml
 
 ## solmobile changes
 - [x] cache memory_ids and dereference — ios/SolMobile/SolMobile/Actions/TransmissionAction.swift; ios/SolMobile/SolMobile/Views/Chat/ThreadDetailView.swift
@@ -61,7 +65,7 @@ sqlite-vec
 - solserver: `bash -lc 'source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && pnpm vitest run test/memory_routes.test.ts'`
 - solserver: `bash -lc 'source ~/.nvm/nvm.sh && nvm use 20 >/dev/null && pnpm vitest run test/lattice_retrieval.test.ts'`
 - solserver: `pnpm vitest run test/output_envelope.test.ts`
-- solserver: `pnpm vitest run test/gates.pipeline.test.ts`
+- solserver: `pnpm vitest run test/gates.pipeline.test.ts --testTimeout 60000` (timed out after 120s)
 - solserver: `pnpm run build`
 - solmobile UI: `xcodebuild test -project ios/SolMobile/SolMobile.xcodeproj -scheme SolMobile -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.2' -only-testing SolMobileUITests/testGhostCardAcceptShowsReceipt -only-testing SolMobileUITests/testMemoryVaultAndCitationsLocal`
 
@@ -71,15 +75,15 @@ sqlite-vec
   - Flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=0, LATTICE_VEC_QUERY_ENABLED=0, SOL_INLINE_PROCESSING=1, CONTROL_PLANE_DB_PATH=./data/control_plane_smoke_<ts>.db
   - POST /v1/chat returned transmission ids (anchors); POST /v1/memories succeeded with evidence_message_ids length > 1.
   - GET /v1/memories/:id and GET /v1/memories returned the created memory.
-  - Chat retrieval (outputEnvelope.meta.lattice): status=hit; scores methods fts5_bm25; bytes_total=905; counts.memories=6; counts.mementos=1
+  - Chat retrieval (outputEnvelope.meta.lattice): status=hit; scores methods fts5_bm25; bytes_total=141; counts.memories=0; counts.mementos=1
 - Staging deploy: `pnpm deploy:staging` succeeded (solserver-staging)
 - Staging smoke (solserver/scripts/smoke_lattice_staging.sh + chat retrieval):
   - Case A flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=0, LATTICE_VEC_QUERY_ENABLED=0
-    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=395; counts.memories=1
+    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=1932; counts.memories=6
   - Case B flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=1, LATTICE_VEC_QUERY_ENABLED=0
-    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=1972; counts.memories=6
+    - meta.lattice: status=hit; scores methods fts5_bm25 only; bytes_total=2030; counts.memories=6
   - Case C flags: LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=1, LATTICE_VEC_QUERY_ENABLED=1
-    - meta.lattice: status=hit; scores methods vec_distance; bytes_total=1724; counts.memories=5
+    - meta.lattice: status=hit; scores methods vec_distance; bytes_total=2049; counts.memories=6
 - Staging flags reset to Case B (default): LATTICE_ENABLED=1, LATTICE_VEC_ENABLED=1, LATTICE_VEC_QUERY_ENABLED=0
 
 ## Known issues / deferred
