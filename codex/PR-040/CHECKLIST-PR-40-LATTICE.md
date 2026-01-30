@@ -3,7 +3,7 @@
 ## 0) PR structure
 - [x] Create bundle dir: infra-docs/codex/PR-040/ — receipts: codex/PR-040/README.md
 - [x] Add: INPUT-PR-40-LATTICE.md, CHECKLIST-PR-40-LATTICE.md, FIXLOG-PR-40-LATTICE.md — receipts: codex/PR-040/INPUT-PR-40-LATTICE.md; codex/PR-040/CHECKLIST-PR-40-LATTICE.md; codex/PR-040/FIXLOG-PR-40-LATTICE.md
-- [ ] Link these in the PR body
+- [x] Link these in the PR body — receipts: infra-docs PR https://github.com/SolLabsHQ/infra-docs/pull/20; solserver PR https://github.com/SolLabsHQ/solserver/pull/42; solmobile PR https://github.com/SolLabsHQ/solmobile/pull/33
 
 ## 1) infra-docs changes
 ADR and docs
