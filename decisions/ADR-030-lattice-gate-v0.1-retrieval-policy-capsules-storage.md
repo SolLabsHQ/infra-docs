@@ -37,6 +37,8 @@ PolicyCapsule schema (minimum):
 - Default: build-time compilation from ADRs and governance docs into a capsule bundle (JSON or SQLite table).
 - Capsules are excerpt-sized and intentionally short.
 - Capsules preserve traceability via source_path and id.
+- Policy capsule IDs use stable ADR anchors (example: ADR-030#D6).
+- Policy capsules are bundled offline in the app; the server emits capsule IDs only.
 
 ### D3) Lattice v0.1 retrieval sources (planned v0.1; stub today)
 Lattice v0.1 pulls from two sources (C = both):
@@ -66,6 +68,7 @@ In v0.1:
 - Lattice output is injected into the existing retrieval section.
 - Governance snippets appear as a labeled subsection inside retrieval in v0 (no new PromptSectionId).
 - Lattice output must not be inserted as Driver Blocks to avoid enforcement confusion.
+- Critical constraints must not rely on Lattice retrieval; enforce via Driver Blocks / Mounted Law.
 
 ### D6) Lattice v0.1 limits and fail-open posture (planned v0.1; stub today)
 Default caps:
@@ -89,9 +92,13 @@ Emit a Lattice trace event with:
 - memory_hits, adr_hits, policy_hits
 - bytes_total
 - query_terms (safe terms only, no content)
-- min_score used
+- lexical and vector scoring are tracked separately (no shared min_score)
 
 No raw content is logged.
+
+### D7a) meta.lattice (planned v0.1; stub today)
+- `OutputEnvelope.meta.lattice` is always present in production responses (even when lattice is disabled).
+- Content-minimized: IDs only (memory_ids, memento_ids, policy_capsule_ids), counts, bytes_total, timings_ms, warning codes.
 
 ### D8) Storage decision for v0.1 on Fly (default + fallback + upgrade, planned v0.1)
 #### v0.1 default (Fly)
