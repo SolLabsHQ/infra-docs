@@ -59,6 +59,15 @@ sequenceDiagram
   M->>M: Log trace + telemetry
 ```
 
+## Lattice v0/v0.1 notes
+- Retrieval injection uses the existing PromptPack retrieval section; no new section id for governance/policy.
+- Lattice emits `meta.lattice` in responses (IDs + counts + timings only).
+- Memory API endpoints support retrieval and UI citation:
+  - `POST /v1/memories` (span save)
+  - `GET /v1/memories` (list)
+  - `GET /v1/memories/:id` (detail)
+- Vector queries are behind flags; default retrieval remains lexical.
+
 ## PR10 delta
 ### Synaptic: JournalOfferClassifier v0 (deterministic)
 - Inputs: Sentinel mood label + intensity, Sentinel risk signal, ThreadMemento affect rollup phase.
